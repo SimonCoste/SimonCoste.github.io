@@ -1,3 +1,0 @@
-ArgumentError: Package Combinatorics not found in current path:
-- Run `import Pkg; Pkg.add("Combinatorics")` to install the Combinatorics package.
-
