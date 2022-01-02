@@ -44,7 +44,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: December 31, 2021. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: January 02, 2022. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 
@@ -261,7 +261,7 @@ end</code></pre>
 <p>The authors of the ConvMixer paper argue that their architecture is as powerful as ResNets or ConViT high-performance models without any hyperparameter tuning, but the conceptual complexity of the model is considerably simpler: in fact, it is simplistic enough to fit in one tweet, ie less than 280 characters when implemented with the PyTorch framework. </p>
 <p><img src="/posts/img/convmixer_singletweet.png " alt="a single tweet" /></p>
 <p>This implies a little bit of <a href="https://en.wikipedia.org/wiki/Code_golf">code golf</a> cheating. In Julia, you can fit everything in a single tweet, <code>using Flux</code> included, in 272 characters without even needing to golf your functions names: </p>
-<p><img src="/posts/img/convmixr.png " alt="even better" /></p>
+<p><img src="/posts/img/carbon.png " alt="even better" /></p>
 <p>The code is here &#40;with spaces&#41;:</p>
 <blockquote>
 <code>ConvMixer&#40;k,p,h,N&#41; &#61; Chain&#40;Conv&#40;&#40;p,p&#41;, 3&#61;&gt;h, gelu;stride&#61;p&#41;, BatchNorm&#40;h&#41;, &#91;Chain&#40;SkipConnection&#40;Chain&#40;Conv&#40;&#40;k,k&#41;,h&#61;&gt;h,gelu;pad&#61;SamePad&#40;&#41;,groups&#61;1&#41;, Batchnorm&#40;h&#41;&#41;,&#43;&#41;, Chain&#40;Conv&#40;&#40;1,1&#41;,h&#61;&gt;h,gelu&#41;, BatchNorm&#40;h&#41;&#41;&#41; for i in 1:D&#93;..., AdaptiveMeanPool&#40;&#40;1,1&#41;&#41;, flatten, Dense&#40;h,N&#41;&#41;</code>
