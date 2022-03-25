@@ -44,13 +44,19 @@
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://scoste.fr/teaching/statagreg/index.html</loc>
+    <loc>https://scoste.fr/posts/catalan/index.html</loc>
     <lastmod>2022-03-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
     <loc>https://scoste.fr/posts/talk/index.html</loc>
+    <lastmod>2022-03-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://scoste.fr/teaching/statagreg/index.html</loc>
     <lastmod>2022-03-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
