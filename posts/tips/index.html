@@ -44,7 +44,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: December 09, 2022. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: December 12, 2022. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 
@@ -153,8 +153,16 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â€
 <span class="hljs-number">2</span>-element <span class="hljs-built_in">Vector</span>{<span class="hljs-built_in">Float64</span>}:
  <span class="hljs-number">0.5208181108065045</span>
  <span class="hljs-number">0.047596231335982044</span></code></pre>
-<h3 id="slurping"><a href="#slurping" class="header-anchor">Slurping</a></h3>
-<p>If <code>X &#61; &#91;1, 2, 3&#93;</code> and <code>f&#40;a,b,c&#41; &#61; a &#43; b - c</code> for instance, then <code>f&#40;X&#41;</code> obviously gives you an error since there is no method matching <code>f&#40;::Vector&#41;</code> or <code>f&#40;::Array&#41;</code>. But then, <code>f&#40;X...&#41;</code> does the trick. What the slurping operator <code>...</code> does is similar to what Python&#39;s <code>*</code> operator does: it simply unfolds the elements in the array and passes them as argument to the function. </p>
+<h3 id="slurping_and_splatting"><a href="#slurping_and_splatting" class="header-anchor">Slurping and splatting</a></h3>
+<p>Slurping and splatting refer to the two &#40;different&#41; uses of the <code>...</code> operator: <a href="https://docs.julialang.org/en/v1/manual/faq/#What-does-the-...-operator-do?">see the Julia manual</a>. </p>
+<p><strong>Splatting</strong>. If <code>X &#61; &#91;1, 2, 3&#93;</code> and <code>f&#40;a,b,c&#41; &#61; a &#43; b - c</code> for instance, then <code>f&#40;X&#41;</code> obviously gives you an error since there is no method matching <code>f&#40;::Vector&#41;</code> or <code>f&#40;::Array&#41;</code>. But then, <code>f&#40;X...&#41;</code> does the trick. What the slurping operator <code>...</code> does is similar to what Python&#39;s <code>*</code> operator does: it simply unfolds the elements in the array and passes them as argument to the function. This is super useful.</p>
+<p><strong>Slurping</strong>. By contrast you can also use <code>...</code> in functions definitions when you don&#39;t exactly know how many arguments there might be. Typically, a function defined by <code>f&#40;args...&#41; &#61; #code</code> can take any number of arguments, but they&#39;ll be combined into a single argument &#40;a tuple, actually&#41;. Look at this: </p>
+<pre><code class="julia hljs">julia&gt; f(x...) = x
+f (generic <span class="hljs-keyword">function</span> with <span class="hljs-number">1</span> method)
+julia&gt; f(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)
+(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+julia&gt; f(<span class="hljs-string">&quot;a&quot;</span>)
+(<span class="hljs-string">&quot;a&quot;</span>,)</code></pre>
 <h3 id="ellipsis_notation"><a href="#ellipsis_notation" class="header-anchor">Ellipsis notation</a></h3>
 <p>Python has its famous ellipsis notation for slicing, <code>...</code>; roughly speaking, it allows to access a range of indices in a list or array, without having to specify the indices. For instance, if you have an array <code>x</code> with 3 dimensions, of size, say, &#40;5,6,7&#41;, writing <code>x&#91;0,:,:&#93;</code> is the same thing as writing <code>x&#91;0,...&#93;</code>. Since <code>...</code> is already taken in Julia for the slurping operator, we use <code>..</code> instead for the ellipsis notation. This is a part of Chris Rackauckas&#39;s package <a href="https://github.com/ChrisRackauckas/EllipsisNotation.jl">EllipsisNotation.jl</a> which just needs to be installed with Pkg and imported with <code>using EllipsisNotation</code>. </p>
 <h3 id="identity_matrices"><a href="#identity_matrices" class="header-anchor">Identity matrices</a></h3>
