@@ -44,7 +44,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: December 22, 2022. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: January 04, 2023. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 
@@ -65,7 +65,7 @@
 <div class="franklin-content">
 <p>This post is some kind of a personnal collection of things learnt on-the-fly, small tips and tricks in the Julia language. They&#39;re not life-safers and won&#39;t make your code work better nor faster, but they&#39;ll probably help you write cleaner code, they&#39;re incredibly smooth, and using them fills me with an intense satisfaction. I hope this helps. </p>
 <p><strong>Contents</strong></p>
-<div class="franklin-toc"><ol><li><a href="#repl_tricks">REPL tricks</a></li><li><a href="#updating_julia">Updating Julia</a></li><li><a href="#showing_off_with_unicode">Showing off with Unicode</a></li><li><a href="#various_kinds_of_syntactic_sugar">Various kinds of syntactic sugar</a></li><li><a href="#multiple_dispatch">Multiple dispatch</a></li><li><a href="#inlining">Inlining</a></li><li><a href="#logging_macros">Logging macros</a></li><li><a href="#saving_stuff_to_files">Saving stuff to files</a></li><li><a href="#keyword_arguments">Keyword arguments</a></li><li><a href="#type_stability">Type stability</a></li></ol></div>
+<div class="franklin-toc"><ol><li><a href="#repl_tricks">REPL tricks</a></li><li><a href="#updating_julia">Updating Julia</a></li><li><a href="#showing_off_with_unicode">Showing off with Unicode</a></li><li><a href="#various_kinds_of_syntactic_sugar">Various kinds of syntactic sugar</a></li><li><a href="#multiple_dispatch">Multiple dispatch</a></li><li><a href="#inlining">Inlining</a></li><li><a href="#logging_macros">Logging macros</a></li><li><a href="#saving_stuff_to_files">Saving stuff to files</a></li><li><a href="#keyword_arguments">Keyword arguments</a></li><li><a href="#type_stability">Type stability</a></li><li><a href="#coding_style">Coding style</a></li></ol></div>
 <h2 id="repl_tricks"><a href="#repl_tricks" class="header-anchor">REPL tricks</a></h2>
 <p>Typing <code>&#93;</code> in a REPL brings you to package mode – you can <code>activate</code> environments or <code>add</code> packages. </p>
 <p>Typing <code>?</code> in a REPL brings you to help mode – type anything and you&#39;ll get documentation. </p>
@@ -112,7 +112,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p>One can simply use <code>x &#61; condition ? 0 : 1</code>. The condition must be a boolean variable. Note that having spaces around the <code>?</code> and <code>:</code> operators is mandatory.  </p>
 <h3 id="short-circuit_boolean_operators"><a href="#short-circuit_boolean_operators" class="header-anchor">Short-circuit boolean operators</a></h3>
 <p>Those are also present in other programming languages but for some reason I always forget which one is which one. The logical <em>and</em> and <em>or</em> are <code>&amp;</code> and <code>|</code>. But beware&#33; In <code>expr1 | expr2</code>, both expressions are tested. This is slightly inefficient: if <code>expr1</code> is true, there&#39;s no need to check <code>expr2</code>. To avoid these spurious evaluations, we have the « short-circuit » operators <code>&amp;&amp;</code> and <code>||</code> which do exactly what you think they do. </p>
-<p>You can use these to replace some <code>if</code> statements. For instance, <code>condition &amp;&amp; f&#40;&#41;</code> checks if <code>condition</code> if true, and if true, performs <code>f&#40;&#41;</code>. </p>
+<p>You can use these to replace some <code>if</code> statements. For instance, <code>condition &amp;&amp; f&#40;&#41;</code> checks if <code>condition</code> if true, and if true, performs <code>f&#40;&#41;</code>. Typically, you see this in functions, for returning things based on a simple check on the argument. For example if you want to throw an error message, you can do</p>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> f(x)
+    x&lt;=<span class="hljs-number">0</span> &amp;&amp; <span class="hljs-keyword">return</span> <span class="hljs-built_in">ArgumentError</span>(<span class="hljs-string">&quot;x must be nonnegative&quot;</span>)
+    <span class="hljs-comment">#rest of the code</span>
+<span class="hljs-keyword">end</span></code></pre>
 <h3 id="defining_functions"><a href="#defining_functions" class="header-anchor">Defining functions</a></h3>
 <p>There are at least three ways to define functions in Julia. The classical one reads</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">function</span> f(x)
@@ -253,6 +257,8 @@ Foo(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;hi&quot;
 julia&gt; typeof(pos(x))
 <span class="hljs-built_in">Int64</span></code></pre>
 <p>The output is an Int. The function <code>pos</code> is not type stable – shame&#33; The solution, here, is <code>pos&#40;x&#41; &#61; x &lt; 0 ? zero&#40;0&#41; : x</code>. In general, if you have an object <code>y</code> and you want to convert it to the type of <code>x</code>, this operation can be performed &#40;if able&#41; by <code>oftype&#40;x,y&#41;</code>. There are helper functions, like <code>one&#40;x&#41;</code> which returns a unit of the same type of <code>x</code>. </p>
+<h2 id="coding_style"><a href="#coding_style" class="header-anchor">Coding style</a></h2>
+<p>Most of Julia&#39;s packages adopt the <a href="https://github.com/invenia/BlueStyle">BlueStyle</a> guideline in addition to the <a href="https://docs.julialang.org/en/v1/manual/style-guide/">general guidelines</a>. In general, you can check that your files have a correct style by using <code>JuliaFormatter.jl</code>: you just go at the root of your repo and launch <code>format&#40;&quot;.&quot;&#41;</code>. All your files will be formatted. In VSCode, you can simply right-click on your file in the text editor and select <code>Format Document</code>.  </p>
 <!-- 
   Page footer is in the sidebar. 
  --></div><!-- CONTENT ENDS HERE -->
