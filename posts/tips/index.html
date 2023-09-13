@@ -147,14 +147,12 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â€
 <span class="hljs-number">4.847492976007113e-7</span></code></pre>
 <p>and you can also broadcast the functions: </p>
 <pre><code class="julia hljs">julia&gt; rand(<span class="hljs-number">3</span>) .|&gt; f .|&gt; g
-<span class="hljs-number">3</span>-element <span class="hljs-built_in">Vector</span>{<span class="hljs-built_in">Float64</span>}:
  <span class="hljs-number">0.4548384389788184</span>
  <span class="hljs-number">0.7478851483599316</span>
  <span class="hljs-number">0.20344218484963622</span></code></pre>
 <p>This works with any function;Â it is common practice, when using a GPU with CUDA.jl, to put an array or a model to the gpu using <code>model &#61; model |&gt; gpu</code> instead of <code>model &#61; gpu&#40;model&#41;</code> </p>
 <p>Finally, note that you can broadcast the pipe itself with the same syntax:</p>
 <pre><code class="julia hljs">julia&gt; rand(<span class="hljs-number">2</span>) .|&gt; (f,g)
-<span class="hljs-number">2</span>-element <span class="hljs-built_in">Vector</span>{<span class="hljs-built_in">Float64</span>}:
  <span class="hljs-number">0.5208181108065045</span>
  <span class="hljs-number">0.047596231335982044</span></code></pre>
 <h3 id="slurping_and_splatting"><a href="#slurping_and_splatting" class="header-anchor">Slurping and splatting</a></h3>
