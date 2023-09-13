@@ -1,1 +1,1 @@
-nothing
+"/home/runner/work/SimonCoste.github.io/SimonCoste.github.io/__site/assets/posts/inv_equiv/code/output/bell.svg"
