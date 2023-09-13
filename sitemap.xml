@@ -2,13 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
+    <loc>https://scoste.fr/posts/dklgaussian/index.html</loc>
+    <lastmod>2023-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://scoste.fr/posts/jarzynski/index.html</loc>
     <lastmod>2023-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://scoste.fr/posts/ellipticlaw/index.html</loc>
+    <lastmod>2023-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://scoste.fr/teaching/index.html</loc>
+    <lastmod>2023-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://scoste.fr/posts/invequiv/index.html</loc>
     <lastmod>2023-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -32,19 +50,7 @@
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://scoste.fr/posts/random_eigenfunctions/index.html</loc>
-    <lastmod>2023-09-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
     <loc>https://scoste.fr/research/index.html</loc>
-    <lastmod>2023-09-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>https://scoste.fr/posts/inv_equiv/index.html</loc>
     <lastmod>2023-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -74,6 +80,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://scoste.fr/posts/randomeigenfunctions/index.html</loc>
+    <lastmod>2023-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://scoste.fr/teaching/statagreg/index.html</loc>
     <lastmod>2023-09-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -92,12 +104,6 @@
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://scoste.fr/posts/elliptic_law/index.html</loc>
-    <lastmod>2023-09-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
     <loc>https://scoste.fr/posts/parapine/index.html</loc>
     <lastmod>2023-09-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -111,12 +117,6 @@
 </url>
 <url>
     <loc>https://scoste.fr/notes/index.html</loc>
-    <lastmod>2023-09-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>https://scoste.fr/posts/dkl_gaussian/index.html</loc>
     <lastmod>2023-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
