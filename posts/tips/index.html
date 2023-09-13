@@ -22,7 +22,7 @@
 </style>
 <link rel="icon" href="/assets/lichen.png">
 
-   <title>Tips and tricks for the Julia language</title> 
+   <title>Tips and tricks in the Julia language</title> 
 
 </head>
 <body>
@@ -59,7 +59,7 @@
 
 
 <div class="franklin-content">
-   <h1 class="page-title"> Tips and tricks for the Julia language </h1> 
+   <h1 class="page-title"> Tips and tricks in the Julia language </h1> 
    <span class="page-date"> August 2022 </span> 
 </div>
 <div class="franklin-content">
@@ -257,6 +257,7 @@ julia&gt; typeof(pos(x))
 <p>The output is an Int. The function <code>pos</code> is not type stable – shame&#33; The solution, here, is <code>pos&#40;x&#41; &#61; x &lt; 0 ? zero&#40;0&#41; : x</code>. In general, if you have an object <code>y</code> and you want to convert it to the type of <code>x</code>, this operation can be performed &#40;if able&#41; by <code>oftype&#40;x,y&#41;</code>. There are helper functions, like <code>one&#40;x&#41;</code> which returns a unit of the same type of <code>x</code>. </p>
 <h2 id="coding_style"><a href="#coding_style" class="header-anchor">Coding style</a></h2>
 <p>Most of Julia&#39;s packages adopt the <a href="https://github.com/invenia/BlueStyle">BlueStyle</a> guideline in addition to the <a href="https://docs.julialang.org/en/v1/manual/style-guide/">general guidelines</a>. In general, you can check that your files have a correct style by using <code>JuliaFormatter.jl</code>: you just go at the root of your repo and launch <code>format&#40;&quot;.&quot;&#41;</code>. All your files will be formatted. In VSCode, you can simply right-click on your file in the text editor and select <code>Format Document</code>.  </p>
+<hr />
 <!-- 
   Page footer is in the sidebar. 
  --></div><!-- CONTENT ENDS HERE -->
