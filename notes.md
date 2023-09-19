@@ -34,12 +34,14 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 {{post randomseries}}
 
 
-## Gaussian computations
+## The Gaussian world
 
 
 {{post schur}}
 
 {{post dklgaussian}}
+
+{{post brownian}}
 
 ## Nice pictures
 
