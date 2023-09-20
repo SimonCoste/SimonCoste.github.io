@@ -5,7 +5,7 @@ abstract = "Une généralisation de la construction de Paul Lévy. "
 +++
 
 
-Un mouvement brownien est une fonction réelle $B$ sur $[0,1]$, aléatoire, gaussienne (au sens où toutes les marginales sont conjointement gaussiennes), centrée, et de covariance $\mathbb{E}[B_s B_t] = \min(s,t)$. Le fait qu'une telle chose existe n'est pas une évidence et c'est un passage obligé de tous les cours de M2; la construction ci-dessous est relativement classique, c'est une généralisation de celle de Lévy. Elle a le mérite d'être assez visuelle et de donner directement une limite continue, alors que d'autres constructions (notamment la construction abstraite $L^2$) nécessite de justifier la continuité en utilisant des résultats plus techniques comme le lemme de Kolmogorov. 
+Un mouvement brownien est une fonction réelle $B$ sur $[0,1]$, aléatoire, gaussienne (au sens où toutes les marginales sont conjointement gaussiennes), centrée, et de covariance $\mathbb{E}[B_s B_t] = \min(s,t)$. Le fait qu'une telle chose existe n'est pas une évidence et c'est un passage obligé de tous les cours de M2; la construction ci-dessous est relativement classique, c'est une généralisation de celle de Lévy. Elle a le mérite d'être assez visuelle et de donner directement une limite continue, alors que d'autres constructions (notamment la construction abstraite $L^2$) nécessitent de justifier la continuité en utilisant des résultats plus techniques comme le lemme de continuité de Kolmogorov. 
 
 ## Base d'ondelette
 
@@ -51,7 +51,8 @@ $$ |B^j_t| \leq j \sum_{k=0}^{2^{j-1}-1} \left|\int_0^t \varphi_{j,k}(s)ds \righ
 L'ondelette $\varphi_{j,k}$ est nulle en dehors de l'intervalle $(i 2^{-j-1}, (i+1)2^{-j-1})$, et son intégrale est nulle. On en déduit que si $t$ n'est pas dans cet intervalle, alors
 $$ \int_0^t\varphi_{j,k} = \int_{k2^{-j-1}}^{(k+1)2^{-j-1}} \varphi_{j,k} = 0.$$
 Ainsi, dans la somme ci-dessus, seul le terme correspondant à l'intervalle dyadique contenant $t$ n'est pas nul, et on peut le borner très simplement : 
-$$\left|\int_0^t \varphi_{j,k} \right| \leqslant \int |\varphi_{j,k}| = \frac{|\psi|_1}{2^{\frac{j-1}{2}}}. $$ 
+$$\left|\int_0^t \varphi_{j,k} \right| \leqslant \int |\varphi_{j,k}| = \frac{|\psi|_1}{2^{\frac{j-1}{2}}}$$ 
+où la seconde égalité résulte d'un simple changement de variables $y = 2^{j-1}x$. 
 De tout cela, on déduit que $|B^j_t| \leqslant c j 2^{-j/2}$ où $c=|\psi|_1 \sqrt{2}$ est une constante indépendante. Ceci étant vrai pour tout $t$, 
 $$ \sup_{t\in[0,1]}\left| \sum_{j\geqslant J}B^j_t\right| \leq c \sum_{j\geq J}\frac{j}{2^{j/2}} \xrightarrow[J\to\infty]{} 0.$$
 Cela montre bien que la série $\sum B^j_t$ est uniformément convergente dans l'espace de Banach $(\mathscr{C}[0,1], |\cdot|_{\infty})$; sa limite $B_t$ est donc une fonction continue. 
