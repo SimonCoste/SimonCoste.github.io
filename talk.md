@@ -18,5 +18,7 @@ abstract = "Html slides of some of my talks"
 
 [Inria ARGO's team seminar](/assets/source.pdf)
 
+[BNP chair](/assets/bnp.pdf)
+
 
 
