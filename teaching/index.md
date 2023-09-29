@@ -7,7 +7,7 @@
 
 TD du cours de Calcul Stochastique de Cyril Labbé. 
 
-Feuilles d'exercice : [TD1 (rappels)](/teaching/csto/TD1.pdf), [TD2 (rappels)](/teaching/csto/TD2.pdf), [TD3 (mouvement brownien)](/teaching/csto/TD3.pdf)
+Feuilles d'exercice : [TD1 (rappels)](/teaching/csto/TD1.pdf), [TD2 (rappels)](/teaching/csto/TD2.pdf), [TD3 (mouvement brownien)](/teaching/csto/TD3.pdf), [TD4 (martingales)](/teaching/csto/TD4.pdf)
 
 
 # Probabilités (PR7, 2023)
