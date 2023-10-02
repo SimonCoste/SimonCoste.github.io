@@ -32,19 +32,25 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://scoste.fr/posts/karhunen/index.html</loc>
+    <lastmod>2023-10-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://scoste.fr/posts/randomlines/index.html</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://scoste.fr/posts/stirling/index.html</loc>
+    <loc>https://scoste.fr/talk/index.html</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://scoste.fr/talk/index.html</loc>
+    <loc>https://scoste.fr/posts/stirling/index.html</loc>
     <lastmod>2023-10-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
