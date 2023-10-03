@@ -43,6 +43,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post brownian}}
 
+{{post karhunen}}
+
 ## Nice pictures
 
 

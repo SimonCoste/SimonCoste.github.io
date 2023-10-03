@@ -1,7 +1,7 @@
 +++
-titlepost = "Mouvement brownien dans les ondelettes"
+titlepost = "Mouvement brownien I 📈 : avec une base d'ondelettes"
 date = "Septembre 2023"
-abstract = "Une généralisation de la construction de Paul Lévy. "
+abstract = "Une généralisation de la construction de Paul Lévy: on construit un mouvement brownien continu en s'aidant d'une base orthonormale.  "
 +++
 
 
