@@ -33,6 +33,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post randomseries}}
 
+{{post mercer}}
+
 
 ## The Gaussian world
 

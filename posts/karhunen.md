@@ -18,6 +18,8 @@ $$B_t = \sum_{n=1}^\infty  \xi_n \frac{\sqrt{2}}{\left(n+\frac{1}{2}\right)\pi}\
 @@ 
 La construction est en fait valable pour n'importe quelle fonction de covariance $K(s,t)$; la base en question et les nombres qui apparaissent dans la somme vont dépendre de $K$. Ceux ci-dessus sont adaptés à la covariance du brownien, $K(s,t) = s\wedge t$. 
 
+Michel Loève (1907 - 1979), d'origine palestitienne, a eu pour directeur de thèse Paul Lévy. Kari Karhunen (1915 - 1992) était finlandais et avait eu Nevanlinna comme directeur de thèse. 
+
 ## Décomposition de Karhunen-Loève
 
 ### Théorème de Mercer
@@ -36,7 +38,7 @@ Autrement dit, les fonctions propres et valeurs propres se trouvent en résolvan
 $$ \lambda_n e_n(t) = \int_0^1 K(s,t)e_n(t){\rm d}t.$$ 
 @@
 
-J'ai écrit une démonstration [dans ce post](/posts/mercer/). L'idée générale simple si l'on connaît un peu de théorie spectrale : l'égalité  \eqref{mercer} est vraie au sens $L^2$ et il suffit de lui donner un sens pour tout $x,y$, ce qui est une conséquence de la continuité de $K$. 
+J'ai écrit une démonstration [dans cette note](/posts/mercer/). L'idée générale simple si l'on connaît un peu de théorie spectrale : l'égalité  \eqref{mercer} est vraie au sens $L^2$ et il suffit de lui donner un sens pour tout $x,y$, ce qui est une conséquence de la continuité de $K$. 
 
 ### Représentation des processus gaussiens
 
@@ -77,6 +79,6 @@ où les $(\xi_n)$ sont des gaussiennes standard iid. Cette série converge au se
 
 ## Remarque générale 
 
-Le théorème de Sturm-Liouville dit que pour toute fonction continue $Q$, il existe une base de $L^2$ composée de fonctions $\mathscr{C}^2$, disons $u_n$, et des nombres positifs $\lambda_n$ qui tendent vers l'infini, tels que $u_n(0)=u_n(1)=0$ et 
-$$u''_n + Qu_n = \lambda_n u_n.$$
-Ces fonctions sont en fait les fonctions propres de l'opérateur de noyau $K(x,y) = a(x \wedge y)b(x \vee y)$ où $a,b$ sont deux solutions de $u'' + Qu = 0$ avec des conditions initiales bien choisies. Dans le cas ci-dessus on a $Q=0$ et donc clairement $a(x)=x$.
+Le [théorème de Sturm-Liouville](https://fr.wikipedia.org/wiki/Th%C3%A9orie_de_Sturm-Liouville) dit que pour toute fonction continue $Q$, il existe une base de $L^2$ composée de fonctions $\mathscr{C}^2$, disons $u_n$, et des nombres positifs distincts $\lambda_n$ qui tendent vers l'infini, tels que $u_n(0)=u_n(1)=0$ et 
+$$-u''_n + Qu_n = \lambda_n u_n.$$
+Ces fonctions sont en fait les fonctions propres de l'opérateur de noyau $K(x,y) = C a(x \wedge y)b(x \vee y)$ où $a,b$ sont deux solutions de $u'' + Qu = 0$ avec des conditions initiales bien choisies pour qu'elles soient orthogonales, et $C$ est une constante. Dans le cas ci-dessus on a $Q=0$ et les conditions initiales donnent $a(x)=x$ et $b(x)=-x$; la constante $C$ est en fait égale à $-1$ et donc on trouve bien $K(x,y) = x \wedge y$   .
