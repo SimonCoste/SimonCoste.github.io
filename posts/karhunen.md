@@ -24,11 +24,11 @@ La construction est en fait valable pour n'importe quelle fonction de covariance
 
 La clé est le résultat suivant, un pur produit d'analyse fonctionnelle dû à [James Mercer](https://en.wikipedia.org/wiki/James_Mercer_(mathematician)) en 1909. 
 
-On dit qu'une fonction $K : [0,1]^2 \to \mathbb{R}$ est un noyau positif si elle est continue et si pour tous $x_1, \dotsc, x_n \in [0,1]$ la matrice $(K(x_i, x_j))$ est définie positive. 
+On dit qu'une fonction $K : [0,1]^2 \to \mathbb{R}$ est un noyau positif si elle est symétrique, continue, et si pour tous $x_1, \dotsc, x_n \in [0,1]$ la matrice $(K(x_i, x_j))$ est définie positive. 
 
 @@deep
 Si $K$ est un noyau positif, il existe une base orthonormale $(e_n)$ de $L^2$ et des nombres positifs $\lambda_n$ tels que $\sum \lambda_n <\infty$ et
-$$ K(s,t) = \sum_{n=0}^\infty \lambda_n e_n(x)e_n(y)$$
+\begin{equation}\label{mercer}K(s,t) = \sum_{n=0}^\infty \lambda_n e_n(x)e_n(y)\end{equation}
 où cette série converge uniformément sur $[0,1]^2$. 
 
 Les $(\lambda_n), (e_n)$ sont les valeurs propres et fonctions propres associées à l'opérateur à noyau $f\mapsto K \star f$ où $$K \star f(s) = \int_0^1 K(s,t)f(t){\rm d}t. $$
@@ -36,16 +36,7 @@ Autrement dit, les fonctions propres et valeurs propres se trouvent en résolvan
 $$ \lambda_n e_n(t) = \int_0^1 K(s,t)e_n(t){\rm d}t.$$ 
 @@
 
-On verra une démonstration complète dans [le livre de Barry Simon](https://www.ams.org/publications/authors/books/postpub/simon), partie 4 théorème 3.11.9. Cependant l'idée est élémentaire si l'on connaît un peu de théorie spectrale des opérateurs. 
-
-@@proof 
-**Grandes lignes de la démonstration.** L'opérateur $f \mapsto K\star f$ est un opérateur symétrique borné sur $L^2$ puisque $$|K\star f|_2^2 = \int \left|\int K(s,t)f(t)dt\right|^2ds \leqslant \int  \left(\int K(s,t)^2 dt\right) \left(\int f(t)^2 dt\right)ds = |K|_2^2 |f|_2^2. $$
-Ainsi $K\star $ est diagonalisable au sens $L^2$ (et en fait il est de classe trace), on peut donc écrire au sens $L^2$
-$$ K \star f = \sum_{n=0}^\infty \lambda_n \langle f, \varphi_n\rangle \varphi_n$$
-où les $\lambda_n$ sont réels et $(\varphi_n)$ est une base orthonormale. En fait, comme $K\star f$ est toujours une fonction continue si $K$ l'est (convergence dominée), alors on voit que $\lambda_n \varphi_n = K\star \varphi_n$ et donc que les fonctions propres $\varphi_n$ associées à une valeur propre $\lambda_n \neq 0$ sont continues. Pour conclure, il suffit de justifier qu'on peut formellement prendre $f = \delta_t$ dans l'identité ci-dessus pour obtenir 
-$$ K(s,t) = K\star \delta_t(s) =\sum \lambda_n \langle\delta_t, \varphi_n\rangle \varphi_n(s)= \sum \lambda_n \varphi_n(s)\varphi_n(t).$$
-Enfin pour justifier la convergence uniforme on utilise le [théorème de Dini](https://fr.wikipedia.org/wiki/Th%C3%A9or%C3%A8mes_de_Dini#:~:text=Premier%20th%C3%A9or%C3%A8me%20de%20Dini,-Le%20premier%20th%C3%A9or%C3%A8me&text=Th%C3%A9or%C3%A8me%20%E2%80%94%20La%20convergence%20simple%20d,continue%20implique%20sa%20convergence%20uniforme.). 
-@@
+J'ai écrit une démonstration [dans ce post](/posts/mercer/). L'idée générale simple si l'on connaît un peu de théorie spectrale : l'égalité  \eqref{mercer} est vraie au sens $L^2$ et il suffit de lui donner un sens pour tout $x,y$, ce qui est une conséquence de la continuité de $K$. 
 
 ### Représentation des processus gaussiens
 
@@ -83,3 +74,9 @@ $$ \lambda_n = \frac{1}{\left(\left(n + \frac{1}{2}\right)\pi\right)^2} \qquad (
 La représentation de Karhunen-Loève nous donne donc
 $$B_t = \sum_{n=1}^\infty \xi_n \frac{\sqrt{2}}{\left(n+\frac{1}{2}\right)\pi}\sin\left(\left(n+\frac{1}{2}\right)\pi t\right) $$
 où les $(\xi_n)$ sont des gaussiennes standard iid. Cette série converge au sens $L^2$ mais on pourrait vérifier qu'elle converge aussi presque sûrement. 
+
+## Remarque générale 
+
+Le théorème de Sturm-Liouville dit que pour toute fonction continue $Q$, il existe une base de $L^2$ composée de fonctions $\mathscr{C}^2$, disons $u_n$, et des nombres positifs $\lambda_n$ qui tendent vers l'infini, tels que $u_n(0)=u_n(1)=0$ et 
+$$u''_n + Qu_n = \lambda_n u_n.$$
+Ces fonctions sont en fait les fonctions propres de l'opérateur de noyau $K(x,y) = a(x \wedge y)b(x \vee y)$ où $a,b$ sont deux solutions de $u'' + Qu = 0$ avec des conditions initiales bien choisies. Dans le cas ci-dessus on a $Q=0$ et donc clairement $a(x)=x$.
