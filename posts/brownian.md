@@ -16,13 +16,22 @@ $$ \varphi_{j,k}(x) = 2^{\frac{j-1}{2}}\psi(2^{j-1}x - k) \qquad \qquad k= 0, 1,
 @@important
 La famille des $(\varphi_{j,k})$ forme une base orthonormale de $L^2(0,1)$. 
 @@
-Les conditions garantissant ce résultat sont par exemple lisibles dans [le livre de Yves Meyer](https://books.google.fr/books/about/Wavelets_and_Operators_Volume_1.html?id=y5L5HVlh3ngC&redir_esc=y). 
+Les conditions garantissant ce résultat sont par exemple lisibles dans [le livre de Yves Meyer](https://books.google.fr/books/about/Wavelets_and_Operators_Volume_1.html?id=y5L5HVlh3ngC&redir_esc=y). Voici à quoi ressemblent quelques bases d'ondelettes usuelles: 
+
+![](/posts/img/wavelets.png)
+
 
 
 
 Maintenant, on se donne une famille $X_{j,k}$ de variables aléatoires gaussiennes standard indépendantes et on pose
 $$ B_t^j = \sum_{k=0}^{2^{j-1}-1}X_{j,k}\int_0^t \varphi_{j,k}(x)dx.$$
-Il faut interpréter $B^j$ comme la variation du mouvement brownien à l'échelle $2^{j}$. Le mouvement brownien est la somme de toutes ces variations, à savoir $B^0_t + B^1_t + \dots$. Évidemment, il faut vérifier que cette somme est bien définie. 
+Il faut interpréter $B^j$ comme la variation du mouvement brownien à l'échelle $2^{j}$. Le mouvement brownien est la somme de toutes ces variations, à savoir $B^0_t + B^1_t + \dots$. Évidemment, il faut vérifier que cette somme est bien définie. Les *primitives* des ondelettes, $\int_0^t \varphi_{j,k}(t){\rm d}t$, qui ressemblent à ceci: 
+
+![](/posts/img/wavelet_integrated.png)
+
+Les variables aléatoires $B^j_t$ pour $j=0, \dotsc, 8$ sont visibles à gauche ci-dessous et leur somme donne la fonction à droite, qui ressemble déjà beaucoup à un mouvement brownien: 
+![](/posts/img/brownian.png)
+
 
 @@deep 
 **Théorème d'existence du mouvement brownien.**
