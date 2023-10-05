@@ -5,31 +5,35 @@ abstract = "Une généralisation de la construction de Paul Lévy: on construit 
 +++
 
 
-Un mouvement brownien est une fonction réelle $B$ sur $[0,1]$, aléatoire, gaussienne (au sens où toutes les marginales sont conjointement gaussiennes), centrée, et de covariance $\mathbb{E}[B_s B_t] = \min(s,t)$. Le fait qu'une telle chose existe n'est pas une évidence et c'est un passage obligé de tous les cours de M2; la construction ci-dessous est relativement classique, c'est une généralisation de celle de Lévy. Elle a le mérite d'être assez visuelle et de donner directement une limite continue, alors que d'autres constructions (notamment la construction abstraite $L^2$) nécessitent de justifier la continuité en utilisant des résultats plus techniques comme le lemme de continuité de Kolmogorov. 
+Un mouvement brownien est une fonction réelle $B$ sur $[0,1]$, aléatoire, gaussienne (au sens où toutes les marginales sont conjointement gaussiennes), centrée, et de covariance $\mathbb{E}[B_s B_t] = \min(s,t)$. Le fait qu'une telle chose existe n'est pas une évidence et c'est un passage obligé de tous les cours de M2; la construction ci-dessous est relativement classique, c'est une généralisation de celle de Paul Lévy. 
+
+Cette construction a le mérite d'être visuelle et de donner directement une limite continue, alors que d'autres constructions (notamment la construction abstraite $L^2$) nécessitent de justifier la continuité en utilisant des résultats plus techniques comme le [lemme de continuité de Kolmogorov](https://en.wikipedia.org/wiki/Kolmogorov_continuity_theorem#:~:text=In%20mathematics%2C%20the%20Kolmogorov%20continuity,Soviet%20mathematician%20Andrey%20Nikolaevich%20Kolmogorov.). 
 
 ## Base d'ondelette
 
 Soit $\varphi$ une *ondelette-mère*, c'est-à-dire une fonction continue dont le support est $[0,1]$, vérifiant
-$$ \int \psi(x)dx = 0 \qquad \int |\psi(x)|^2 dx = 1.$$
+$$ \int_0^1 \psi(x)dx = 0 \qquad \int_0^1 |\psi(x)|^2 dx = 1.$$
 Si cette ondelette possède certaines propriétés, il est possible de définir une base de $L^2(0,1)$ en variant l'échelle et la position de cette ondelette. Pour cela, on pose $\varphi_0 = 1, \varphi_1 = \psi$, et pour chaque échelle $j \geqslant 2$, 
 $$ \varphi_{j,k}(x) = 2^{\frac{j-1}{2}}\psi(2^{j-1}x - k) \qquad \qquad k= 0, 1, 2, \dots, 2^{j-1}-1.$$
 @@important
-La famille des $(\varphi_{j,k})$ forme une base orthonormale de $L^2(0,1)$. 
+**Théorème.** La famille des $(\varphi_{j,k})$ forme une base orthonormale de $L^2(0,1)$. 
 @@
 Les conditions garantissant ce résultat sont par exemple lisibles dans [le livre de Yves Meyer](https://books.google.fr/books/about/Wavelets_and_Operators_Volume_1.html?id=y5L5HVlh3ngC&redir_esc=y). Voici à quoi ressemblent quelques bases d'ondelettes usuelles: 
 
 ![](/posts/img/wavelets.png)
 
 
-
-
-Maintenant, on se donne une famille $X_{j,k}$ de variables aléatoires gaussiennes standard indépendantes et on pose
-$$ B_t^j = \sum_{k=0}^{2^{j-1}-1}X_{j,k}\int_0^t \varphi_{j,k}(x)dx.$$
-Il faut interpréter $B^j$ comme la variation du mouvement brownien à l'échelle $2^{j}$. Le mouvement brownien est la somme de toutes ces variations, à savoir $B^0_t + B^1_t + \dots$. Évidemment, il faut vérifier que cette somme est bien définie. Les *primitives* des ondelettes, $\int_0^t \varphi_{j,k}(t){\rm d}t$, qui ressemblent à ceci: 
+Les *primitives* des ondelettes, $\int_0^t \varphi_{j,k}(t){\rm d}t$, ressemblent à ceci: 
 
 ![](/posts/img/wavelet_integrated.png)
 
-Les variables aléatoires $B^j_t$ pour $j=0, \dotsc, 8$ sont visibles à gauche ci-dessous et leur somme donne la fonction à droite, qui ressemble déjà beaucoup à un mouvement brownien: 
+
+Maintenant, on se donne une famille $X_{j,k}$ de variables aléatoires gaussiennes standard indépendantes et on pose
+$$ B_t^j = \sum_{k=0}^{2^{j-1}-1}X_{j,k}\int_0^t \varphi_{j,k}(x){\rm d}x.$$
+Il faut interpréter $B^j$ comme la variation du mouvement brownien à l'échelle $2^{j}$. Le mouvement brownien sera défini comme la somme de toutes ces variations : 
+$$ B_t = \sum_{j=0}^\infty B^j_t = t X_0 + \sum_{j=1}^{\infty}\sum_{k=0}^{2^{j-1}-1}X_{j,k}\int_0^t \varphi_{j,k}(x){\rm d}x$$
+pour peu que cette série soit convergente --- c'est ce qu'on va vérifier après. Les variables aléatoires $B^j_t$ pour $j=0, \dotsc, 8$ sont visibles à gauche ci-dessous et leur somme donne la fonction à droite, qui ressemble déjà beaucoup à un mouvement brownien: 
+
 ![](/posts/img/brownian.png)
 
 
@@ -43,7 +47,7 @@ La somme $B_t = \sum_{j=0}^{\infty} B^j_t$ est presque sûrement uniformément c
 
 ### Un lemme préliminaire
 
-On aura besoin du résultat suivant: $\mathbf{P}$-presque sûrement, pour toute échelle $j$ suffisamment grande on a 
+On aura besoin du résultat suivant: $\mathbb{P}$-presque sûrement, pour toute échelle $j$ suffisamment grande on a 
 \begin{equation}\label{evt} \max_{k\leqslant 2^{j-1}-1}|X_{j,k}| \leq j.\end{equation}
  
 
@@ -82,7 +86,9 @@ $$\langle \mathbf{1}_{[0,t]}, \mathbf{1}_{[0,s]}\rangle = \int_0^{1}\mathbf{1}_{
 
 ### La construction de Paul Lévy 
 
-Le choix de $\psi(x) = -1$ si $x \leq 1/2$ et $1$ si $x>1/2$ donne une famille $(\varphi_{j,k})$ appelée base de Haar. Elle correspond exactement à la construction géométrique utilisée par Paul Lévy, et exposée dans lui-même par exemple [ici](http://www.numdam.org/item/MSM_1954__126__1_0.pdf) : la démonstration est exactement celle ci-dessus, la formule (1) dont il est question étant simplement la loi du brownien à savoir 
+Le choix de $\psi(x) = -1$ si $x \leq 1/2$ et $1$ si $x>1/2$ donne une famille $(\varphi_{j,k})$ appelée base de Haar. On voit les premiers termes dans les graphes au début de cette note. 
+
+Ce choix correspond exactement à la construction géométrique utilisée par Paul Lévy, et exposée dans lui-même par exemple [ici](http://www.numdam.org/item/MSM_1954__126__1_0.pdf) : sa démonstration est exactement celle ci-dessus, la formule (1) dont il est question étant simplement la loi du brownien à savoir 
 $$ B_t - B_s = \sqrt{t-s}\xi$$
 où $\xi$ est une gaussienne standard. 
 
@@ -90,6 +96,9 @@ où $\xi$ est une gaussienne standard.
 
 ![](/posts/img/levy2.png)
 
+
+
+L'avantage de cette construction est qu'elle donne directement une fonction continue. Cependant, elle a un grand défaut : comme les primitives des ondelettes $\int_0^t \varphi_{j,k}(x){\rm d}x$ ne forment pas une base (même si les ondelettes en forment une), il n'est pas évident de trouver les coefficients de $B$ dans la base d'ondelettes ! La [construction de Karhunen-Loève](/posts/karhunen/) répond à ce problème. Michel Loève était d'ailleurs un étudiant de Paul Lévy. 
 
 ## Références
 

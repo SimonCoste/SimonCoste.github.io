@@ -4,17 +4,23 @@ date = "Octobre 2023"
 abstract = "Le théorème de représentation des noyaux positifs"
 +++
 
-Soit $K : [0,1]^2 \to \mathbb{R}$ une fonction continue symétrique. Dans [cette note](/posts/karhunen/) on a montré comment construire un processus stochastique gaussien de fonction de covariance $K$, c'est-à-dire une fonction aléatoire $X : [0,1] \to \mathbb{R}$ dont toutes les marginales sont des gaussiennes centrées et telle que $\mathbb{E}[X_s X_t] = K(s,t)$. On a utilisé un théorème général, dit de Mercer, qui explique que $K$ se diagonalise dans une base orthonormale. Dans cette note on donne les grandes lignes d'une démonstration. 
+Soit $K : [0,1]^2 \to \mathbb{R}$ une fonction continue symétrique. Dans [cette précédente note](/posts/karhunen/) on a montré comment construire un processus stochastique gaussien de fonction de covariance $K$, c'est-à-dire une fonction aléatoire $B : [0,1] \to \mathbb{R}$ dont toutes les marginales sont des gaussiennes centrées et telle que $\mathbb{E}[B_s B_t] = K(s,t)$. On a utilisé un théorème général, dit de Mercer, qui explique que $K$ se diagonalise dans une base orthonormale. 
+
+Dans cette note on démontre le théorème de Mercer, moyennant des résultats de base en analyse fonctionnelle. 
+
+## Opérateurs intégraux 
 
 Pour toute fonction $f\in L^2$ on pose 
 $$ (K \star f)(x) = \int_0^1 K(x,y)f(y){\rm d}y.$$
-et on notera $A_K$ l'opérateur $f \mapsto K \star f$. On voit vite que si $K$ est une fonction $L^2$, alors $A_K$ est un opérateur linéaire borné symétrique, et même compact si $K$ est continu. Le théorème de décomposition des opérateurs bornés sur des espaces de Hilbert dit alors qu'il existe une base orthonormale $(e_n)$ de $L^2$ et des réels $\lambda_n$ tels que 
+et on notera $A_K$ l'opérateur $f \mapsto K \star f$ ; dans le jargon de l'analyse fonctionnelle, $A_K$ s'appelle *opérateur intégral de noyau $K$*. 
+
+Si $K$ est une fonction $L^2$, alors $A_K$ est un opérateur linéaire borné symétrique, et même compact si $K$ est continu. Le [théorème de décomposition](https://en.wikipedia.org/wiki/Hilbert%E2%80%93Schmidt_theorem) des opérateurs bornés sur des espaces de Hilbert dit qu'il existe une base orthonormale $(e_n)$ de $L^2$ et des réels $\lambda_n$ tels que 
 \begin{equation}\label{AK} A_K f = \sum \lambda_n \langle e_n, f\rangle e_n.\end{equation}
-La convergence de cette somme est au sens $L^2$ et les $e_n$ sont des fonctions $L^2$, donc on ne peut pas donner de sens direct à $e_n(x)$ par exemple. Cependant, si l'on pouvait évaluer \eqref{AK} en n'importe quel point on aurait 
+La convergence de cette somme est au sens $L^2$ et les $e_n$ sont des fonctions $L^2$, donc on ne peut pas donner de sens direct à $e_n(x)$. Cependant, si l'on pouvait évaluer \eqref{AK} en n'importe quel point on aurait 
 $$ K(x,y) = \langle \delta_x, A_K \delta_y\rangle  = \sum \lambda_n \langle \delta_x, e_n\rangle \langle \delta_y, e_n\rangle = \sum \lambda_n e_n(x)e_n(y).$$
 Le théorème de Mercer dit essentiellement que c'est vrai lorsque $K$ est un noyau positif. 
 @@important
-On dit qu'une fonction $K : [0,1]^2 \to \mathbb{R}$ est un noyau positif si elle est continue et si pour tous $x_1, \dotsc, x_n \in [0,1]$ la matrice $(K(x_i, x_j))$ est définie positive. 
+On dit qu'une fonction $K : [0,1]^2 \to \mathbb{R}$ est un noyau positif si elle est symétrique, continue, et si pour tous $x_1, \dotsc, x_n \in [0,1]$ la matrice $(K(x_i, x_j))_{1 \leqslant i,j\leqslant n}$ est définie positive. 
 @@ 
 
 @@deep
@@ -28,6 +34,10 @@ où cette série converge uniformément sur $[0,1]^2$.
 Les $\varphi_n, \lambda_n$ se trouvent en résolvant les équations aux valeurs propres
 $$ \lambda_n e_n(x) = \int_0^1 K(x,y)e_n(y){\rm d}y.$$ 
 @@
+
+Le théorème est dû à [James Mercer](https://mathshistory.st-andrews.ac.uk/Biographies/Mercer/) (1883 - 1932), mathématicien britannique. 
+
+![](/posts/img/mercer.jpeg)
 
 On verra une démonstration très détaillée dans [le livre de Barry Simon](https://www.ams.org/publications/authors/books/postpub/simon), partie 4 théorème 3.11.9. Cependant l'idée est élémentaire si l'on connaît un peu de théorie spectrale des opérateurs. 
 
