@@ -7,7 +7,7 @@
 
 TD du cours de Calcul Stochastique de Cyril Labbé. 
 
-Feuilles d'exercice : [TD1 (rappels)](/teaching/csto/TD1.pdf), [TD2 (rappels)](/teaching/csto/TD2.pdf), [TD3 (mouvement brownien)](/teaching/csto/TD3.pdf), [TD4 (martingales)](/teaching/csto/TD4.pdf), [TD5 (Intégrale de Wiener)](/teaching/csto/TD5.pdf), [TD 6 (Intégrale d'Itô)](/teaching/csto/TD6.pdf)
+Feuilles d'exercice : [TD1 (rappels)](/teaching/csto/TD1.pdf), [TD2 (rappels)](/teaching/csto/TD2.pdf), [TD3 (mouvement brownien)](/teaching/csto/TD3.pdf), [TD4 (martingales)](/teaching/csto/TD4.pdf), [TD5 (Intégrale de Wiener)](/teaching/csto/TD5.pdf), [TD 6 (Intégrale d'Itô)](/teaching/csto/TD6.pdf), [TD 7 (Formule d'Itô)](/teaching/csto/TD7.pdf), [TD 8 (Girsanov)](/teaching/csto/TD8.pdf)
 
 
 # Probabilités (PR7, 2023)
