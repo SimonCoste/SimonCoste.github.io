@@ -1,7 +1,7 @@
 +++
-titlepost = "Gradient descent over convex landscapes"
+titlepost = "Gradient descent I: strongly convex functions"
 date = "April 2022"
-abstract = "A note on the most elementary result of convex optimization: the speed of convergence is determined by the conditionning number of the Hessian. "
+abstract = "For strongly convex functions, the speed of convergence is determined by the conditionning number of the Hessian. "
 +++
 
 A function $f$ is [convex](https://en.wikipedia.org/wiki/Convex_function) when $f(x) - f(y) \geqslant \langle \nabla f(y), x-y\rangle$; with this pretty loose definition, it can very well happen that two different points $x,y$ have the same value $f(x) = f(y)$. Finding a minimum of $f$ with gradient descent can then lead to very different behaviours. For smooth functions, we have more quantitative notions of convexity and they lead to convergence results for the gradient descent algorithm. 
@@ -21,33 +21,37 @@ Let $f$ be a $\mathscr{C}^2$, convex function. If there are two numbers $0< \eta
 \end{equation}
 @@
 
-The lower bound is a stronger version of convexity; it is often called *$\eta$-strong convexity*. The second one is indeed nothing more than the fact that if the Hessian norm is bounded by $M$, then the gradient of $f$ is $M$-Lipschitz. We say that $f$ is $M$-smooth. 
+The lower bound is a stronger version of convexity; it is often called *$\eta$-strong convexity*. The second one is indeed nothing more than the fact that if the Hessian norm is bounded by $M$, then the gradient of $f$ is $M$-Lipschitz. We say that $f$ is $M$-smooth. In general, \eqref{qc} is chosen as a definition of strong convexity and smoothness, without asking for any regularity assumption. 
 
 ## Convergence of the gradient descent dynamic
 
 Strongly convex functions have a unique minimum, say $x$. The gradient descent algorithm for finding this minimum consists in following the steepest descent direction, given by the gradient of $f$, with a step size of $\varepsilon$: starting from $x_0$, this descent is written
 $$ x_{n+1} = x_n - \varepsilon \nabla f(x_n).$$
 
-@@important
+@@deep
 **Theorem.**
 
 If $f$ is $\eta$-strongly convex and $M$-smooth, and if the step size $\varepsilon$ is smaller than $1/M$, then for every $n$ we have
 $$ |x_n - x|^2 \leqslant (1 - \varepsilon \eta)^n |x_0 - x|^2.$$
 @@
 
-**Proof**. Developing the euclidean norm and using the LHS of \eqref{qc} with $y = x_n$, we get
+@@proof
+**Proof**. Developing the euclidean norm and using the LHS of \eqref{qc} with $x = x_n$ and $y = x$, we get
 \begin{align}|x_{n+1} - x|^2 &= |x_n - \varepsilon \nabla f(x_n) - x|^2 \\ &= |x_n - x|^2 - 2\varepsilon \langle \nabla f(x_n), x_n - x\rangle  + \varepsilon^2 |\nabla f(x_n)|^2 \\
 &\leqslant |x_n - x|^2 + 2\varepsilon(f(x) -f(x_n))  - \eta \varepsilon|x-x_n|^2 + \varepsilon^2 |\nabla f(x_n)|^2 \\
 &\leqslant |x_n - x|^2 (1 - \eta \varepsilon) + z
 \end{align}
 where $z = \varepsilon^2|\nabla f(x_n)|^2 - 2\varepsilon(f(x_n) - f(x))$. Now we only have to check that $z$ is nonpositive; if so, we will obtain $|x_{n+1} - x|^2 \leqslant |x_n -x|^2 (1 - \eta \varepsilon)$ and a recursion will finish the proof. 
+@@
 
+@@proof
 **Proof of $z\leqslant 0$**. By the RHS of \eqref{qc} and the definition of $x_{n+1}$,  
 
 $$ f(x_{n+1}) - f(x_n) \leqslant  -\varepsilon |\nabla f(x_n)|^2 + \frac{\varepsilon^2 M}{2}|\nabla f(x_n)|^2 = \varepsilon |\nabla f(x_n)|^2 ( \varepsilon M/2-1)$$
 but then, if $\varepsilon M \leqslant 1$, the RHS is smaller than $-\varepsilon/2 |\nabla f(x_n)|^2$. Overall, we get that
 $$ \varepsilon |\nabla f(x_n)|^2 \leqslant 2(f(x_n) - f(x_{n+1})) \leqslant 2(f(x_n) - f(x)) $$
 or equivalently $z\leqslant 0$. 
+@@
 
 ---
 
@@ -63,5 +67,8 @@ There are several takeaway messages in this elementary but powerful result.
 
 - When $f(x) = |Ax - b|^2 / 2$, we are doing nothing more than an iterative method to find a solution for $Ax = b$. The gradient of $f$ is $Ax$, while the Hessian is $A$: it no longer depends on $x$. Its eigenvalues are the eigenvalues of $A$, hence $\kappa$ is *really* the conditioning number of $A$. 
 
+## Stochastic gradient descent 
+
+There are many situations where one would like to perform gradient descent, but access to the real gradient $\nabla f(x_n)$ at every step can be very resource-consuming. This is the case in many machine learning algorithms where $f$ is a sum of individual losses over a dataset and estimationg the whole gradient would need to compute as many complicated gradients as elements in the dataset. In [this follow-up note](/posts/SGD/) I give the same kind of result, but for SGD when the loss still satisfies inequalities like \eqref{qc}.  
 
 

@@ -15,7 +15,11 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post convmixer}}
 
+## Gradient descent
+
 {{post gradient}}
+
+{{post SGD}}
 
 ## Probability and maths
 
