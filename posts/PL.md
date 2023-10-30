@@ -4,7 +4,7 @@ date = "October 2023"
 abstract = "Convex functions are not my friends anymore. Now I am best friend with Polyak-Łojasiewicz functions. "
 +++
 
-A differentiable function $f:\mathbb{R}^d \to \mathbb{R}$ is $\eta$-Polyak-Łojasiewicz[^a] ($\eta$-PL for short) if it is bounded below and if for every $x$, 
+In the preceding note on [stochastic gradient descent](/posts/gradient/) we proved some convergence guarantees for functions satisfying strong convexity assumptions. Now, we move on to a more realistic setting. A differentiable function $f:\mathbb{R}^d \to \mathbb{R}$ is $\eta$-Polyak-Łojasiewicz[^a] ($\eta$-PL for short) if it is bounded below and if for every $x$, 
 
 \begin{equation}\label{PL} f(x) - \inf f \leqslant \frac{1}{2\eta}|\nabla f(x)|^2.\end{equation}
 
@@ -26,11 +26,11 @@ These examples show that PL functions form a really wider class than (strongly) 
 
 ![](/posts/img/PL.png)
 
-Consequently, optimization algorithms will not find minimizers of $f$ but they will search for the minimum value of $f$ instead.  Just as for [strongly convex functions](/posts/gradient/), there is a general convergence result for vanilla Gradient Descent, but I'll only present the corresponding result for SGD. That is, we are now in the minimization of a function $f$ assuming the shape
+Consequently, optimization algorithms will not find minimizers of $f$ but they will search for the minimum value of $f$ instead.  Just as for strongly convex functions, there is a general convergence result for vanilla Gradient Descent, but I'll only present the corresponding result for SGD. That is, we are now in the minimization of a function $f$ assuming the shape
 $$ f(x) = \frac{1}{n}\sum_{i=1}^m f_i(x)$$
 where the $f_i : \mathbb{R}^d \to \mathbb{R}$ are PL functions. The SGD is given by the updates
 $$ x_{n+1} = x_n - \varepsilon_n \nabla f_{i_n}(x_n)$$
-where for each step $n$, the index $i_n$ is independent of $x_n$ and $i_n \sim \mathrm{Unif}\{1,\dotsc, d\}$. 
+where for each step $n$, the index $i_n$ is independent of $x_n$ and $i_n \sim \mathrm{Unif}\{1,\dotsc, d\}$. For future reference, we recall that $f$ is $M$-smooth if $f(y)-f(x)\leqslant \langle \nabla f(x), y-x\rangle + M/2 |x-y|^2$, see [the note on GD](/posts/gradient/). 
  
 
 @@deep
@@ -79,11 +79,13 @@ $$ \mathbb{E}[f(x_{n+1})] \leqslant (1 - \varepsilon \eta)^n f(x_0) +  \frac{M^2
 
 ### Discussion
 
+
+
 - **Minibatch SGD.** In this note and the preceding one I chose the simplest SGD version, the one where $f$ is a sum and we choose one of the functions to estimate the full gradient. The same proof can be adapted to more complicate settings, such as mini-batches where at each step we draw a random batch of indices $\{i_1, \dotsc, i_B\}$ uniformly at random on $[m]$ and estimate the gradient with $\frac{1}{B}\sum_{k=1}^B \nabla f_{i_k}(x)$. The main difference will be on the definition of the discrepancy $\delta$ which needs to be adapted (it's straightforward). 
 
-- **Noisy SGD.** The other variant of SGD is when we have access to a noisy estimate of the gradient, say for simplicity $\nabla f(x) + \xi$ where $\xi$ is an independent small Gaussian noise. I don't know if there are results for this. 
+- **Noisy SGD.** The other variant of SGD is when we have access to a noisy estimate of the gradient, say for simplicity $\nabla f(x) + \xi$ where $\xi$ is an independent small Gaussian noise. I don't know if there are results for this (typically, they shall relate to the mixing time of the Langevin dynamics). 
 
-- **Local PL functions**. The PL assumption is considerably more realistic than strong convexity. PL functions need not be convex and need not have a unique minimizer. However, the absence of non-global local minima can be considered highly unrealistic, especially when dealing with neural networks. One possible workaround would be to replace the global PL condition with local ones. What happens when we only assume that functions are locally PL? Among many works, [this paper by Sourav Chatterjee](https://arxiv.org/pdf/2203.16462.pdf) goes in this direction. He only asks that for *some point $x$* and some radius $r>0$, we have $f(x) \leqslant \eta(x,r)r^2/4$ where $\eta(x,r)$ is the PL-constant of $f$ in the ball $B(x,r)$. This condition implies that the gradient flow/descent on $f$ does stay inside $B(x,r)$, hence our main theorem essentially applies. However, this result is only valid for non-stochastic gradient descent… 
+- **Local PL functions**. The PL assumption is considerably more realistic than strong convexity. PL functions need not be convex and need not have a unique minimizer. However, the absence of non-global local minima can be considered highly unrealistic, especially when dealing with neural networks. One possible workaround would be to replace the global PL condition with local ones. What happens when we only assume that functions are locally PL? Many results were obtained in this line: [this one](https://epubs.siam.org/doi/epdf/10.1137/040605266) or [this one for proximal gradient](https://hal.science/hal-00803898/document). More recently [this paper by Sourav Chatterjee](https://arxiv.org/pdf/2203.16462.pdf) goes in the same direction. However these results are only valid for classical gradient descent. There are no similar results for SGD.  
 
 - **Neural Networks.** Applying such results to neural networks remains a moot point. The main argument is that the loss landscape for NNs in the infinite width regime (and for certain initializations), the loss landscape is almost quadratic. The paper by [Liu, Zhu, Belkin](https://ar5iv.org/pdf/2003.00307.pdf) is a wonderful read for anyone interested in the topic. They essentially study the small singular values of the differential of a NN -- these singular values are the spectral values of the Neural Tangent Kernel, and the NTK is supposed (under certain circumstances) to be… almost constant. Hence, NNs are almost PL. 
 

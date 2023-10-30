@@ -29,6 +29,9 @@ $$\sigma = \mathbb{E}_{j \sim \mathrm{Unif}\{1, \dotsc, d\}}[|\nabla f_j(x)|^2].
 
 What comes out of this theorem, compared with the [non-stochastic gradient descent](/posts/gradient/), is the $2\varepsilon\sigma / \eta$ term. Indeed, there can be no general convergence result for SGD since, even when $x_n = x$, the dynamics does not stop because there is no reason for $\nabla f_i(x)$ to be zero. However, the theorem says that eventually, $x_n$ stays within distance roughly $2\varepsilon / \eta$ of the minimizer $x$. 
 
+The rest of the note is devoted to the proof of this result, which is marginally more technical than the classical exponential convergence of gradient descent. In the [following note](/posts/PL/), I will prove yet another similar result, but where we considerably loosen the conditions on $f$ and in particular allow for non-convexity. 
+
+
 ## Proof 
 
 By developing the square norm $|x_{n+1} - x|^2 = |x_{n+1} - x_n + x_n - x|^2$, we get
