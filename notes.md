@@ -21,6 +21,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post SGD}}
 
+{{post PL}}
+
 ## Probability and maths
 
 {{post importance}}
