@@ -21,7 +21,7 @@ For all $n$, we set $i_n \sim \mathrm{Unif}\{1,\dotsc, d\}$. The SGD is given by
 $$ x_{n+1} = x_n - \varepsilon_n \nabla f_{i_n}(x_n).$$
 
 @@deep
-If $f$ is $\eta$-strongly convex and $M$-smooth, and if the step size $\varepsilon$ is smaller than $1/2M$, then
+If all the $f_i$ are $\eta$-strongly convex and $M$-smooth, and if the step size $\varepsilon$ is smaller than $1/2M$, then
 $$ \mathbb{E}[|x_n - x|^2] \leqslant (1 - \varepsilon \eta)^n |x_0 - x|^2 + \frac{2\varepsilon}{\eta}\sigma$$
 where $\sigma$ is the *local variance of $f$ around the minimum*: 
 $$\sigma = \mathbb{E}_{j \sim \mathrm{Unif}\{1, \dotsc, d\}}[|\nabla f_j(x)|^2].  $$
@@ -57,7 +57,7 @@ $$\mathbb{E}[z_n] \leqslant 2 \varepsilon^2 \sigma + \mathbb{E}[f(x_n) - f(x)]\t
 and since we took $\varepsilon < 1/2M$, we finally get $\mathbb{E}[z_n] \leqslant 2\varepsilon^2 \sigma$ and 
 $$ \mathbb{E}[|x_{n+1} - x|^2] \leqslant (1 - \varepsilon \eta)\mathbb{E}[|x_n - x|^2] + 2\varepsilon^2 \sigma.$$
 
-This is a classical recursion of the form $u_{n+1} \leqslant a u_n + b$. An easy recursion yields $ u_n \leqslant b(a^n - 1)/(1-a) + a^n u_0  $, hence 
+This is a classical recursion of the form $u_{n+1} \leqslant a u_n + b$. An easy recursion yields $ u_n \leqslant b(1-a^n)/(1-a) + a^n u_0  $, hence 
 $$ \mathbb{E}[|x_n - x|^2] \leqslant\frac{2\varepsilon}{\eta}\sigma   + (1 - \eta \varepsilon)^n \mathbb{E}[|x_0 - x|^2] . $$
 
 ## Proof of the Lemma
