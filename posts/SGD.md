@@ -32,6 +32,7 @@ What comes out of this theorem, compared with the [non-stochastic gradient desce
 The rest of the note is devoted to the proof of this result, which is marginally more technical than the classical exponential convergence of gradient descent. In the [following note](/posts/PL/), I will prove yet another similar result, but where we considerably loosen the conditions on $f$ and in particular allow for non-convexity. 
 
 
+
 ## Proof 
 
 By developing the square norm $|x_{n+1} - x|^2 = |x_{n+1} - x_n + x_n - x|^2$, we get
