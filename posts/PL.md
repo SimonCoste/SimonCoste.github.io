@@ -16,17 +16,17 @@ A differentiable function $f:\mathbb{R}^d \to \mathbb{R}$ is $\eta$-Polyak-Łoja
 Flipping sides and using $f(x) = \inf f$ and $|\nabla f(y)/\sqrt{\mu} - \sqrt{\mu}(y-x)|^2\geq 0$ yields \eqref{PL}. 
 @@
 
-What is really impressive is that most results on gradient descent or SGD seem to transfer directly from strongly convex functions to PL functions... **but PL functions need not even be convex!** This is a great leap forward for optimization, and it's quite a recent finding. 
+What is really impressive is that most results on gradient descent or SGD transfer directly from strongly convex functions to PL functions... **but PL functions need not even be convex!** This is a great leap forward for optimization, and it's quite a recent finding. 
 
 Two important examples of PL functions which are not convex are 
 - $f(x) = \mathrm{dist}(x,S)^2$ where $S$ is any set and the distance is the euclidean one.  
 - $f(x) = |F(x) - y|^2$ when $F:\mathbb{R}^d \to \mathbb{R}^d$ and the smallest singular value of the Jacobien $DF(x)$ is uniformly bounded away from zero, ie $\min_x \sigma_{\min}(DF(x))>\mu$. This roughly says that $f$ is locally invertible, and « uniformly so ».  In this case $F$ is $\mu$-PL. 
 
-These examples show that PL functions form a really wider class than convex functions. As a counterpart, their optimization properties are not as good: they need not have a unique minimizer, which is the case for strongly convex functions. Indeed, \eqref{PL} implies that any critical point ($\nabla f (x) = 0$) has $f(x) = \inf f$. In other words, local minima are not unique at all, but they are all global, see (b) in the Figure below[^b]. 
+These examples show that PL functions form a really wider class than (strongly) convex functions. On the other hand, they need not have a unique minimizer, which is the case for strongly convex functions. Indeed, \eqref{PL} implies that any critical point ($\nabla f (x) = 0$) has $f(x) = \inf f$. In other words, local minima are not unique at all, but they are all global, see (b) in the Figure below[^b]. 
 
 ![](/posts/img/PL.png)
 
-Consequently, optimization algorithms will not find minimizers of $f$ but they will find the minimum value of $f$.  Just as for [strongly convex functions](/posts/gradient/), there is a general convergence result for vanilla Gradient Descent, but I'll only present the corresponding result for SGD. That is, we are now in the minimization of a function $f$ assuming the shape
+Consequently, optimization algorithms will not find minimizers of $f$ but they will search for the minimum value of $f$ instead.  Just as for [strongly convex functions](/posts/gradient/), there is a general convergence result for vanilla Gradient Descent, but I'll only present the corresponding result for SGD. That is, we are now in the minimization of a function $f$ assuming the shape
 $$ f(x) = \frac{1}{n}\sum_{i=1}^m f_i(x)$$
 where the $f_i : \mathbb{R}^d \to \mathbb{R}$ are PL functions. The SGD is given by the updates
 $$ x_{n+1} = x_n - \varepsilon_n \nabla f_{i_n}(x_n)$$
@@ -37,10 +37,10 @@ where for each step $n$, the index $i_n$ is independent of $x_n$ and $i_n \sim \
 If all the $f_i$ are $\eta$-PL and $M$-smooth, and if the step size $\varepsilon$ is smaller than $\eta / M^2$, then
 $$ \mathbb{E}[f(x_{n+1})] - \inf f \leqslant (1 - \varepsilon \eta)^n f(x_0) + \frac{M^2\varepsilon}{\eta}\delta$$
 where $\delta$ is the *local discrepancy of $f$ around its minimal value*: 
-$$\delta = \inf_x \mathbb{E}[f_i(x)] - \mathbb{E}[\inf_x f_i(x)]>0 \qquad i \sim \mathrm{Unif}\{1, \dotsc, m\}. $$
+$$\delta = \inf_x \mathbb{E}[f_i(x)] - \mathbb{E}[\inf_x f_i(x)] \geqslant 0 \qquad i \sim \mathrm{Unif}\{1, \dotsc, m\}. $$
 @@
 
-The difference between this and the classical GD result is the additional term featuring $\delta$. Strikingly, when all the $f_i$ have the same minimal value (ie $\inf f_i = \inf f$), this term disappears since $\delta = 0$. This situation is called *interpolation*. It does not imply that all the $f_i$ can reach their minimal value at the same time. One might be tempted to check how this $\delta$ relates to the local variance $\sigma$ introduced in the case of strongly convex functions. It turns out[^c] that if all the $f_i$ are $M$-smooth, (i) in general, $\sigma \leqslant 2M\delta$;  (ii) if the $f_i$ are $\mu$-strongly convex, then $2\mu \delta \leqslant \sigma$. So in the case of strongly convex functions, these two parameters measure the same thing. 
+The difference between this and the classical GD result is the additional term featuring $\delta$. Strikingly, when all the $f_i$ have the same minimal value (ie $\inf f_i = \inf f$), this term disappears since $\delta = 0$. This situation is called *interpolation*. It does imply that all the $f_i$ can reach their minimal value at the same time. One might be tempted to check how this $\delta$ relates to the local variance $\sigma$ introduced in the case of strongly convex functions. It turns out[^c] that if all the $f_i$ are $M$-smooth, (i) in general, $\sigma \leqslant 2M\delta$;  (ii) if the $f_i$ are $\mu$-strongly convex, then $2\mu \delta \leqslant \sigma$. So in the case of strongly convex functions, these two parameters measure the same thing. 
 
 ## Proof
 
@@ -77,16 +77,20 @@ This is once again a classical recursion of the form $u_{n+1} \leqslant a u_n + 
 $$ \mathbb{E}[f(x_{n+1})] \leqslant (1 - \varepsilon \eta)^n f(x_0) +  \frac{M^2\varepsilon}{\eta}\delta. $$
 
 
-## Conclusion and references
+### Discussion
 
-The PL assumption is considerably more realistic than strong convexity. PL functions need not be convex and need not have a unique minimizer. However, the absence of non-global local minima can be considered a serious limitation, especially when dealing with neural networks. One possible workaround would be to replace the global PL condition with local ones. What happens when we only assume that functions are locally PL? 
+- **Minibatch SGD.** In this note and the preceding one I chose the simplest SGD version, the one where $f$ is a sum and we choose one of the functions to estimate the full gradient. The same proof can be adapted to more complicate settings, such as mini-batches where at each step we draw a random batch of indices $\{i_1, \dotsc, i_B\}$ uniformly at random on $[m]$ and estimate the gradient with $\frac{1}{B}\sum_{k=1}^B \nabla f_{i_k}(x)$. The main difference will be on the definition of the discrepancy $\delta$ which needs to be adapted (it's straightforward). 
 
-[This paper by Sourav Chatterjee](https://arxiv.org/pdf/2203.16462.pdf) goes in this direction. He only asks that for *some point $x$* and some radius $r>0$, we have $f(x) \leqslant \eta(x,r)r^2/4$ where $\eta(x,r)$ is the PL-constant of $f$ in the ball $B(x,r)$. This condition implies that the gradient flow/descent on $f$ does stay inside $B(x,r)$, hence our main theorem essentially applies. 
+- **Noisy SGD.** The other variant of SGD is when we have access to a noisy estimate of the gradient, say for simplicity $\nabla f(x) + \xi$ where $\xi$ is an independent small Gaussian noise. I don't know if there are results for this. 
 
-Applying such results to neural networks remains a moot point. The main argument is that the loss landscape for NNs in the infinite width regime (and for certain initializations), the loss landscape is almost quadratic. The paper by [Liu, Zhu, Belkin](https://arxiv.org/pdf/2003.00307.pdf) is a wonderful read for anyone interested in the topic. They essentially study the small singular values of the differential of a NN -- these singular values are the spectral values of the Neural Tangent Kernel, and the NTK is supposed (under certain circumstances) to be… almost constant. Hence, NNs are almost PL. 
+- **Local PL functions**. The PL assumption is considerably more realistic than strong convexity. PL functions need not be convex and need not have a unique minimizer. However, the absence of non-global local minima can be considered highly unrealistic, especially when dealing with neural networks. One possible workaround would be to replace the global PL condition with local ones. What happens when we only assume that functions are locally PL? Among many works, [this paper by Sourav Chatterjee](https://arxiv.org/pdf/2203.16462.pdf) goes in this direction. He only asks that for *some point $x$* and some radius $r>0$, we have $f(x) \leqslant \eta(x,r)r^2/4$ where $\eta(x,r)$ is the PL-constant of $f$ in the ball $B(x,r)$. This condition implies that the gradient flow/descent on $f$ does stay inside $B(x,r)$, hence our main theorem essentially applies. However, this result is only valid for non-stochastic gradient descent… 
 
-These three notes on GD and SGD were mostly taken from the wonderful survey by Guillaume Garrigos and Richard Gower, [here](https://arxiv.org/pdf/2301.11235.pdf). Note that the convergence of continuous-time gradient flow $\partial_t x_t = - \nabla f(x_t)$ towards the minimum can also be proved quite easily for PL functions, using Cauchy-Schwarz and Lyapounov ideas. 
+- **Neural Networks.** Applying such results to neural networks remains a moot point. The main argument is that the loss landscape for NNs in the infinite width regime (and for certain initializations), the loss landscape is almost quadratic. The paper by [Liu, Zhu, Belkin](https://ar5iv.org/pdf/2003.00307.pdf) is a wonderful read for anyone interested in the topic. They essentially study the small singular values of the differential of a NN -- these singular values are the spectral values of the Neural Tangent Kernel, and the NTK is supposed (under certain circumstances) to be… almost constant. Hence, NNs are almost PL. 
 
+
+# References
+
+These three notes on GD and SGD were mostly taken from the wonderful survey by Guillaume Garrigos and Robert Gower, [here](https://ar5iv.org/pdf/2301.11235.pdf). Guillaume proofread this note. Most of the remaining errors are due to him. 
 
 
 ---
@@ -94,7 +98,7 @@ These three notes on GD and SGD were mostly taken from the wonderful survey by G
 
 [^a] The Polish Ł is actually pronounced like the French « ou » or the English « w ». So Łojasiewicz sounds like « Wo-ja-see-yeah-vitch ». Among well-known Polish names with this letter, there's also Rafał Latała, Jan Łukasiewicz or my former colleague [Bartłomiej Błaszczyszyn](https://www.di.ens.fr/~blaszczy/) whose name is legendarily hard to pronounce for Westerners. 
 
-[^b] Figure extracted from the [Liu, Zhu, Belkin](https://arxiv.org/pdf/2003.00307.pdf) paper. 
+[^b] Figure extracted from the [Liu, Zhu, Belkin](https://ar5iv.org/pdf/2003.00307.pdf) paper. 
 
 
-[^c] See Lemma 4.18 in the [survey](https://arxiv.org/pdf/2301.11235.pdf). 
+[^c] See Lemma 4.18 in the [survey](https://ar5iv.org/pdf/2301.11235.pdf). 
