@@ -41,6 +41,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post mercer}}
 
+{{post kesten}}
+
 
 ## The Gaussian world
 
