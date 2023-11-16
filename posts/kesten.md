@@ -4,6 +4,20 @@ date = "November 2023"
 abstract = "The solutions of the distributional equation X = AX+B can have heavy tails: a sketch of proof, plus a presentation of the Renewal theorem. "
 +++
 
+### Motivation: ARCH models
+
+In 2003, [Robert F. Engle](https://en.wikipedia.org/wiki/Robert_F._Engle) won the Nobel prize in economists for his innovative methods in time-series analysis; to put it sharply, Engle introduced ARCH models into economics. In his [seminal 1982 paper](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)  (30000 citations), he wants to model the time-series $(y_t)$ representing the inflation in the UK. Most previous models used a simple autoregressive model of the form $y_{t+1} = \alpha y_t + \varepsilon_t$, where $\varepsilon_t$ is an external Gaussian noise with variance $\sigma^2$ and $\alpha$ a parameter. The problem with these models is that the variance of the inflation at time $t+1$ knowing the inflation at time , that is $\mathrm{Var}(y_{t+1}|y_t)$, is simply the variance of $\mathrm{Var}(\varepsilon_t)=\sigma^2$, which does not depend on $y_t$. 
+
+Engle wanted a model where the conditional variance would depend on $y_t$: there are good reasons to think that volatility is sticky. The model he came up with (equations (1)-(3) in his paper) is simply 
+\begin{align}\label{garch0}
+&y_{t+1} = \varepsilon_t \times \sqrt{\alpha + \beta y_t^2} .
+\end{align}
+In other words, the variance of $y_{t+1}$ given $y_t$ is $\alpha + \beta y_t^2$. This is the simplest of Auto-Regressive Conditionally Heteroscedastic (ARCH) models. Upon squaring everything in \eqref{garch0}, the equation becomes \begin{equation}\label{garch}y_{n+1}^2 = \alpha \varepsilon^2_t + \beta \varepsilon_t^2 y_t^2.\end{equation} In other words, it is a linear recursion. In the paper, Engle introduced a few variations and crafted statistical methods to estimate the parameters and their significance. 
+
+A central question in this way of modelling things is **how does $y_n$ behave in the long term?** Does $y_n$ stay stable, can it take extremely large values (crises, shocks and crashes), and if so, at which frequency? 
+
+## Kesten's theorems
+
 This note is interested in the solutions of the equation
 \begin{equation}\label{rec}
 X \stackrel{\mathrm{law}}{=} AX+B
@@ -18,7 +32,7 @@ For simplicity, we restrict to the case where $A,B$ are independant and have a d
 @@deep 
 **Kesten's theorem (1973).**
 
-(i) Assume that $A>0$ almost surely and that there is an $s>0$ such that \begin{align}\label{condition}&\mathbb{E}[|A|^s]=1, &&\mathbb{E}[|A|^s (\ln |A|)_+]<\infty, &&\mathbb{E}[|B|^s]=1.\end{align}
+(i) Assume that $A>0$ almost surely and that there is an $s>0$ such that \begin{align}\label{condition}&\mathbb{E}[|A|^s]=1, &&\mathbb{E}[|A|^s (\ln |A|)_+]<\infty, &&\mathbb{E}[|B|^s]<1.\end{align}
 Then, there are two constants $c_\pm$ such that when $x\to \infty$, 
 \begin{align}&\mathbb{P}(X>x)\sim c_+ x^{-s},&&&\mathbb{P}(X<-x) \sim c_- x^{-s}.\end{align}
 (ii) The same result holds if $A$ can take positive and negative values, and in this case $c_+ = c_-$. 
