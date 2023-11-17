@@ -18,11 +18,11 @@ In other words, the variance of $y_{t+1}$ given $y_t$ is $\alpha + \beta y_t^2$.
 A central question in this way of modelling things is **how does $y_n$ behave in the long term?** Does $y_n$ stay stable, can it take extremely large values (crises, shocks and crashes), and if so, at which frequency? 
 @@ 
 
-If $y_t^2$ converges in distribution towards a random variable $Y$, then \eqref{garch} shows that $Y$ and $\alpha \varepsilon^2 + \beta \varepsilon^2 Y$ must have the same probability distribution, where $\varepsilon$ is an $\mathscr{N}(0,\sigma^2)$, independent of $Y$. This is an instance of a very general kind of equations, called *affine distributional equations*: they are equations of the form $Y \stackrel{\mathrm{law}}{=} AY+B$ where $A,B$ are random variables independent of $Y$. It turns out that these equations are generally impossible to solve. However, one of the most famous theorem of Harry Kesten states, perhaps not so intuitively, that the law of any solution must have a heavy tail: in contrast with, say, Gaussian distributions, for which taking extremely large values (« shocks ») has an exponentially small probability, heavy-tailed distributions can take large values with *polynomially small* probability, which is… not so rare at all! 
+If $y_t^2$ converges in distribution towards a random variable $Y$, then \eqref{garch} shows that $Y$ and $\alpha \varepsilon^2 + \beta \varepsilon^2 Y$ must have the same probability distribution, where $\varepsilon$ is an $\mathscr{N}(0,\sigma^2)$, independent of $Y$. This is an instance of a very general kind of equations, called *affine distributional equations*: they are equations of the form $$Y \stackrel{\mathrm{law}}{=} AY+B$$ where $A,B$ are random variables independent of $Y$. It turns out that these equations are generally impossible to solve. However, a theorem of Harry Kesten states, perhaps not so intuitively, that the law of any solution must have a heavy tail: in contrast with, say, Gaussian distributions, for which taking extremely large values (« shocks ») has an exponentially small probability, heavy-tailed distributions can take large values with *polynomially small* probability, which is… not so rare at all! 
 
 
 @@deep 
-This one of Kesten's most famous results, [published in 1973 in Acta Mathematica](https://scholar.google.com/scholar_lookup?title=Random%20difference%20equations%20and%20renewal%20theory%20for%20products%20of%20random%20matrices&publication_year=1973&author=H.%20Kesten). 
+This is one of Kesten's most famous results, [published in 1973 in Acta Mathematica](https://scholar.google.com/scholar_lookup?title=Random%20difference%20equations%20and%20renewal%20theory%20for%20products%20of%20random%20matrices&publication_year=1973&author=H.%20Kesten). 
 
 ![](/posts/img/kesten_article.png)
 
@@ -55,7 +55,7 @@ Then, there are two constants $c_\pm$ such that when $x\to \infty$,
 
 I'll only sketch the proof ideas in the subcase of (i) where in addition, $B$ is nonnegative. In this case, we can safely assume that $X$ is nonnegative by conditionning over the set $\{X>0\}$. We set $f(x) = e^{sx}\mathbb{P}(X > e^x)$; our final goal is to prove that $f(x)$ converges towards some constant when $x\to+\infty$, the $-\infty$ case being identical. 
 
-The recursion \eqref{rec} shows that $f(x) = e^{sx}\mathbb{P}(AX + B > e^x)$. However, if $x$ is very large, we could guesse that $\mathbb{P}(AX + B > e^x)$ is close to $\mathbb{P}(AX > e^x)$. This is the origin of the **first trick** of the proof, which is to artificially write  
+The recursion \eqref{rec} shows that $f(x) = e^{sx}\mathbb{P}(AX + B > e^x)$. However, if $x$ is very large, we could guess that $\mathbb{P}(AX + B > e^x)$ is close to $\mathbb{P}(AX > e^x)$. This is the origin of the **first trick** of the proof, which is to artificially write  
 \begin{align} f(x) &= e^{sx}(\mathbb{P}(AX+B>e^x) - \mathbb{P}(AX>e^x)) + e^{sx}\mathbb{P}(AX>e^x). \end{align}
 Let us note $g$ the first term on the right: $$g(x)=e^{sx}(\mathbb{P}(AX+B>e^x) - \mathbb{P}(AX>e^x)).$$ For the second term, we can express it in terms of $f$ by using $\mathbb{E}[A^s]=1$:
 \begin{align}  e^{sx}\mathbb{P}(X>e^{x - \ln A}) &=  \mathbb{E}[A^s e^{s(x-\ln(A))}\mathbf{1}_{X>e^{x - \ln A}}]. 
@@ -72,7 +72,7 @@ then there is only one solution to this equation, and more crucially it satisfie
 $$\lim_{x\to \infty}f(x) = \frac{\int_0^\infty g(u)du}{\mathbb{E}_s[\ln A]} = \frac{\int_0^\infty g(u)du}{\mathbb{E}[A^s \ln A]}=:c.$$
 If $\mathbb{E}[A^s \ln A]>0$, as we assumed, then $c>0$, because $g$ is a nonzero positive function so its integral is nonzero. Consequently, 
 $$ \lim_{x\to \infty}e^{sx}\mathbb{P}(X>e^x) = c.$$
-This is equivalent to $\mathbb{P}(X>x) \sim cx^{-s}$, as requested. There is, however, a serious catch: to apply the main Renewal theorem we need to check the two conditions listed above. The second one is nothing but an assumption. However, the first one needs $g$ to be "directly Riemann integrable", which is indeed very difficult to check. I won't do this part, but it is very easy to see that if $B$ is positive and diffuse, then $g$ is positive and continuous.  
+This is equivalent to $\mathbb{P}(X>x) \sim cx^{-s}$, as requested. There is, however, a serious catch: to apply the main Renewal theorem we need to check the two conditions listed above. The second one is nothing but an assumption. However, the first one needs $g$ to be "directly Riemann integrable", which is indeed very difficult to check. I won't do this part *at all*[^1]. 
 
 ### Multi-dimensional case
 
@@ -144,12 +144,17 @@ $$ \lim_{x\to \infty} f(x) = c \int_0^\infty g(u)du.$$
 
 ## References 
 
-- [Kesten's original paper](https://scholar.google.com/scholar_lookup?title=Random%20difference%20equations%20and%20renewal%20theory%20for%20products%20of%20random%20matrices&publication_year=1973&author=H.%20Kesten), almost unreadable. 
 
-- [Goldie's paper](https://projecteuclid.org/journals/annals-of-applied-probability/volume-1/issue-1/Implicit-Renewal-Theory-and-Tails-of-Solutions-of-Random-Equations/10.1214/aoap/1177005985.full), which both simplified and generalized Kesten's proof (the proof in this note is Goldie's). 
 
-- [ARCH models by Engle](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)
+- [Kesten's original paper](https://scholar.google.com/scholar_lookup?title=Random%20difference%20equations%20and%20renewal%20theory%20for%20products%20of%20random%20matrices&publication_year=1973&author=H.%20Kesten), really hard to read. 
 
-- [An excellent book on the topic](https://www.google.com/search?q=buraczewski+damek&oq=buraczewski+damek&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhA0gEINDI1NWowajGoAgCwAgA&sourceid=chrome&ie=UTF-8) by Buraczewski, Damek and Mikosch. This is where I learned the proof of Kesten's theorem. 
+- [Goldie's paper](https://projecteuclid.org/journals/annals-of-applied-probability/volume-1/issue-1/Implicit-Renewal-Theory-and-Tails-of-Solutions-of-Random-Equations/10.1214/aoap/1177005985.full), which both simplified and generalized Kesten's proof (the proof in this note is Goldie's). Hard to read too.
+
+- [ARCH models by Engle](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf). 
+
+- [An excellent book on the topic](https://www.google.com/search?q=buraczewski+damek&oq=buraczewski+damek&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhA0gEINDI1NWowajGoAgCwAgA&sourceid=chrome&ie=UTF-8) by Buraczewski, Damek and Mikosch. This is where I learned the proof of Kesten's theorem. It's very well written. 
 
 - [Another excellent book with a chapter on the Renewal Theorem](https://link.springer.com/book/10.1007/b97236), by Asmussen. 
+
+
+[^1]: indeed, there's a catch. It is not possible to directly prove that $g$ is directly Riemann integrable. Instead, what Goldie did is that he mollified the problem by convoluting $g$ with a mollifier $\rho_\delta$, proved the equivalent for this version, then sent $\delta$ to zero. 
