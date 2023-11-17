@@ -12,13 +12,19 @@ Engle wanted a model where the conditional variance would depend on $y_t$: ther
 \begin{align}\label{garch0}
 &y_{t+1} = \varepsilon_t \times \sqrt{\alpha + \beta y_t^2} .
 \end{align}
-In other words, the variance of $y_{t+1}$ given $y_t$ is $\alpha + \beta y_t^2$. This is the simplest of Auto-Regressive Conditionally Heteroscedastic (ARCH) models. Upon squaring everything in \eqref{garch0}, the equation becomes \begin{equation}\label{garch}y_{n+1}^2 = \alpha \varepsilon^2_t + \beta \varepsilon_t^2 y_t^2.\end{equation} In other words, it is a linear recursion. In the paper, Engle introduced a few variations and crafted statistical methods to estimate the parameters and their significance. 
+In other words, the variance of $y_{t+1}$ given $y_t$ is $\alpha + \beta y_t^2$. This is the simplest of Auto-Regressive Conditionally Heteroscedastic (ARCH) models. Upon squaring everything in \eqref{garch0}, the equation becomes \begin{equation}\label{garch}y_{t+1}^2 = \alpha \varepsilon^2_t + \beta \varepsilon_t^2 y_t^2.\end{equation} In other words, it is a linear recursion. In the paper, Engle introduced a few variations and crafted statistical methods to estimate the parameters and their significance. 
 
 A central question in this way of modelling things is **how does $y_n$ behave in the long term?** Does $y_n$ stay stable, can it take extremely large values (crises, shocks and crashes), and if so, at which frequency? 
 
+If $y_t^2$ converges in distribution towards a random variable $Y$, then \eqref{garch} shows that $Y$ and $\alpha \varepsilon^2 + \beta \varepsilon^2 Y$ must have the same probability distribution, where $\varepsilon$ is an $\mathscr{N}(0,\sigma^2)$, independent of $Y$. This is an instance of a very general kind of equations, called *affine distributional equations*: they are equations of the form $Y \stackrel{\mathrm{law}}{=} AY+B$ where $A,B$ are random variables independent of $Y$. It turns out that these equations are generally impossible to solve. However, one of the most famous theorem of Harry Kesten states, perhaps not so intuitively, that the law of any solution must have a heavy tail: in contrast with, say, Gaussian distributions, for which taking extremely large values (« shocks ») has an exponentially small probability, heavy-tailed distributions can take large values with *polynomially small* probability, which is… not so rare at all! 
+
+This one of Kesten's most famous results, [published in 1973 in Acta Mathematica](https://scholar.google.com/scholar_lookup?title=Random%20difference%20equations%20and%20renewal%20theory%20for%20products%20of%20random%20matrices&publication_year=1973&author=H.%20Kesten). 
+
+![](/posts/img/kesten_article.png)
+
 ## Kesten's theorems
 
-This note is interested in the solutions of the equation
+From now on, we'll study the solutions of the equation
 \begin{equation}\label{rec}
 X \stackrel{\mathrm{law}}{=} AX+B
 \end{equation}
@@ -111,6 +117,9 @@ where $U$ has distribution $\mu$.
 - The theorem is also valid when $U$ is not necessarily positive, but on the condition that $\mathbb{E}[U]>0$. This version is due to [Athreya et al. (1978)](https://projecteuclid.org/journals/annals-of-probability/volume-6/issue-5/Limit-Theorems-for-Semi-Markov-Processes-and-Renewal-Theory-for/10.1214/aop/1176995429.full). 
 
 @@proof
+
+(note: the proof is still work in progress as of today, vendredi 17 novembre, 9:57). 
+
 **Proof of Blackwell's version without the constant.**
 When $g(t) = \mathbb{P}(X\leqslant t)$, the solution of \eqref{sol} is $\mathbb{E}[N_t]$, hence $\mathbb{E}[N_{t+a}] - \mathbb{E}[N_t] = \mathbb{E}[\#\{n : S_n \in [t,t+a[\}]$. Suppose that the limit exists for every $a$ and note $\ell(a)$ the limit. Then it is easily seen that $\ell(a+b) = \ell(a) + \ell(b)$ and it is but an exercise to show that $\ell(a) = ca$ for some constant $c \geqslant 0$. Actually proving that the limit exists is difficult, I'll skip this part. 
 
