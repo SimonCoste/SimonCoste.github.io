@@ -6,7 +6,7 @@ abstract = "The solutions of the distributional equation X = AX+B can have heavy
 
 ### Motivation: ARCH models
 
-In 2003, [Robert F. Engle](https://en.wikipedia.org/wiki/Robert_F._Engle) won the Nobel prize in economists for his innovative methods in time-series analysis; to put it sharply, Engle introduced ARCH models into economics. In his [seminal 1982 paper](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)  (30000 citations), he wants to model the time-series $(y_t)$ representing the inflation in the UK. Most previous models used a simple autoregressive model of the form $y_{t+1} = \alpha y_t + \varepsilon_t$, where $\varepsilon_t$ is an external Gaussian noise with variance $\sigma^2$ and $\alpha$ a parameter. The problem with these models is that the variance of the inflation at time $t+1$ knowing the inflation at time , that is $\mathrm{Var}(y_{t+1}|y_t)$, is simply the variance of $\mathrm{Var}(\varepsilon_t)=\sigma^2$, which does not depend on $y_t$. 
+In 2003, [Robert F. Engle](https://en.wikipedia.org/wiki/Robert_F._Engle) won the Nobel prize in economists for his innovative methods in time-series analysis; to put it sharply, Engle introduced ARCH models into economics. In his [seminal 1982 paper](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)  (30k+ citations), he wants to model the time-series $(y_t)$ representing the inflation in the UK. Most previous models used a simple autoregressive model of the form $y_{t+1} = \alpha y_t + \varepsilon_t$, where $\varepsilon_t$ is an external Gaussian noise with variance $\sigma^2$ and $\alpha$ a parameter. The problem with these models is that the variance of the inflation at time $t+1$ knowing the inflation at time , that is $\mathrm{Var}(y_{t+1}|y_t)$, is simply the variance of $\mathrm{Var}(\varepsilon_t)=\sigma^2$, which does not depend on $y_t$. 
 
 Engle wanted a model where the conditional variance would depend on $y_t$: there are good reasons to think that volatility is sticky. The model he came up with (equations (1)-(3) in his paper) is simply 
 \begin{align}\label{garch0}
@@ -141,3 +141,15 @@ $$ \lim_{x\to \infty} f(x) = c \int_0^\infty g(u)du.$$
 
 **Computation of the constant.** The function $g(x) = \mathbb{P}( U \geqslant x)$ is dRi hence \eqref{aux} holds. With this specific $g$, the $f$ solving \eqref{conveq} is $f(x)=\mathbf{1}_{x\geqslant 0}$ (this function is a solution and the solution is unique). Since $f(x) \to 1$, we must have $c\int g(x)dx = 1$. On the other hand, $\int g(x)dx = \int \mathbb{P}(U\geqslant x)dx = \mathbb{E}[U]$, hence $c = 1/\mathbb{E}[U]$ as requested. 
 @@ 
+
+## References 
+
+- [Kesten's original paper](https://scholar.google.com/scholar_lookup?title=Random%20difference%20equations%20and%20renewal%20theory%20for%20products%20of%20random%20matrices&publication_year=1973&author=H.%20Kesten), almost unreadable. 
+
+- [Goldie's paper](https://projecteuclid.org/journals/annals-of-applied-probability/volume-1/issue-1/Implicit-Renewal-Theory-and-Tails-of-Solutions-of-Random-Equations/10.1214/aoap/1177005985.full), which both simplified and generalized Kesten's proof (the proof in this note is Goldie's). 
+
+- [ARCH models by Engle](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)
+
+- [An excellent book on the topic](https://www.google.com/search?q=buraczewski+damek&oq=buraczewski+damek&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhA0gEINDI1NWowajGoAgCwAgA&sourceid=chrome&ie=UTF-8) by Buraczewski, Damek and Mikosch. This is where I learned the proof of Kesten's theorem. 
+
+- [Another excellent book with a chapter on the Renewal Theorem](https://link.springer.com/book/10.1007/b97236), by Asmussen. 
