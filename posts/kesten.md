@@ -6,19 +6,34 @@ abstract = "The solutions of the distributional equation X = AX+B can have heavy
 
 ### Motivation: ARCH models
 
-In 2003, [Robert F. Engle](https://en.wikipedia.org/wiki/Robert_F._Engle) won the Nobel prize in economists for his innovative methods in time-series analysis; to put it sharply, Engle introduced ARCH models into economics. In his [seminal 1982 paper](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)  (30k+ citations), he wants to model the time-series $(y_t)$ representing the inflation in the UK. Most previous models used a simple autoregressive model of the form $y_{t+1} = \alpha y_t + \varepsilon_t$, where $\varepsilon_t$ is an external Gaussian noise with variance $\sigma^2$ and $\alpha$ a parameter. The problem with these models is that the variance of the inflation at time $t+1$ knowing the inflation at time , that is $\mathrm{Var}(y_{t+1}|y_t)$, is simply the variance of $\mathrm{Var}(\varepsilon_t)=\sigma^2$, which does not depend on $y_t$. 
+In 2003, [Robert F. Engle](https://en.wikipedia.org/wiki/Robert_F._Engle) won the Nobel prize in economy for his innovative methods in time-series analysis; to put it sharply, Engle introduced ARCH models into economics. In his [seminal 1982 paper](http://www.econ.uiuc.edu/~econ508/Papers/engle82.pdf)  (30k+ citations), he wanted to model the time-series $(y_t)$ representing the inflation in the UK. Most previous models used a simple autoregressive model of the form $y_{t+1} = \alpha y_t + \varepsilon_t$, where $\varepsilon_t$ is an external Gaussian noise with variance $\sigma^2$ and $\alpha<1$ a "forgetting" parameter. The problem with these models is that the variance of the inflation at time $t+1$ knowing the inflation at time $t$, that is $\mathrm{Var}(y_{t+1}|y_t)$, is simply the variance of $\mathrm{Var}(\varepsilon_t)=\sigma^2$, which does not depend on $y_t$. 
 
 Engle wanted a model where the conditional variance would depend on $y_t$: there are good reasons to think that volatility is sticky. The model he came up with (equations (1)-(3) in his paper) is simply 
 \begin{align}\label{garch0}
 &y_{t+1} = \varepsilon_t \times \sqrt{\alpha + \beta y_t^2} .
 \end{align}
-In other words, the variance of $y_{t+1}$ given $y_t$ is $\alpha + \beta y_t^2$. This is the simplest of Auto-Regressive Conditionally Heteroscedastic (ARCH) models. Upon squaring everything in \eqref{garch0}, the equation becomes \begin{equation}\label{garch}y_{t+1}^2 = \alpha \varepsilon^2_t + \beta \varepsilon_t^2 y_t^2.\end{equation} In other words, it is a linear recursion. In the paper, Engle introduced a few variations and crafted statistical methods to estimate the parameters and their significance. 
+In other words, the variance of $y_{t+1}$ given $y_t$ is $\alpha + \beta y_t^2$. This is the simplest of Auto-Regressive Conditionally Heteroscedastic (ARCH) models. Upon squaring everything in \eqref{garch0}, the equation becomes \begin{equation}\label{garch}y_{t+1}^2 = \alpha \varepsilon^2_t + \beta \varepsilon_t^2 y_t^2.\end{equation} 
+
+This is a linear recursion in $y_t^2$. In the paper, Engle introduced a few variations and crafted statistical methods to estimate the parameters and their significance. 
+
+
 
 @@important
-A central question in this way of modelling things is **how does $y_n$ behave in the long term?** Does $y_n$ stay stable, can it take extremely large values (crises, shocks and crashes), and if so, at which frequency? 
+A central question in this way of modelling things is: **how does $y_n$ behave in the long term?** 
+Does $y_n$ stay stable, can it take extremely large values (crises, shocks and crashes), and if so, at which frequency? 
 @@ 
 
+
+
 If $y_t^2$ converges in distribution towards a random variable $Y$, then \eqref{garch} shows that $Y$ and $\alpha \varepsilon^2 + \beta \varepsilon^2 Y$ must have the same probability distribution, where $\varepsilon$ is an $\mathscr{N}(0,\sigma^2)$, independent of $Y$. This is an instance of a very general kind of equations, called *affine distributional equations*: they are equations of the form $$Y \stackrel{\mathrm{law}}{=} AY+B$$ where $A,B$ are random variables independent of $Y$. It turns out that these equations are generally impossible to solve. However, a theorem of Harry Kesten states, perhaps not so intuitively, that the law of any solution must have a heavy tail: in contrast with, say, Gaussian distributions, for which taking extremely large values (« shocks ») has an exponentially small probability, heavy-tailed distributions can take large values with *polynomially small* probability, which is… not so rare at all! 
+
+
+Here is a small simulation over $10^6$ periods of time and parameters $\alpha=0.1, \beta=1, \sigma = 0.1$. The histogram indicates that $y(t)$ seems to have heavy tails, that is, the probability of observing a unusually large value is polynomially small (and not exponentially small). 
+
+
+
+
+![](/posts/img/arch.png)
 
 
 @@deep 
@@ -66,7 +81,7 @@ Overall, we obtain that $f$ is a solution of the following equation: 
 \begin{equation}\label{renewal}\forall x \geqslant 0, \qquad f(x) = g(x) + \mathbb{E}_s[f(x - \ln A)].\end{equation}
 @@
 If $\mu_s$ is the density of $\log A$ under the measure $\mathbb{P}_s$, this equation becomes $f(x) = g(x) + f\star \mu(x)$ where $\star$ denotes the convolution operator. Such equations are called *convolution equations* and they can be studied using classical probability theory. The main result of Renewal Theory, exposed later below, shows that 
-- **if $g$ satisfies some integrability condition**; 
+- **if $g$ is  « directly Riemann integrable »**; 
 - and if $\mathbb{E}_s[\ln A]>0$, which is the same thing as $\mathbb{E}[A^s \ln(A)]>0$;
 then there is only one solution to this equation, and more crucially it satisfies 
 $$\lim_{x\to \infty}f(x) = \frac{\int_0^\infty g(u)du}{\mathbb{E}_s[\ln A]} = \frac{\int_0^\infty g(u)du}{\mathbb{E}[A^s \ln A]}=:c.$$
@@ -115,32 +130,17 @@ It is quite rare that the representation theorem yields the explicit solution $f
 @@deep 
 **Renewal theorem I (Blackwell's version).** For any $a>0$, 
 \begin{equation}\label{I}\lim_{x\to \infty}\mathbb{E}[N_{t+a}] - \mathbb{E}[N_t]  = \frac{a}{\mathbb{E}[U]}.\end{equation}
-**Renewal theorem II (Ultimate version).** If $g$ has bounded variation  , then the solution of \eqref{conveq} satisfies 
+**Renewal theorem II (Ultimate version).** If $g$ is « directly Riemann integrable », then the solution of \eqref{conveq} satisfies 
 \begin{equation}\label{rt}\lim_{x\to\infty}f(x) = \frac{\int_0^\infty g(u)du}{\mathbb{E}[U]}\end{equation}
 where $U$ has distribution $\mu$. 
 @@ 
 
-- Note that we can very well have $\mathbb{E}[U] = \infty$ in this theorem but for simplicity I'll stick to the finite case. 
+- « Directly Riemann integrable » is the true equivalent of « Riemann integrable », but for functions defined over $\mathbb{R}$ or the half-line. It states that the Riemann sums *over the whole domain* (they are indeed series, not sums, in contrast with the classical definition) converge toward the same limit.  
+- The intuition is pretty clear. In Blackwell's version, $\mathbb{E}[N_{t+a} - N_t]$ is nothing but the number of $S_n$ in the interval $[t,t+a]$. If the size of each jump is roughly $\mathbb{E}[U]$ then the number of jumps in this interval should be proportional to the length of the interval divided by $\mathbb{E}[U]$; Blackwell's theorem says that this is true when $t\to\infty$. Note that in this case $g=\mathbf{1}_[-a,0]$ and $\int g(u)du = a$. 
+- By linearity, Blackwell's version extends to \eqref{rt} at least for piecewise constant functions with bounded support. To extend to wider functions, a limiting argument is needed, and this is where direct Riemann integrability comes into play. 
+- We can very well have $\mathbb{E}[U] = \infty$ in this theorem but for simplicity I'll stick to the finite case. 
 - The theorem is also valid when $U$ is not necessarily positive, but on the condition that $\mathbb{E}[U]>0$. This version is due to [Athreya et al. (1978)](https://projecteuclid.org/journals/annals-of-probability/volume-6/issue-5/Limit-Theorems-for-Semi-Markov-Processes-and-Renewal-Theory-for/10.1214/aop/1176995429.full). 
-
-@@proof
-
-(note: the proof is still work in progress as of today, vendredi 17 novembre, 9:57). 
-
-**Proof of Blackwell's version without the constant.**
-When $g(t) = \mathbb{P}(X\leqslant t)$, the solution of \eqref{sol} is $\mathbb{E}[N_t]$, hence $\mathbb{E}[N_{t+a}] - \mathbb{E}[N_t] = \mathbb{E}[\#\{n : S_n \in [t,t+a[\}]$. Suppose that the limit exists for every $a$ and note $\ell(a)$ the limit. Then it is easily seen that $\ell(a+b) = \ell(a) + \ell(b)$ and it is but an exercise to show that $\ell(a) = ca$ for some constant $c \geqslant 0$. Actually proving that the limit exists is difficult, I'll skip this part. 
-
-**Extension to staircase functions.**
-Now, if $g$ is a linear combination of indicators of finite intervals, by linearity we immediately get 
-\begin{equation}\label{aux} \mathbb{E}\left[\sum_{n=0}^\infty g(S_n-t)\right]\to c \int g(x)dx.\end{equation}
-**Extension to dRi functions.** Let $\delta$ be small and set $I_n = ]\delta n, \delta(n+1)]$. We define a function $g_u$ ($u$ like "up") by $g_u(x) = \sup_{t \in I_k}|g(t)|$ for any $x \in I_k$. 
-[proof]
-
-In the end, we get 
-$$ \lim_{x\to \infty} f(x) = c \int_0^\infty g(u)du.$$
-
-**Computation of the constant.** The function $g(x) = \mathbb{P}( U \geqslant x)$ is dRi hence \eqref{aux} holds. With this specific $g$, the $f$ solving \eqref{conveq} is $f(x)=\mathbf{1}_{x\geqslant 0}$ (this function is a solution and the solution is unique). Since $f(x) \to 1$, we must have $c\int g(x)dx = 1$. On the other hand, $\int g(x)dx = \int \mathbb{P}(U\geqslant x)dx = \mathbb{E}[U]$, hence $c = 1/\mathbb{E}[U]$ as requested. 
-@@ 
+- A full, readable proof can be found in [Asmussen's book](https://link.springer.com/book/10.1007/b97236). I'll probably write a note on this topic, some day. 
 
 ## References 
 
