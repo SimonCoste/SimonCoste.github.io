@@ -1,5 +1,5 @@
 +++
-titlepost = "The law of small numbers: what are heavy-tailed distributions?"
+titlepost = "Heavy-tailed distributions"
 date = "November 2023"
 abstract = "A presentation of heavy tails, how they behave, and how to estimate them using Hill's estimator. "
 +++

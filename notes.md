@@ -41,6 +41,10 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post mercer}}
 
+## Heavy tails
+
+{{post heavy_tails}}
+
 {{post kesten}}
 
 
