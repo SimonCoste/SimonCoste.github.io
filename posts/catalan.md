@@ -30,7 +30,7 @@ C'est certainement vrai.
 
 ## Plus intéressant : une identité de Von Szily
 
-La démonstration précédente est un assez nulle, parce que c'est une vérification brutale. En réalité, les $S(n,m)$ sont entiers parce qu'ils peuvent s'écrire sous une forme intéressante : l'identité suivante est appelée *identité de Von Szily*. 
+La démonstration précédente est un peu nulle, parce que c'est une vérification brutale. En réalité, les $S(n,m)$ sont entiers parce qu'ils peuvent s'écrire sous une forme intéressante : l'identité suivante est appelée *identité de Von Szily*. 
 
 @@important 
 $$ S(n,m) = \sum_k (-1)^k \binom{2m}{m+k}\binom{2n}{n+k}$$
