@@ -14,7 +14,9 @@ Feuilles d'exercice : [TD1 (rappels)](/teaching/csto/TD1.pdf), [TD2 (rappels)](
 
 2023-2024 : TD du cours de probabilités mathématiques de Cyril Labbé (M1). 
 
-Feuilles d'exercice : [TD1 (espaces mesurés)](/teaching/pr7/TD1.pdf), [TD2 (intégration)](/teaching/pr7/TD2.pdf), [TD3 (variables aléatoires)](/teaching/pr7/TD3.pdf), [TD4 (fonctions caractéristiques)](/teaching/pr7/TD4.pdf), [TD5 (vecteurs aléatoires)](/teaching/pr7/TD5.pdf), [TD6 (espérance conditionnelle)](/teaching/pr7/TD6.pdf)
+Feuilles d'exercice : [TD1 (espaces mesurés)](/teaching/pr7/TD1.pdf), [TD2 (intégration)](/teaching/pr7/TD2.pdf), [TD3 (variables aléatoires)](/teaching/pr7/TD3.pdf), [TD4 (fonctions caractéristiques)](/teaching/pr7/TD4.pdf), [TD5 (vecteurs aléatoires)](/teaching/pr7/TD5.pdf), [TD6 (espérance conditionnelle)](/teaching/pr7/TD6.pdf), [TD7 (suites aléatoires)](/teaching/pr7/TD7.pdf), [TD8 (convergence en loi et CLT)](/teaching/pr7/TD8.pdf)
+
+J'ai rédigé une correction de l'exercice 12 du TD7 sur le théorème de Carleman : [voir ici](/teaching/carleman/)
 
 
 
