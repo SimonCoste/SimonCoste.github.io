@@ -64,7 +64,7 @@ Julia has nice syntactic shortcuts; they're clear, usefull, and simple to use, b
 
 ### condition ? yes : no
 
-This is the same as in Python. Instead of writing
+This is the same as in C. Instead of writing
 ```
 if condition
     x = 0
@@ -198,6 +198,24 @@ Y = @. sin(X^2) - cos(X * sin(X+1))^3
 ```
 
 Of course, sometimes you want to dot-broadcast some operations and not others in the same expression, and in this case you need to escape some caracters with `$` as explained in [this post by B. Kaminski](https://www.juliabloggers.com/broadcasting-in-julia-the-good-the-bad-and-the-ugly/?utm_source=ReviveOldPost&utm_medium=social&utm_campaign=ReviveOldPost), but it results in even uglier code. 
+
+
+### Linear solvers
+
+The division of number `y` by number `x` is simply `y / x`. But the division of a vector `y` by a matrix `X` is `X \ y`. By « dividing a vector by a matrix », we simply mean solving the equation `Aw = y` in `w`. In general if `A` is not invertible there is no reason for a solution of $Aw=y$ to exist, but there is always at least one $w$ minimizing the square norm $|Aw - y|^2$. 
+
+In fact, there is no reason for `y` to be a vector, it can be a matrix; in this case `A \ y` computes a matrix `W` such that `AW=Y` (or the min-norm solution as above). 
+
+In either cases, there are closed formulas for `w`, typically using the pseudo-inverse: $w = (A^\top A)^{-1}A^\top y$, which reduces to $A^{-1}y$ when $A$ is invertible. 
+
+This operator is extremely flexible. For example, if you're a statistician and want to perform linear regression, this is your go-to operator: 
+
+```julia
+x = randn(1000)
+y = A * [1 ; 5] + 0.01*randn(1000) # y = Ax + noise
+y \ x # linear regression
+```
+
 
 
 ## Multiple dispatch
