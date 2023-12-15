@@ -16,7 +16,9 @@ Feuilles d'exercice : [TD1 (rappels)](/teaching/csto/TD1.pdf), [TD2 (rappels)](
 
 Feuilles d'exercice : [TD1 (espaces mesurés)](/teaching/pr7/TD1.pdf), [TD2 (intégration)](/teaching/pr7/TD2.pdf), [TD3 (variables aléatoires)](/teaching/pr7/TD3.pdf), [TD4 (fonctions caractéristiques)](/teaching/pr7/TD4.pdf), [TD5 (vecteurs aléatoires)](/teaching/pr7/TD5.pdf), [TD6 (espérance conditionnelle)](/teaching/pr7/TD6.pdf), [TD7 (suites aléatoires)](/teaching/pr7/TD7.pdf), [TD8 (convergence en loi et CLT)](/teaching/pr7/TD8.pdf), et une feuille supplémentaire non traitée en TD : [TD9 (vecteurs gaussiens)](/teaching/pr7/TD9.pdf)
 
-J'ai rédigé une correction de l'exercice 12 du TD7 sur le théorème de Carleman : [voir ici](/teaching/carleman/)
+J'ai rédigé une correction de l'exercice 12 du TD7 sur le théorème de Carleman : [voir ici](/teaching/carleman/#th%C3%A9or%C3%A8me_de_carleman_td7_exercice_12)
+
+**[  🎄 C'EST NOËL  🎄]** J'ai aussi rédigé une correction de l'exercice 11 du TD8 : [voir ici](/teaching/carleman/)
 
 
 
