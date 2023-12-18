@@ -1,5 +1,5 @@
 +++
-titlepost = "🏋🏼 Heavy-tailed distributions II: is it really heavy?"
+titlepost = "🏋🏼 Heavy-tails II: is it really heavy?"
 date = "December 2023"
 abstract = "A presentation of Hill's estimator for the heavy-tail index. "
 +++
