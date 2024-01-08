@@ -1,14 +1,21 @@
 +++
-titlepost = "Heavy-tailed distributions"
+titlepost = "🏋🏼 Heavy tails I: extremes events and randomness"
 date = "November 2023"
-abstract = "A presentation of heavy tails, how they behave, and how to estimate them using Hill's estimator. "
+abstract = "A presentation of heavy tails, how they behave, and a short list of where they come from. "
 +++
 
-If $X$ is a random number, the tail of its distribution is the probability of $X$ taking large values: $G(x)=\mathbb{P}(X>x)$. Of course, this function is decreasing in $x$. Extreme value theory and large deviation theory are the areas of statistics and probability studying how fast $G$ decreases with $x$, and studying distributions where $G$ decays very slowly, meaning that $X$ could take very large values with non-negligible probability. For a long time, these heavy-tailed distributions were an *angle mort* of applied mathematics; they are, however, responsible for exceptional but catastrophic events. 
+The famous [Pareto principle](https://en.wikipedia.org/wiki/Pareto_principle) states that, when many independent sources contribute to a quantitative phenomenon, roughly 80% of the total originates from 20% of the sources: 80% of the wealth is owned by (less than) 20% of the people, you wear the same 20% of your wardrobe 80% of the time, 20% of your efforts are responsible for 80% of your grades, 80% of your website traffic comes from 20% of your content, etc. 
+
+
+This phenomenon mostly comes from a severe imbalance of the underlying probability distribution: for each sample, there is a not-so-small probability of this sample being unusually large. This is what we call **heavy tails**. In this post, we'll give a mathematical definition, a few examples, and show how they lead to Pareto-like principles. 
+
 
 \toc 
 
 ## The tail distribution of a random variable
+
+If $X$ is a random number, the tail of its distribution is the probability of $X$ taking large values: $G(x)=\mathbb{P}(X>x)$. Of course, this function is decreasing in $x$; the question is, *how fast*?
+
 
 ### Light tails
 
@@ -22,7 +29,6 @@ A distribution is heavy-tailed when $\mathbb{P}(X>x)$ does not decay as fast as 
 $$ \mathbb{P}(X>x) = \frac{1}{2} - \frac{\mathrm{arctan}(x)}{\pi} \sim \frac{1}{\pi x}. $$
 This decays **very slowly**. For example $\mathbb{P}(X>5)\approx 1/5\pi \approx 6\%$, which means that if you draw as few as 100 samples from $X$ then you will see one of the samples larger than 5 with probability $99.8\%$. That's a very different behaviour than the preceding Gaussian example. 
 
-![](/posts/img/tails.png)
 
 
 Mathematically, we say that a distribution is heavy-tailed if $\mathbb{P}(X>x)$ is asymptotically comparable to $1/x^s$ for some $s$. By "asymptotically comparable", we mean that terms like $\log(x)$ should not count. There is a class of functions, called [*slowly varying*](https://en.wikipedia.org/wiki/Slowly_varying_function), encompassing this: they are all the functions which are essentially somewhere between constant and logarithmic. Just forget about this technical point: for the rest of the note, think of "regularly varying" as "almost constant". I will keep this denomination. 
@@ -33,127 +39,84 @@ A distribution is heavy-tailed if there is an essentially constant function $c$ 
 \begin{equation}\label{def} \mathbb{P}(X>x) = \frac{c(x)}{x^s}.\end{equation}
 @@
 
-The same definition holds for $x\to -\infty$. For distributions having a density $f$, if $f(x) \sim x^{-s-1}$ when $x$ is large, then it is heavy tailed with index $s$. 
+The same definition holds for $x\to -\infty$. 
 
-Examples of heavy-tailed distributions include: the Cauchy distributions, the Pareto distributions, the Lévy distributions, the Weibull distributions, the Burr distributions, the log-normal distributions. In general, everything which has a density with polynomial decay. For example, the Burr distributions are 
+### Densities
+
+If $X$ has a density $f$, then one can generally see the heavy-tail of $X$ in the asymptotics of $f$. Roughly speaking, if for example $f(x) \approx c / x^{s+1}$ when $x$ is large, then $\mathbb{P}(X > x) \approx c\int_x^\infty x^{-s-1}dx = c' x^{-s}$, so $X$ is heavy-tailed with index $s$. Most of our following examples will have densities.  
+
+### Log-scales
+
+On the left, you see the two densities mentioned above: Gaussian and Cauchy. On classical plots like this, it is almost impossible to see if something is heavy-tailed or not. The orange curve seems to go to zero slower than the blue one, but at which rate? This is why, when it comes to heavy tails, log-scales on plots are ubiquitous. The plot on the middle is the same as the one on the left, but with a log-scale on the y-axis; and on the right, both axes have a log-scale. 
+
+![](/posts/img/tails.png)
+
+In fact, if $X$ has a density $f$, then discerning by bare visual inspection if $f(x)$ decays to zero rather polynomially or exponentially is almost impossible. But on a log-log scale,
+- if $f(x)\approx c/x^r$ we have $\log f(x) \approx \log(c) - r \log(x)$: on a log-log plot, this is a linear relation ($y=ax+b$). 
+- while if $f(x)$ is (say) exponential, $f(x) \approx ce^{-x^r}$, then $\log f(x) \approx \log(c) - x^r = \log(c) - e^{r\log (x)}$.  On a log-log plot, this is an exponential relation ($y = ae^{bx} + c$). 
+
+This is why most plots you will see on this topic are on log-scales or log-log scales. 
+
+## Examples of heavy-tailed densities 
+
+### The Power-Law, or Pareto distribution
+
+The most basic and important example of a heavy-tailed distribution is the Pareto one. It is directly parametrized by its index $s>0$ and its density is given by 
+$$ \rho_s(x) = \frac{s\mathbf{1}_{x>1}}{x^{s+1}}.$$
+I started the distribution at 1, but some people add its starting point as a second parameter. It's really not important. The Pareto law is often denoted $\mathrm{PL}(s)$. 
+
+### Other heavy-tailed densities
+
+The [Fréchet distribution](https://en.wikipedia.org/wiki/Fr%C3%A9chet_distribution) has CDF and PDF
+$$ F_s(x) = e^{-x^{-s}} \qquad \rho_s(x) = \frac{s\mathbf{1}_{x>0}}{x^{1+s}}e^{-x^{-s}}.$$
+Closely related is the [Inverse Gamma distribution](https://en.wikipedia.org/wiki/Inverse-gamma_distribution),with 
+$$F_{\lambda, s}(x) = \frac{\Gamma(s, \lambda/x)}{\Gamma(s)} \qquad \rho_{\lambda,s}(x) = \frac{\lambda^s}{\Gamma(s)}\frac{\mathbf{1}_{x>0}}{x^{s+1}}e^{-\frac{\lambda}{x}}. $$
+When $s=1/2$, this is often called a [Lévy distribution](https://en.wikipedia.org/wiki/L%C3%A9vy_distribution). It is a special case of the [$\alpha$-stable distributions](https://en.wikipedia.org/wiki/Stable_distribution), which encompasses the Cauchy distribution.  
+There is also the [Burr](https://www.johndcook.com/blog/2023/02/15/all-burr-distributions/) distribution (of type XII), with density
 $$f(x) = \frac{ckx^{c-1}}{(1+x^c)^{k+1}}.$$
-The Pareto distribution is 
-$$ f(x) = \frac{s\mathbf{1}_{x>1}}{x^{s+1}}.$$
 
-## How do we estimate the tail index?
+### A shortlist of mechanisms leading to heavy tails. 
 
-Suppose you have samples from a random phenomenon, $X_1, \dotsc, X_n$. How do you convince yourself that they come from a heavy-tailed distribution, and how do you estimate the index $s$? This is not an easy task. For example, look at the three histograms below. Which ones are heavy-tailed? What's the index?
+There are many survey papers on why heavy tails do appear in the real world, like [Newman's one](https://arxiv.org/pdf/cond-mat/0412004.pdf). In general, the most ubiquitous cases are the following ones: 
+- simple transforms (like inverses or exponentials) of distributions. For example, the inverse of a uniform random variable has a heavy tail with index $1$. 
+- Maxima of many independent random variables often converge (after proper normalization) towards heavy-tailed distributions. This is called the [Fisher-Tippett-Gnedenko theorem](https://en.wikipedia.org/wiki/Fisher%E2%80%93Tippett%E2%80%93Gnedenko_theorem). This is why many areas in applied statistics (insurance, lifetime estimation, flood predictions, etc) have to deal with heavy tailed distributions. 
+- Any dynamic phenomenon where an growth rate is independent of the size leads to sizes which are exponentials of classical random variables. In economics, this is called [Gibrat's law](https://en.wikipedia.org/wiki/Gibrat%27s_law). 
+- Random recursions of the form $X_{n+1} = A_n X_n + B_n$ often converge towards heavy-tailed distributions. This is a very deep result by Harry Kesten and I wrote [a note](/posts/kesten/) on this topic. 
+- The number of connections of nodes in a large network often follows a heavy-tailed distribution. This is notably the case for the [Albert-Barabasi preferential attachment model](https://en.wikipedia.org/wiki/Barab%C3%A1si%E2%80%93Albert_model). 
+- [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law) is probably the most famous example. It says that the probability of a word appearing in a text is inversely proportional to its use rank: for example, the second most-used word ("of") is two times less frequent than the first one ("the"). 
 
-![](/posts/img/histo_tail.png)
+## The Lorenz curve of heavy-tailed distributions
 
-### Histogram 
-
-In a histogram, we count the number of observations on small bins, say $[k\varepsilon, (k+1)\varepsilon]$. The proportion of observations in any bin $[k\varepsilon,(k+1)\varepsilon]$ should be $G((k+1)\varepsilon) - G(k\varepsilon) \approx G'(k\varepsilon) \varepsilon\approx \varepsilon/(k\varepsilon)^{s+1}$. The tails of the histogram should thus decay like $k^{-s-1}$. We can also use this idea to estimate $s$: suppose that $p(k)$ is the height of the bin $[k\varepsilon, (k+1)\varepsilon]$. Then we should have $p(k)\approx c/k^{s+1}$ and so $\log p(k) \approx c - (s+1) \log(k)$. With a linear regression of $\log p(k)$ on $\log(k)$ we get an estimate for $s+1$. 
-
-![](/posts/img/histo_tail_fit.png)
-
-
-### Rank plot
-
-There is a better way: instead of drawing histograms, one might draw "rank plots": for every $k\varepsilon$, plot the number of observations larger than $k\varepsilon$. These plots are less sensitive to noise in the observations. 
+Now, let us see how heavy tails are the kind of distributions accountable for imbalances like the 80-20 principle. In general, we measure such imbalances using the [Lorenz curve](https://en.wikipedia.org/wiki/Lorenz_curve): this curves gives the amount of mass "produced" by the $t$-th quantile of a probability distribution. By "mass", we mean the mathematical expectation. The correct definition of the Lorenz curve is the curve joining all points $(F(x), M(x))$ for all $x$,  where $F(x) = \mathbb{P}(X < x)$
+is the proportion of samples below level $x$, and  $$M(x) = \frac{\mathbb{E}[X\mathbf{1}_{X < x}]}{\mathbb{E}[X]}$$ is the proportion of the total mean $\mathbb{E}[X]$ coming from samples below $x$. This is the same curve as $(t, M(q(t))$ where $q = F^{-1}$ is the quantile function. 
 
 
-![](/posts/img/rank_plot.png)
-
-Again, we can use this idea to estimate the tail-index $s$. Indeed, if $Q(k)$ is the proportion of observations greater than $k\varepsilon$, then we should have $Q(k) \approx G(k\varepsilon) \approx c/(k\varepsilon)^s$, or $\log Q(k) \approx \mathrm{cst} - s \log(k)$. A linear regression would  give another estimate, directly for $s$.   
-
-
-![](/posts/img/rank_plot_fit.png)
-That's better, but still not very convincing. 
-
-### MLE on a Pareto model
-
-If we suspect that the $X_i$ were generated from a specific parametric family of densities (Pareto, Weibull, etc.), we can try to estimate the tail-index using methods from classical parametric statistics, like Maximum Likelihood. Suppose we know that the $X_i$ come from a Pareto distribution, whose density is $f_s(x) = sx^{-s-1}$ over $[1,\infty[$. The likelihood of the observations is then 
-$$\ell(s) = \sum_{i=1}^n \ln(s) - (s+1)\ln(x_i)$$
-which is maximized when $n/s = \sum \ln (x_i)$. Consequently, the MLE estimator for $s$ is: 
+For Pareto distributions, we have $F(x) = 1 - t^{-s}$ hence $q(t) = (1-t)^{-1/s}$. On the other hand $\mathbb{E}[X] = s/(s-1)$ and $$\mathbb{E}[X\mathbf{1}_{X < x}] = s\int_1^x \frac{y}{y^{s+1}} dy = \frac{s}{s-1}\left(1 - \frac{1}{x^{1-s}}\right)$$ so that $M(x) = 1 - x^{s-1}$. A mere computation gives the following picture. 
 @@important 
-$$\hat{s} = \frac{1}{\frac{1}{n}\sum_{i=1}^n \ln(x_i)}.$$
-@@
-If the $X_i$ were truly generated by a Pareto model, this estimator has good properties: it is consistent and asymptotically Gaussian, indeed $\sqrt{n}(\hat{s} - s)$ is approximately $\mathscr{N}(0,s^2)$ when $n$ is large. This opens the door to statistical significance tests. 
-
-For the three datasets showed earlier, the MLE estimators are: 
-
-```
-| 1.7      | 0.43       | 1.1      | 
-```
-
-Up to now, with three different estimators, we had very different estimates for $s$… 
-
-### Censoring
-
-But what if my data are *not* Pareto-distributed? A possible approach goes as follows. Suppose that the $X_i$ follow some heavy-tailed distribution with density $f$ and that $f(x)\sim cx^{-s-1}$ for some constant $c$. Then it means that, for large $x$, the density $f$ is almost the same as a Pareto. Hence, we could simply forget about the $X_i$ which are too small and only keep the large ones above some threshold $M$ (after all, they are the ones responsible for the tail behaviour), then apply the MLE estimator. This is called *censorship*; typically, if $N$ is the number of observations above the chosen threshold, then 
-\begin{equation}\label{censored} \hat{s}_{\mathrm{censored}} = \frac{1}{\frac{1}{N}\sum_{i=1}^n \mathbf{1}_{X_i > M}\ln(X_i/M)}.\end{equation}
-This estimator is bad. Indeed, 
-- it is biased and/or not consistent for many models[^3]. 
-- It is extremely sensitive to the choice of the threshold $M$. 
-
-To avoid these pitfalls, the idea is to play with various levels of censorship $M$; that is, to choose a threshold $M_n$ which grows larger with $n$. This leads to the Hill estimator. 
-
-### Hill's estimator
-
-![](/posts/img/hill.png)
-
-What would be the best choice for $M$ in \eqref{censored}? First, we note that $\hat{s}_M$ undergoes discontinuous changes when $M$ becomes equal to one of the $X_i$, since in this case one term is added to the sum and the number of indices such that $X_k > M$ is incremented by 1. It is thus natural to replace $M$ with the largest samples, say $X_{(1)}, X_{(2)}…$ where $X_{(1)}>…>X_{(n)}$ are the ordered samples:
-@@important
-\begin{equation}\label{h}
-\hat{s}_k = \frac{1}{\frac{1}{k}\sum_{i=k}^n \ln(X_{(i)}/X_{(k)})}.
-\end{equation}
-@@
-Here, $k$ is the number of $X_i$ larger than $X_{(k)}$, so \eqref{h} fits the definition of the censored estimator \eqref{censored} with $M = X_{(k)}$. The crucial difference with \eqref{censored} is that the threshold is now *random*. 
-
-We still have to explain how to choose $k$. It turns out that many choices are possible, and they depend on $n$, as stated by the following essential theorem. 
-
-@@deep **Hill's estimator is consistent.**
-Set $k=k_n$, and suppose that $k_n / n \to 0$ and $k_n \to \infty$. If the $X_i$ are iid samples from a heavy-tailed distribution with index $s$ in the general sense of \eqref{def}, then $\hat{s}_{k_n}$ converges in probability towards $s$. 
-
+**Mass imbalance in heavy-tails.**
+- The Lorenz curve of a $\mathrm{PL}(s)$ is given by $t \mapsto 1 - (1 - t)^{1 - \frac{1}{s}}$. 
+- The quantile contributing the last 80% of the total mass is given by $\mathfrak{q}_{0.8}(s) = 1 - 0.8^{s/(s-1)}$. I call this quantile the "Pareto Index" in the next picture below. 
+- Pareto's "80-20 principle" corresponds to $s=1.16$. 
+![](/posts/img/lorenz_plots.png)
 @@ 
 
-@@proof **Proof in the case of Pareto random variables.**
-If the $X_i$ have the Pareto density $\mathbf{1}_{[1,\infty[}sx^{-s-1}$, then it is easy to check that $E_i = \ln(X_i)$ are Exponential random variables with rate $s$. The distribution of the ordered tuple $(\ln(X_{(1)}), \dotsc, \ln(X_{(n)}))$ is thus the distribution of $(E_{(1)}, \dotsc, E_{(n)})$.  This distribution has a very nice representation due to the exponential density. Indeed, for any test function $\varphi$, 
-\begin{align*}
-\mathbb{E}[\varphi(E_{(1)}, \dotsc, E_{(n)})]&= \sum_{\sigma}\mathbb{E}[\varphi(E_{\sigma(1)}, \dotsc, E_{\sigma(n)})\mathbf{1}_{E_{\sigma(1)}>\dotsb > E_{\sigma(n)}}]\\
-&= \sum_\sigma \int_{x_1>\dotsb>x_n} \varphi(x_1, \dotsc, x_n)e^{-sx_1 - \dotsb - sx_n}dx_1\dots dx_n \\ 
-&= \sum_\sigma \int_{u_1>0, \dotsc, u_n>0} \varphi(u_n + \dotsb + u_1, \dotsc, u_{n-1} + u_n, u_n)e^{-su_n - (su_n + su_{n-1}) - \dotsc -(su_n + \dotsb + su_1)}du_1… du_n \\
-&= n! \int_{u_1>0, \dotsc, u_n>0} \varphi(u_n + \dotsb + u_1, \dotsc, u_{n-1} + u_n, u_n)e^{-ns u_n - (n-1) su_{n-1} - \dotsc - su_1}du_1… du_n \\
-&= \mathbb{E}[\varphi(F_n + \dotsb + F_1, \dotsc, F_{n-1} + F_n, F_n)]
-\end{align*}
-where the $F_i$ are independent exponential random variables, $F_i \sim \mathscr{E}(si)$. Moreover, if $E \sim \mathscr{E}(s)$ then $E/\lambda \sim \mathscr{E}(s\lambda)$: since the $E_i$ are all iid we thus have $F_i \stackrel{\mathrm{law}}{=}E_{i}/i$. In the end, we proved that 
-$$(E_{(1)}, \dotsc, E_{(n)}) \stackrel{\mathrm{law}}{=}\left( \sum_{i=1}^{n}\frac{E_i}{i}, \dotsc, \frac{E_{n-1}}{n-1} + \frac{E_{n}}{n}, \frac{E_n}{n},  \right), $$
-in other words $E_{(i)}$ has the same distribution as $\sum_{j=i}^n E_j/j$. 
-As a consequence, 
-\begin{align*}
-\frac{1}{k}\sum_{i=1}^k \ln(X_{(i)}/X_{(k)}) &= \frac{1}{k}\sum_{i=1}^k E_{(i)} - E_{(k)} \stackrel{\mathrm{law}}{=}\frac{1}{k}\sum_{i=1}^k \sum_{j=i+1}^{n} \frac{E_j}{j} = \frac{1}{k}\sum_{j=1}^{k-1}E_j.
-\end{align*}
-As long as $k=k_n \to \infty$, this is the empirical mean of $\mathscr{E}(s)$ random variables, and it converges towards their common mean $1/s$ as requested. Note that with this representation, we can also infer a CLT. 
+As shown with the dotted lines, the tail-index which seems to fit the 80-20 principle is $s=1.16$. For this index (as for any index $1 < s < 2$), the Pareto distribution has a finite mean but no finite variance. For general heavy-tailed distributions, we would have the same kind of pictures, with really convex Lorenz curves. Of course, since the distribution becomes more and more heavy-tailed when $s$ is closer and closer to 1, these curves are less convex when $s$ increases. 
 
-**Proof in the general case.** It is rougly the same idea, but with more technicalities coming from the properties of slowly varying functions. To give the sketch, if $F$ is the cdf of the law of the $X_i$, then we can write $X_i = F^{-1}(U_i)$ where the $U_i$ are uniform on $[0,1]$. It turns out that if $F$ satisfies \eqref{def}, then its inverse can be written as $F^{-1}(u) = (1-u)^{-1/s}\ell(1/(1-u))$ -- this is a difficult result due to Karamata. Then, $\log F^{-1}(X_i)$ can be represented as 
-$$ s^{-1}\log 1/U_i + \log \ell(1/U_i).$$
-The first term is precisely an $\mathscr{E}(s)$ random variable, hence the analysis of the Pareto case holds. Then, we must show that the second term, when summed over $i=1, \dotsc, k$, does not contribute. This is again a consequence of slow variation. 
-@@
-
-Typically, $k_n $ could be $ \lfloor \ln n \rfloor$ or $\lfloor \sqrt{n}\rfloor$ or even $\lfloor (\log \log \log n)^2\rfloor$. That leaves many possible choices. In practice, instead of picking one such $k$, statisticians prefer plotting $\hat{s}_k$ for all the possible $k$ and observe the general shape of the plot of $k\mapsto \hat{s}_k$, which is called **Hill's plot**. Of course, Hill's theorem above says that most of the information on $s$ is contained in a small region at the beginning of the plot, a region where $k$ is small with respect to $n$ (ie $k/n \to 0$), but not too small (ie $k\to\infty$). It often happens that the Hill plot is almost constant on this small region, which can be seen for example in the second plot. 
-
-![](/posts/img/hill_plots.png)
-
-There's a whole science for reading Hill plots. 
-
-It turns out that the three datasets I created for this post are as follows: 
-- the first one is an exponential distribution with parameter $1$. It has a light tail. 
-- the second one is a Pareto distribution with index $s=0.5$. 
-- the third one is (the absolute of) a Cauchy distribution, therefore its index is $s=1$. 
+In general, estimating the heavy-tail index $s$ is a difficult task. I have a [note on this topic](/posts/heavy_tails_1/) where I describe the Hill estimator. 
 
 ## References
 
-- [Hill's estimator](https://projecteuclid.org/journals/annals-of-statistics/volume-3/issue-5/A-Simple-General-Approach-to-Inference-About-the-Tail-of/10.1214/aos/1176343247.full). Hill's PhD-grandfather was Wald.
 
 - The manual [Fundamentals of heavy tails](https://www.cambridge.org/core/books/fundamentals-of-heavy-tails/3B1A35A6E72551E50E4723A4785044EE) is simply the best book out there on heavy tails. 
 
 - The book [Fooled by Randomness](https://en.wikipedia.org/wiki/Fooled_by_Randomness), written by the unsufferable Nassim Nicholas Taleb, is a very good book on maths, stats, life, risk, finance, and randomness. As always with Taleb, shining pieces of wisdom are mixed with bad faith and purely idiotic stupidities -- such books are the best books.  
+
+- [This paper by M. Newman](https://arxiv.org/pdf/cond-mat/0412004.pdf) is a gold mine for heavy-tail examples. 
+
+- There's a self-improvement book on [the 80/20 principle](https://www.goodreads.com/book/show/181206.The_80_20_Principle). Look at the cover: "the secret to achieving more with less", "the 80/20 principle is the cornerstone of results-based living", etc.  These "books" are the equivalent of astrology or healing with stones, but marketed for overachieving young graduates starting a consulting carreer at McKinsey. 
+
+
+![](/posts/img/paretoprinciple.png)
 
 --- 
 
@@ -161,4 +124,3 @@ It turns out that the three datasets I created for this post are as follows:
 
 [^2] Indeed, $\arctan(x) + \arctan(1/x) = \pi/2$ and when $t=1/x$ is close to zero $\arctan(t)\sim \pi/2 - 1/t$. 
 
-[^3] It is easy to see that if the $X_i$ come from a mixture of two Pareto distributions with different parameters $s_1, s_2$, then the censored MLE estimator will not converge towards the true tail index wich is $\min\{s_1, s_2\}$. 

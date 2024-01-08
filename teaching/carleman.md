@@ -1,8 +1,42 @@
-@def title = "Probabilités mathématiques"
+@def title = "Corrections supplémentaires (PR7)"
 @def hascode = true
 
+\tableofcontents
 
-## Théorème de Carleman
+## TD8 Exercice 11
+
+J'ai reçu plusieurs mails me demandant une correction de l'exercice 11 du TD8. La voici (vérifiez bien les détails, ils y a peut-être des coquilles). 
+
+Bon courage pour les révisions ! 🎅🎅🎅🎅
+
+a) L'intégrale fait 1 donc c'est une densité. Comme la densité est une fonction symétrique, l'espérance est nulle : $\mathbb{E}[X]=0$. Encore par symétrie, on a $\mathbb{E}[X^2] = 2\int_1^\infty x^2 / x^3 dx = +\infty$. Le TCL ne s'applique pas car $X$ n'est donc pas $L^2$. 
+
+b) Comme $X$ a une loi symétrique on a $\varphi(-t) = \varphi(t)$. De plus, on a toujours $\varphi(-t) = \overline{\varphi(t)}$. On en déduit que $\varphi(t) = \overline{\varphi(t)}$, c'est-à-dire que $\varphi$ est en fait une fonction à valeurs réelles, et donc $\varphi(t) = \mathrm{Re}\mathbb{E}[e^{itX}] = \mathbb{E}[\cos(tX)]$. Le cosinus et la densité de $X$ étant des fonctions symétriques, on peut écrire 
+$$ \varphi(t) = 2\int_1^\infty \frac{\cos(tx)}{x^3}dx.$$ 
+Le changement de variables $y = tx$ donne  
+$$ \varphi(t) = 2 t^2 \int_t^\infty \frac{\cos(y)}{y^3}dy $$
+On écrit artificiellement $\cos(y) = 1 - (1 - \cos(y))$. Comme $\int_t^\infty 1/y^3 dy = [-2/y^2]_t^\infty = 2t^2$, on en déduit que 
+$$\varphi(t) = \frac{2t^2}{2t^2} - 2t^2\int_t^\infty \frac{1 - \cos(y)}{y^3}dy $$
+ce qui est bien l'identité demandée. 
+
+c) Il s'agit essentiellement de montrer que la fonction $g(t)$ définie par $g(t) = \int_t^\infty (1 - \cos(y))y^{-3}dy $ vérifie $g(t)\sim -\ln(t)/2$ lorsque $t\to 0^+$ (ou plus précisément $g(t) = -\ln(t)/2 + o(\ln(t)))$. 
+
+**Idée** : On coupe l'intégrale en $a$ (à choisir plus tard), $g(t) = \int_t^a… + \int_a^\infty…$; le second terme est une constante donc on l'oublie. On va montrer que le premier terme est équivalent à $\ln(1/t)/2$.  Près de 0 on a $\cos(x) \sim 1 - x^2/2 + o(x^2)$, donc en zéro la fonction dans l'intégrale est $\sim 1/2x$ et l'intégrale devrait être comparable à l'intégrale de $ \int_t^a    1/2ydy = (\ln(a)-\ln(t))/2 \sim ln(1/t)/2$.
+
+**Je vous laisse essayer par vous-même de rendre rigoureuse cette idée (indice : bien choisir $a$ et bien quantifier le petit o dans l'équivalent du cos).** Envoyez moi un mail si vous avez des questions. 
+
+
+
+
+d) Comme les $X_i$ sont iid, $\varphi_{Z_n}(t) = \varphi(t/\sqrt{n\ln(n)})^n$. Lorsque $n\to \infty$, la question précédente montre que ceci est équivalent à $$\exp\left(n\ln\left(1 - \frac{t^2}{n\ln(n)}\ln\left(\frac{t}{\sqrt{n\ln(n)}}\right) + o(t^2 / n\ln(n))\right)\right)$$
+Il faut calculer cette limite. L'équivalent usuel du logarithme en zéro est suffisant: on voit que le terme dans l'exponentielle est équivalent à 
+\begin{align}- \frac{nt^2}{n\ln(n)}\ln(t) - \frac{nt^2(\ln(n) + \ln\ln(n))}{2n\ln(n)} + o(t^2/\ln(n))& = \frac{t\ln(t)}{\ln(n)} - \frac{t^2}{2} - \frac{t^2\ln\ln(n)}{2\ln(n)} + o(1) \\ &= o(1) - t^2/2 + o(1) + o(1) \\ &= -t^2/2 + o(1)\end{align}
+ce qui veut précisément dire que $\varphi_{Z_n}(t)\to e^{-t^2/2}$, et donc par le théorème de Paul Lévy que $Z_n$ converge en loi vers $\mathscr{N}(0,1)$. 
+
+e) La fonction $x \mapsto e^{-\theta x^2}$ est une fonction continue bornée. Par conséquent, la convergence en loi de la question précédente entraîne que $\mathbb{E}[e^{-\theta Z_n^2}] \to \mathbb{E}[e^{-\theta N^2}]$ où $N$ est une gaussienne standard. Le carré d'une gaussienne standard suit une loi du chi-deux avec paramètre 1 (qui est aussi une loi $\Gamma(1/2, 1/2)$). On a déjà vu la transformée de Laplace de ces lois: 
+$$ \mathbb{E}[e^{-\theta N^2}] = \left(\frac{1}{1 + 2\theta}\right)^{1/2}$$
+
+## Théorème de Carleman : TD7 exercice 12
 
 L'objectif est de montrer que si une suite de variables $X_n$ est uniformément sous-gaussienne, c'est-à-dire s'il existe $C,c$ telles que pour tout $x$, 
 $$\mathbb{P}(|X_n|>x)\leq Ce^{-cx^2}$$
@@ -10,14 +44,14 @@ alors la convergence en loi des $X_n$ et la convergence des moments sont équiva
 
 Ce théorème (sous une forme plus forte) est dû à [Torsten Carleman](https://en.wikipedia.org/wiki/Torsten_Carleman), mathématicien suédois peu fréquentable. 
 
-## Correction de l'exercice 12 du TD 7: le théorème de Carleman
+### Correction de l'exercice 12 du TD 7: le théorème de Carleman
 \newcommand{\P}{\mathbb{P}}
 \newcommand{\E}{\mathbb{E}}
 
 On rappelle que si $X$ est positive alors 
 \begin{equation}\label{1}\mathbb{E}X = \int_0^\infty \P(X>x)dx. \end{equation}
 
-## a)
+### a)
 
  En utilisant \eqref{1} on voit que 
 \begin{align}\E|X_n|^k &= \int_0^\infty \P(|X_n|^k>x)dx \\ 
@@ -39,7 +73,7 @@ Comme la partie positive et négative de $X_n$ sont également sous-gaussiennes 
 $$ \E X_n^k = \E [A_n^k - B_n^k]= \E[A_n^k] - \E[B_n^k] \to \E[A^k] - \E[B^k] = \E[X^k].  $$ 
 
 
-## b)
+### b)
 
 ### i) 
 

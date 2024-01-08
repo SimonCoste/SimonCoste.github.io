@@ -1,5 +1,5 @@
 +++
-titlepost = "Kesten's theorem on affine recursions"
+titlepost = "🏋🏼 Heavy tails III: Kesten's theorem "
 date = "November 2023"
 abstract = "The solutions of the distributional equation X = AX+B can have heavy tails: a sketch of proof, plus a presentation of the Renewal theorem. "
 +++
