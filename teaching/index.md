@@ -3,6 +3,11 @@
 
 @def tags = ["syntax", "code", "image"]
 
+
+# Statistiques fondamentales (MFA et MIDS, 2024)
+
+Tout est sur [le site du cours](statsfonda.github.io/site).
+
 # Calcul Stochastique (M2MO, 2023)
 
 TD du cours de Calcul Stochastique de Cyril Labbé. 
