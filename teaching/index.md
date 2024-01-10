@@ -6,7 +6,7 @@
 
 # Statistiques fondamentales (MFA et MIDS, 2024)
 
-Tout est sur [le site du cours](statsfonda.github.io/site).
+Tout est sur [le site du cours](https://statsfonda.github.io/site).
 
 # Calcul Stochastique (M2MO, 2023)
 
