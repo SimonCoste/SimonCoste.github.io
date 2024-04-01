@@ -16,7 +16,9 @@ abstract = "Html slides of some of my talks"
 
 ## Talk on Jarzynski's method for EBMs
 
-[Inria ARGO's team seminar](/assets/source.pdf)
+[Jarzyski's method](/assets/source.pdf)
+
+## Tutorial on generative models
 
 [BNP chair I](/assets/bnp.pdf),  [BNP chair II](/assets/bnp2.pdf)
 
