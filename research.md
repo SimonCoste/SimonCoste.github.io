@@ -95,7 +95,7 @@ In deep learning, score-based diffusion models recently achieved very impressive
 
 ### Training EBMs with Jarczynski reweighting
 
-[Arxiv link](https://arxiv.org/abs/2305.19414), joint work with Davide Carbone, Mengjian Hua and [Eric Vanden-Eijnden](https://wp.nyu.edu/courantinstituteofmathematicalsciences-eve2/)
+[Arxiv link](https://arxiv.org/abs/2305.19414), joint work with Davide Carbone, Mengjian Hua and [Eric Vanden-Eijnden](https://wp.nyu.edu/courantinstituteofmathematicalsciences-eve2/), Neurips 23
 
 Energy-based models (EBMs) are generative models inspired by statistical physics. Their performance is measured by the cross-entropy (CE) of the model distribution relative to the data distribution. Using the CE as the objective for training is challenging because the computation of its gradient wrt the model parameters requires sampling the model distribution. We show how results for nonequilibrium thermodynamics based on Jarzynski equality can be used to perform this computation efficiently and avoid the uncontrolled approximations made using the standard contrastive divergence algorithm. 
 
