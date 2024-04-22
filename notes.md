@@ -73,6 +73,7 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 ## Misc
 
+{{post papers}}
 
 {{post tips}}
 
