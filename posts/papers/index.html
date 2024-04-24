@@ -21,7 +21,7 @@
 </style>
 <link rel="icon" href="/assets/lichen.png">
 
-   <title>Applied Mathematics Gems</title> 
+   <title>Maths & ML Gems</title> 
 
 </head>
 <body>
@@ -43,7 +43,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: April 22, 2024. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: April 24, 2024. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 
@@ -58,16 +58,19 @@
 
 
 <div class="franklin-content">
-   <h1 class="page-title"> Applied Mathematics Gems </h1> 
+   <h1 class="page-title"> Maths & ML Gems </h1> 
    <span class="page-date"> 2024 </span> 
 </div>
 <div class="franklin-content">
+<p>This is a list of wonderful papers in machine learning, reflecting my own tastes and interests. </p>
 <ul>
 <li><p><a href="http://mlsp.cs.cmu.edu/courses/fall2010/class14/lloyd.pdf">Least Squares Quantization in PCM</a> by Stuart P Lloyd &#40;1982 but he got the method twenty years earlier&#41;. Definition of Lloyd&#39;s algorithm for k-means clustering. </p>
 </li>
 <li><p><a href="http://www.stat.yale.edu/~hz68/619/Stein-1961.pdf">The James-Stein paradox in estimation</a> by Jamest and Stein, 1961</p>
 </li>
 <li><p><a href="https://link.springer.com/article/10.1007/BF02291478">Generalized Procrustes analysis</a> by Gower &#40;1975&#41;</p>
+</li>
+<li><p><a href="https://link.springer.com/article/10.1007/BF02551274">Universal approximation theorem</a> by Cybenko &#40;1989&#41;</p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/math/0409186.pdf">Compressed sensing paper</a> by Candès, Romberg, and Tao &#40;2006&#41;.</p>
 </li>
@@ -83,13 +86,23 @@
 </li>
 <li><p><a href="https://arxiv.org/abs/math/0403022">The BBP transition</a> by Baik, Ben Arous, and Péché &#40;2004&#41;. </p>
 </li>
+<li><p><a href="https://proceedings.neurips.cc/paper/2001/file/801272ee79cfde7fa5960571fee36b9b-Paper.pdf">On spectral clustering</a> by Ng, Jordan and Weiss &#40;2001&#41;.</p>
+</li>
 <li><p><a href="https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf">Hyvärinen&#39;s Score Matching paper</a> in 2005. </p>
 </li>
 <li><p><a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">The AlexNet paper</a> by Krizhevsky, Sutskever, and Hinton &#40;2012&#41;.</p>
 </li>
+<li><p><a href="https://dl.acm.org/doi/pdf/10.1145/2184319.2184343">Exact Matrix Completion via Convex Optimization</a> by Candes and Recht &#40;2009&#41;. Matrix completion via optimization.</p>
+</li>
+<li><p><a href="https://arxiv.org/pdf/0901.3150.pdf">Matrix completion from a few entries</a> by Keshavan, Montanari and Oh &#40;2009&#41;. Matrix completion from SVD tresholding. </p>
+</li>
+<li><p><a href="https://www.cs.toronto.edu/~hinton/absps/jjnh91.pdf">Adaptive mixtures of experts</a> by Jacobs et al. Introduces the famous MoE method. </p>
+</li>
 <li><p><a href="https://proceedings.mlr.press/v37/rezende15.pdf">Normalizing flows</a> by Rezende and Mohamed &#40;2015&#41;.</p>
 </li>
 <li><p><a href="https://arxiv.org/abs/1412.6980">The ADAM optimizer</a> by Kingma and Ba &#40;2014&#41;.</p>
+</li>
+<li><p><a href="https://arxiv.org/pdf/1812.09902.pdf">Invariant and equivariant graph networks</a> by Maron et al. &#40;2019&#41;. They compute the dimension of invariant and equivariant linear layers and study GNN expressivity. </p>
 </li>
 <li><p><a href="https://arxiv.org/abs/1503.03585">The original paper introducing generative diffusion models</a>, by Sohl-Dickstein et al &#40;2015&#41;</p>
 </li>
@@ -97,7 +110,23 @@
 </li>
 <li><p><a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.pdf">The Stable Diffusion paper</a> by Rombach et al &#40;2021&#41;</p>
 </li>
+<li><p><a href="https://arxiv.org/abs/1806.07366">The Neural ODE paper</a> by Chen et al. &#40;2018&#41;</p>
+</li>
 <li><p><a href="https://arxiv.org/abs/1706.03762">Attention is all you need</a>, 2017. This paper changed the world.</p>
+</li>
+<li><p><a href="https://arxiv.org/abs/2210.02747">Flow matching</a> by Lipman et al, 2022</p>
+</li>
+<li><p><a href="https://arxiv.org/abs/1806.07572">The NTK paper</a> by Jacot, Gabriel and Hongler &#40;2018&#41;.</p>
+</li>
+<li><p><a href="https://www.jmlr.org/papers/volume22/20-410/20-410.pdf">Implicit regularization in deep networks</a> by Martin and Mahonney &#40;2021&#41;. On the training dynamics of the hessian spectrum of DNNs. </p>
+</li>
+<li><p><a href="https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf">Language models are few-shot learners</a> on LLM scaling laws</p>
+</li>
+<li><p><a href="https://arxiv.org/abs/2103.00065">Edge of Stability paper</a> by Cohen et al. </p>
+</li>
+<li><p><a href="https://arxiv.org/abs/2310.18988">A U-turn on double descent</a> by Curth et al. </p>
+</li>
+<li><p><a href="https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf">The Wasserstein GAN paper</a> by Arzovsky, Chintala and Bottou &#40;2017&#41;</p>
 </li>
 </ul>
 <!-- 
