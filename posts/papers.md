@@ -38,3 +38,9 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Edge of Stability paper](https://arxiv.org/abs/2103.00065) by Cohen et al. 
 - [A U-turn on double descent](https://arxiv.org/abs/2310.18988) by Curth et al. 
 - [The Wasserstein GAN paper](https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf) by Arzovsky, Chintala and Bottou (2017)
+- [Deep learning for symbolic mathematics](https://arxiv.org/pdf/1912.01412.pdf) by Lample and Charton (2019)
+- [The Convmixer paper](https://arxiv.org/abs/2201.09792)
+- [Error in high-dimensional GLMs](https://www.pnas.org/doi/full/10.1073/pnas.1802705116?doi=10.1073/pnas.1802705116) by Barbier et al. (2018)
+- [Spectral algorithms for clustering](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.108.188701) by Nadakuditi and Newman, from an RMT perspective
+- [Spectral redemption in clustering sparse networks](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=gkCjy_UAAAAJ&citation_for_view=gkCjy_UAAAAJ:O3NaXMp0MMsC)
+- [An image is worth 16x16 words](https://arxiv.org/abs/2010.11929), the Vision Transformer paper by Dosovitskiy et al. (2020)
