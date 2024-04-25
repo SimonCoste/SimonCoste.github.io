@@ -33,14 +33,20 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Attention is all you need](https://arxiv.org/abs/1706.03762), 2017. This paper changed the world.
 - [Flow matching](https://arxiv.org/abs/2210.02747) by Lipman et al, 2022
 - [The NTK paper](https://arxiv.org/abs/1806.07572) by Jacot, Gabriel and Hongler (2018).
+- [The data-driven Schrödinger bridge](https://onlinelibrary.wiley.com/doi/pdf/10.1002/cpa.21975) by Pavon, Tabak and Trigila (2021)
+- [Density estimation by dual ascent of the log-likelihood](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=0XfFckgAAAAJ&citation_for_view=0XfFckgAAAAJ:L8Ckcad2t8MC) by Tabak and Vanden-Eijnden (2010), first definition of coupling layers for normalizing flows. 
 - [Implicit regularization in deep networks](https://www.jmlr.org/papers/volume22/20-410/20-410.pdf) by Martin and Mahonney (2021). On the training dynamics of the hessian spectrum of DNNs. 
 - [Language models are few-shot learners](https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf) on LLM scaling laws
 - [Edge of Stability paper](https://arxiv.org/abs/2103.00065) by Cohen et al. 
 - [A U-turn on double descent](https://arxiv.org/abs/2310.18988) by Curth et al. 
 - [The Wasserstein GAN paper](https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf) by Arzovsky, Chintala and Bottou (2017)
 - [Deep learning for symbolic mathematics](https://arxiv.org/pdf/1912.01412.pdf) by Lample and Charton (2019)
+- [Emergence of scaling in random networks](https://arxiv.org/pdf/cond-mat/9910332), the original paper by Barabasi and Albert (1999)
 - [The Convmixer paper](https://arxiv.org/abs/2201.09792)
 - [Error in high-dimensional GLMs](https://www.pnas.org/doi/full/10.1073/pnas.1802705116?doi=10.1073/pnas.1802705116) by Barbier et al. (2018)
 - [Spectral algorithms for clustering](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.108.188701) by Nadakuditi and Newman, from an RMT perspective
+  
 - [Spectral redemption in clustering sparse networks](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=gkCjy_UAAAAJ&citation_for_view=gkCjy_UAAAAJ:O3NaXMp0MMsC)
 - [An image is worth 16x16 words](https://arxiv.org/abs/2010.11929), the Vision Transformer paper by Dosovitskiy et al. (2020)
+- [On Estimation of a Probability Density Function and Mode](https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-33/issue-3/On-Estimation-of-a-Probability-Density-Function-and-Mode/10.1214/aoms/1177704472.full), the famous kernel density estimation paper by Parzen (1962)
+- [Power laws, Pareto distributions and Zipf’s law](https://arxiv.org/pdf/cond-mat/0412004.pdf), the survey by Newman on heavy-tails
