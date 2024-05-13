@@ -61,6 +61,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post karhunen}}
 
+{{post gaussian_comp}}
+
 ## Nice pictures
 
 
