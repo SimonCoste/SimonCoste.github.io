@@ -18,9 +18,9 @@ abstract = "Html slides of some of my talks"
 
 [Jarzyski's method](/assets/source.pdf)
 
-## Tutorial on generative models
+## Tutorial on generative models at Politecnico Torino
 
-[BNP chair I](/assets/bnp.pdf),  [BNP chair II](/assets/bnp2.pdf)
+[Session I](/assets/source.pdf),  [Session II](/assets/source.pdf) (not updated yet)
 
 
 

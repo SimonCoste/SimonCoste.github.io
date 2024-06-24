@@ -50,3 +50,4 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [An image is worth 16x16 words](https://arxiv.org/abs/2010.11929), the Vision Transformer paper by Dosovitskiy et al. (2020)
 - [On Estimation of a Probability Density Function and Mode](https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-33/issue-3/On-Estimation-of-a-Probability-Density-Function-and-Mode/10.1214/aoms/1177704472.full), the famous kernel density estimation paper by Parzen (1962)
 - [Power laws, Pareto distributions and Zipf’s law](https://arxiv.org/pdf/cond-mat/0412004.pdf), the survey by Newman on heavy-tails
+- [Best subset or Lasso](https://www.stat.cmu.edu/~ryantibs/papers/bestsubset.pdf), by Hastie, Tibshirani and Friedman (2017)
