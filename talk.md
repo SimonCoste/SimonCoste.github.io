@@ -20,7 +20,7 @@ abstract = "Html slides of some of my talks"
 
 ## Tutorial on generative models at Politecnico Torino
 
-[Session I](/assets/source.pdf),  [Session II](/assets/source.pdf) (not updated yet)
+[Session I](/assets/source.pdf),  [Session II](/assets/dsm.pdf)
 
 
 
