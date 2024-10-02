@@ -114,6 +114,8 @@ This last way is useful for passing functions as argument of other functions, wi
 map(x->x^2, array)
 ```
 
+On the many ways to define functions in Julia, have a look at [this list by ZJ Dai](https://medium.com/@evalparse/there-are-so-many-ways-to-define-a-function-sort-of-in-julia-7821e49373cd) and [this discourse thread](https://discourse.julialang.org/t/all-ways-to-define-functions-in-julia/45816/16).
+
 
 ### Feeding things to structs
 
