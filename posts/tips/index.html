@@ -44,7 +44,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: September 24, 2024. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: October 02, 2024. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 
@@ -132,6 +132,7 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">â€
 <pre><code class="julia hljs">x -&gt; x^<span class="hljs-number">2</span></code></pre>
 <p>This last way is useful for passing functions as argument of other functions, without hassling to give them a name. Typically, if you want to apply a function to every element in an array, you can use </p>
 <pre><code class="julia hljs">map(x-&gt;x^<span class="hljs-number">2</span>, array)</code></pre>
+<p>On the many ways to define functions in Julia, have a look at <a href="https://medium.com/@evalparse/there-are-so-many-ways-to-define-a-function-sort-of-in-julia-7821e49373cd">this list by ZJ Dai</a> and <a href="https://discourse.julialang.org/t/all-ways-to-define-functions-in-julia/45816/16">this discourse thread</a>.</p>
 <h3 id="feeding_things_to_structs"><a href="#feeding_things_to_structs" class="header-anchor">Feeding things to structs</a></h3>
 <p>Despite being essentially functional, Julia allows some object-oriented-style code. A very useful tip is that if you defined a custom <code>Struct</code>, you might want to call it like a function â€“- just as in Python, you can override the <code>self.__call__&#40;&#41;</code> method for your objects. Say you have a struct, </p>
 <pre><code class="julia hljs"><span class="hljs-keyword">struct</span> Thing
