@@ -40,11 +40,13 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Spline smoothing is almost kernel smoothing](https://sites.stat.washington.edu/courses/stat527/s14/readings/Silverman_Annals_1984.pdf), a striking paper by Silverman (1984), and [its generalization](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8611353) by Ong, Milanfar and Getreuer (2019). Global optimization problems (such as interpolation) can be approximated by local operations (kernel smoothing).
   
 ## Deep Learning techniques and architectures
-- [The AlexNet paper](https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) by Krizhevsky, Sutskever, and Hinton (2012).
-- [Normalizing flows](https://proceedings.mlr.press/v37/rezende15.pdf) by Rezende and Mohamed (2015). They're not so popular now, but the paper is really a gem. 
+
 - [The ADAM optimizer](https://arxiv.org/abs/1412.6980) by Kingma and Ba (2014).
 - [The BatchNorm paper](https://arxiv.org/abs/1502.03167) by Ioffe and Szegedy (2015).
 - [The LayerNorm paper](https://arxiv.org/pdf/1607.06450) by Ba et al. (2016).
+- [The Dropout paper](https://jmlr.org/papers/volume15/srivastava14a/srivastava14a.pdf) by Srivastava et al. (2014).
+- [The AlexNet paper](https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) by Krizhevsky, Sutskever, and Hinton (2012).
+- [Normalizing flows](https://proceedings.mlr.press/v37/rezende15.pdf) by Rezende and Mohamed (2015). They're not so popular now, but the paper is really a gem. 
 - [Invariant and equivariant graph networks](https://arxiv.org/pdf/1812.09902.pdf) by Maron et al. (2019). They compute the dimension of invariant and equivariant linear layers and study GNN expressivity. 
 - [The original paper introducing generative diffusion models](https://arxiv.org/abs/1503.03585), by Sohl-Dickstein et al (2015)
 - [The second paper of diffusions](https://arxiv.org/abs/2011.13456) by Song et al (2020)
@@ -55,12 +57,12 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [The data-driven Schrödinger bridge](https://onlinelibrary.wiley.com/doi/pdf/10.1002/cpa.21975) by Pavon, Tabak and Trigila (2021)
 - [Language models are few-shot learners](https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf) on LLM scaling laws
 - [The Wasserstein GAN paper](https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf) by Arzovsky, Chintala and Bottou (2017)
+- [YOLO](https://arxiv.org/abs/1506.02640), now at its 11th version!
 - [Deep learning for symbolic mathematics](https://arxiv.org/pdf/1912.01412.pdf) by Lample and Charton (2019)
 -  [The Convmixer paper](https://arxiv.org/abs/2201.09792): fitting a big convolutional network in a tweet.
 -  [An image is worth 16x16 words](https://arxiv.org/abs/2010.11929), the original Vision Transformer paper by Dosovitskiy et al. (2020). The paper that started the revolution of transformers in computer vision.
 - [Image Segmentation as rendering](https://arxiv.org/pdf/1912.08193)
 - [Per-Pixel Classification is Not All You Need for Semantic Segmentation](https://arxiv.org/pdf/2107.06278)
-- [YOLO](https://arxiv.org/abs/1506.02640), now at its 10th version [YOLOv10](https://arxiv.org/pdf/2405.14458)
 - [Segment Anything](https://arxiv.org/pdf/2304.02643), the original paper on segmentation by Kirillov et al. (2023) which really pushed the field forward.
 
 
