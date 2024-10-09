@@ -25,6 +25,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Adaptive mixtures of experts](https://www.cs.toronto.edu/~hinton/absps/jjnh91.pdf) by Jacobs et al. Introduces the famous MoE method. 
 - [Normalizing flows](https://proceedings.mlr.press/v37/rezende15.pdf) by Rezende and Mohamed (2015). They're not so popular now, but the paper is really a gem. 
 - [The ADAM optimizer](https://arxiv.org/abs/1412.6980) by Kingma and Ba (2014).
+- [The LayerNorm paper](https://arxiv.org/pdf/1607.06450) by Ba et al. (2016).
 - [Invariant and equivariant graph networks](https://arxiv.org/pdf/1812.09902.pdf) by Maron et al. (2019). They compute the dimension of invariant and equivariant linear layers and study GNN expressivity. 
 - [The original paper introducing generative diffusion models](https://arxiv.org/abs/1503.03585), by Sohl-Dickstein et al (2015)
 - [The second paper of diffusions](https://arxiv.org/abs/2011.13456) by Song et al (2020)
