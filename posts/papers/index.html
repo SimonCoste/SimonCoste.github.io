@@ -63,6 +63,7 @@
 </div>
 <div class="franklin-content">
 <p>This is a list of wonderful papers in machine learning, reflecting my own tastes and interests. </p>
+<h2 id="theoretical_statsmldl"><a href="#theoretical_statsmldl" class="header-anchor">Theoretical Stats/ML/DL</a></h2>
 <ul>
 <li><p><a href="http://mlsp.cs.cmu.edu/courses/fall2010/class14/lloyd.pdf">Least Squares Quantization in PCM</a> by Stuart P Lloyd &#40;1982 but he got the method twenty years earlier&#41;. Definition of Lloyd&#39;s algorithm for k-means clustering. </p>
 </li>
@@ -90,17 +91,50 @@
 </li>
 <li><p><a href="https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf">Hyvärinen&#39;s Score Matching paper</a> in 2005. </p>
 </li>
-<li><p><a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">The AlexNet paper</a> by Krizhevsky, Sutskever, and Hinton &#40;2012&#41;.</p>
-</li>
 <li><p><a href="https://dl.acm.org/doi/pdf/10.1145/2184319.2184343">Exact Matrix Completion via Convex Optimization</a> by Candes and Recht &#40;2009&#41;. Matrix completion via optimization.</p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/0901.3150.pdf">Matrix completion from a few entries</a> by Keshavan, Montanari and Oh &#40;2009&#41;. Matrix completion from SVD tresholding is &#40;was ?&#41; the go-to method for sparse matric completion. </p>
 </li>
 <li><p><a href="https://www.cs.toronto.edu/~hinton/absps/jjnh91.pdf">Adaptive mixtures of experts</a> by Jacobs et al. Introduces the famous MoE method. </p>
 </li>
+<li><p><a href="https://arxiv.org/abs/1806.07572">The NTK paper</a> by Jacot, Gabriel and Hongler &#40;2018&#41;.</p>
+</li>
+<li><p><a href="https://scholar.google.com/citations?view_op&#61;view_citation&amp;hl&#61;en&amp;user&#61;0XfFckgAAAAJ&amp;citation_for_view&#61;0XfFckgAAAAJ:L8Ckcad2t8MC">Density estimation by dual ascent of the log-likelihood</a> by Tabak and Vanden-Eijnden &#40;2010&#41;, first definition of coupling layers for normalizing flows. </p>
+</li>
+<li><p><a href="https://www.jmlr.org/papers/volume22/20-410/20-410.pdf">Implicit regularization in deep networks</a> by Martin and Mahonney &#40;2021&#41;. On the training dynamics of the hessian spectrum of DNNs. </p>
+</li>
+<li><p><a href="https://arxiv.org/abs/2103.00065">Edge of Stability paper</a> by Cohen et al. </p>
+</li>
+<li><p><a href="https://arxiv.org/abs/2310.18988">A U-turn on double descent</a> by Curth et al. </p>
+</li>
+<li><p><a href="https://arxiv.org/pdf/cond-mat/9910332">Emergence of scaling in random networks</a>, the original paper by Barabasi and Albert &#40;1999&#41;</p>
+</li>
+<li><p><a href="https://www.pnas.org/doi/full/10.1073/pnas.1802705116?doi&#61;10.1073/pnas.1802705116">Error in high-dimensional GLMs</a> by Barbier et al. &#40;2018&#41;</p>
+</li>
+<li><p><a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.108.188701">Spectral algorithms for clustering</a> by Nadakuditi and Newman, .from an RMT perspective</p>
+</li>
+<li><p><a href="https://www.pnas.org/doi/pdf/10.1073/pnas.1312486110">Spectral redemption in clustering sparse networks</a> by Krzkala et al. &#40;2013&#41;: classical versions of spectral clustering are failing for sparse graphs, but the authors show that a simple modification of the Laplacian matrix can lead to a successful clustering.</p>
+</li>
+<li><p><a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-33/issue-3/On-Estimation-of-a-Probability-Density-Function-and-Mode/10.1214/aoms/1177704472.full">On Estimation of a Probability Density Function and Mode</a>, the famous kernel density estimation paper by Parzen &#40;1962&#41;</p>
+</li>
+<li><p><a href="https://arxiv.org/pdf/cond-mat/0412004.pdf">Power laws, Pareto distributions and Zipf’s law</a>, the survey by Newman on heavy-tails</p>
+</li>
+<li><p><a href="https://www.stat.cmu.edu/~ryantibs/papers/bestsubset.pdf">Best subset or Lasso</a>, by Hastie, Tibshirani and Friedman &#40;2017&#41;</p>
+</li>
+<li><p><a href="https://tlakoba.w3.uvm.edu/AppliedUGMath/auxpaper_Reinsch_1967.pdf">Smoothing by spline functions</a>, one of the seminal papers on spline smoothing, by Reinsh &#40;1967&#41;</p>
+</li>
+<li><p><a href="https://sites.stat.washington.edu/courses/stat527/s14/readings/Silverman_Annals_1984.pdf">Spline smoothing is almost kernel smoothing</a>, a striking paper by Silverman &#40;1984&#41;, and <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber&#61;8611353">its generalization</a> by Ong, Milanfar and Getreuer &#40;2019&#41;. Global optimization problems &#40;such as interpolation&#41; can be approximated by local operations &#40;kernel smoothing&#41;.</p>
+</li>
+</ul>
+<h2 id="deep_learning_techniques_and_architectures"><a href="#deep_learning_techniques_and_architectures" class="header-anchor">Deep Learning techniques and architectures</a></h2>
+<ul>
+<li><p><a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">The AlexNet paper</a> by Krizhevsky, Sutskever, and Hinton &#40;2012&#41;.</p>
+</li>
 <li><p><a href="https://proceedings.mlr.press/v37/rezende15.pdf">Normalizing flows</a> by Rezende and Mohamed &#40;2015&#41;. They&#39;re not so popular now, but the paper is really a gem. </p>
 </li>
 <li><p><a href="https://arxiv.org/abs/1412.6980">The ADAM optimizer</a> by Kingma and Ba &#40;2014&#41;.</p>
+</li>
+<li><p><a href="https://arxiv.org/abs/1502.03167">The BatchNorm paper</a> by Ioffe and Szegedy &#40;2015&#41;.</p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/1607.06450">The LayerNorm paper</a> by Ba et al. &#40;2016&#41;.</p>
 </li>
@@ -118,45 +152,17 @@
 </li>
 <li><p><a href="https://arxiv.org/abs/2210.02747">Flow matching</a> by Lipman et al, 2022, the most elegant generalization of diffusion models. </p>
 </li>
-<li><p><a href="https://arxiv.org/abs/1806.07572">The NTK paper</a> by Jacot, Gabriel and Hongler &#40;2018&#41;.</p>
-</li>
 <li><p><a href="https://onlinelibrary.wiley.com/doi/pdf/10.1002/cpa.21975">The data-driven Schrödinger bridge</a> by Pavon, Tabak and Trigila &#40;2021&#41;</p>
 </li>
-<li><p><a href="https://scholar.google.com/citations?view_op&#61;view_citation&amp;hl&#61;en&amp;user&#61;0XfFckgAAAAJ&amp;citation_for_view&#61;0XfFckgAAAAJ:L8Ckcad2t8MC">Density estimation by dual ascent of the log-likelihood</a> by Tabak and Vanden-Eijnden &#40;2010&#41;, first definition of coupling layers for normalizing flows. </p>
-</li>
-<li><p><a href="https://www.jmlr.org/papers/volume22/20-410/20-410.pdf">Implicit regularization in deep networks</a> by Martin and Mahonney &#40;2021&#41;. On the training dynamics of the hessian spectrum of DNNs. </p>
-</li>
 <li><p><a href="https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf">Language models are few-shot learners</a> on LLM scaling laws</p>
-</li>
-<li><p><a href="https://arxiv.org/abs/2103.00065">Edge of Stability paper</a> by Cohen et al. </p>
-</li>
-<li><p><a href="https://arxiv.org/abs/2310.18988">A U-turn on double descent</a> by Curth et al. </p>
 </li>
 <li><p><a href="https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf">The Wasserstein GAN paper</a> by Arzovsky, Chintala and Bottou &#40;2017&#41;</p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/1912.01412.pdf">Deep learning for symbolic mathematics</a> by Lample and Charton &#40;2019&#41;</p>
 </li>
-<li><p><a href="https://arxiv.org/pdf/cond-mat/9910332">Emergence of scaling in random networks</a>, the original paper by Barabasi and Albert &#40;1999&#41;</p>
-</li>
 <li><p><a href="https://arxiv.org/abs/2201.09792">The Convmixer paper</a>: fitting a big convolutional network in a tweet.</p>
 </li>
-<li><p><a href="https://www.pnas.org/doi/full/10.1073/pnas.1802705116?doi&#61;10.1073/pnas.1802705116">Error in high-dimensional GLMs</a> by Barbier et al. &#40;2018&#41;</p>
-</li>
-<li><p><a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.108.188701">Spectral algorithms for clustering</a> by Nadakuditi and Newman, .from an RMT perspective</p>
-</li>
-<li><p><a href="https://www.pnas.org/doi/pdf/10.1073/pnas.1312486110">Spectral redemption in clustering sparse networks</a> by Krzkala et al. &#40;2013&#41;: classical versions of spectral clustering are failing for sparse graphs, but the authors show that a simple modification of the Laplacian matrix can lead to a successful clustering.</p>
-</li>
 <li><p><a href="https://arxiv.org/abs/2010.11929">An image is worth 16x16 words</a>, the original Vision Transformer paper by Dosovitskiy et al. &#40;2020&#41;. The paper that started the revolution of transformers in computer vision.</p>
-</li>
-<li><p><a href="https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-33/issue-3/On-Estimation-of-a-Probability-Density-Function-and-Mode/10.1214/aoms/1177704472.full">On Estimation of a Probability Density Function and Mode</a>, the famous kernel density estimation paper by Parzen &#40;1962&#41;</p>
-</li>
-<li><p><a href="https://arxiv.org/pdf/cond-mat/0412004.pdf">Power laws, Pareto distributions and Zipf’s law</a>, the survey by Newman on heavy-tails</p>
-</li>
-<li><p><a href="https://www.stat.cmu.edu/~ryantibs/papers/bestsubset.pdf">Best subset or Lasso</a>, by Hastie, Tibshirani and Friedman &#40;2017&#41;</p>
-</li>
-<li><p><a href="https://tlakoba.w3.uvm.edu/AppliedUGMath/auxpaper_Reinsch_1967.pdf">Smoothing by spline functions</a>, one of the seminal papers on spline smoothing, by Reinsh &#40;1967&#41;</p>
-</li>
-<li><p><a href="https://sites.stat.washington.edu/courses/stat527/s14/readings/Silverman_Annals_1984.pdf">Spline smoothing is almost kernel smoothing</a>, a striking paper by Silverman &#40;1984&#41;, and <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber&#61;8611353">its generalization</a> by Ong, Milanfar and Getreuer &#40;2019&#41;. Global optimization problems &#40;such as interpolation&#41; can be approximated by local operations &#40;kernel smoothing&#41;.</p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/1912.08193">Image Segmentation as rendering</a></p>
 </li>
