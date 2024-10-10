@@ -54,6 +54,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [The Stable Diffusion paper](https://openaccess.thecvf.com/content/CVPR2022/papers/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.pdf) by Rombach et al (2021)
 - [The Neural ODE paper](https://arxiv.org/abs/1806.07366) by Chen et al. (2018)
 - [Attention is all you need](https://arxiv.org/abs/1706.03762), 2017. This paper changed the world.
+- [https://arxiv.org/abs/2104.09864](Rotary Positional Encoding), a killer method. 
 - [Flow matching](https://arxiv.org/abs/2210.02747) by Lipman et al, 2022, the most elegant generalization of diffusion models. 
 - [The data-driven Schrödinger bridge](https://onlinelibrary.wiley.com/doi/pdf/10.1002/cpa.21975) by Pavon, Tabak and Trigila (2021)
 - [Language models are few-shot learners](https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf) on LLM scaling laws
