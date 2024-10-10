@@ -38,6 +38,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Best subset or Lasso](https://www.stat.cmu.edu/~ryantibs/papers/bestsubset.pdf), by Hastie, Tibshirani and Friedman (2017)
 - [Smoothing by spline functions](https://tlakoba.w3.uvm.edu/AppliedUGMath/auxpaper_Reinsch_1967.pdf), one of the seminal papers on spline smoothing, by Reinsh (1967)
 - [Spline smoothing is almost kernel smoothing](https://sites.stat.washington.edu/courses/stat527/s14/readings/Silverman_Annals_1984.pdf), a striking paper by Silverman (1984), and [its generalization](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8611353) by Ong, Milanfar and Getreuer (2019). Global optimization problems (such as interpolation) can be approximated by local operations (kernel smoothing).
+- [Tweediess formula and selection bias](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf), a landmark paper by Bradley Efron. 
   
 ## Deep Learning techniques and architectures
 
