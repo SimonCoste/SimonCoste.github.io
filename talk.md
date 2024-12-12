@@ -22,6 +22,10 @@ abstract = "Html slides of some of my talks"
 
 [Session I](/assets/source.pdf),  [Session II](/assets/dsm.pdf)
 
+## Présentation de STF8 (2025)
+
+[STF8](/talks/stf8/)
+
 
 
 
