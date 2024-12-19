@@ -6,10 +6,15 @@ abstract = "My personal curated list of old and recent outstanding papers in app
 
 This is a list of wonderful papers in machine learning, reflecting my own tastes and interests. 
 
+## Numerical Maths
+
+- [Compact finite difference schemes](https://acoustics.web.illinois.edu/pdfs/lele-1992.pdf) by Lele (1992). The paper that introduced the concept of compact finite difference schemes. 
+- [Generalized Procrustes analysis](https://link.springer.com/article/10.1007/BF02291478) by Gower (1975)
+
+
 ## Theoretical Stats/ML/DL
 - [Least Squares Quantization in PCM](http://mlsp.cs.cmu.edu/courses/fall2010/class14/lloyd.pdf) by Stuart P Lloyd (1982 but he got the method twenty years earlier). Definition of Lloyd's algorithm for k-means clustering. 
 - [The James-Stein paradox in estimation](http://www.stat.yale.edu/~hz68/619/Stein-1961.pdf) by Jamest and Stein, 1961. Sometimes, Maximum-likelihood is not the best estimator, even in a L2 world. 
-- [Generalized Procrustes analysis](https://link.springer.com/article/10.1007/BF02291478) by Gower (1975)
 - [Universal approximation theorem](https://link.springer.com/article/10.1007/BF02551274) by Cybenko (1989)
 - [Compressed sensing paper](https://arxiv.org/pdf/math/0409186.pdf) by Candès, Romberg, and Tao (2006).
 - [Scale Mixtures of Gaussians and the Stastistics of Natural Images](https://proceedings.neurips.cc/paper_files/paper/1999/file/6a5dfac4be1502501489fc0f5a24b667-Paper.pdf) by Wainwright and Simoncelli (1999).
@@ -58,17 +63,18 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [The Stable Diffusion paper](https://openaccess.thecvf.com/content/CVPR2022/papers/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.pdf) by Rombach et al (2021)
 - [The Neural ODE paper](https://arxiv.org/abs/1806.07366) by Chen et al. (2018)
 - [Attention is all you need](https://arxiv.org/abs/1706.03762), 2017. This paper changed the world.
-- [https://arxiv.org/abs/2104.09864](Rotary Positional Encoding), a killer method. 
-- [Flow matching](https://arxiv.org/abs/2210.02747) by Lipman et al, 2022, the most elegant generalization of diffusion models. 
+- [https://arxiv.org/abs/2104.09864](Rotary Positional Encoding): previously, positional encoding did not retain *relative position* information. By working in the complex plane with rotations, this is no longer a problem. This solution is now practically implemented everywhere.  
+- [Flow matching](https://arxiv.org/abs/2210.02747) by Lipman et al, 2022, the most elegant generalization of diffusion models. Flow matching models are now SOTA and it is clear that diffusions will, at some point, disappear. 
 - [The data-driven Schrödinger bridge](https://onlinelibrary.wiley.com/doi/pdf/10.1002/cpa.21975) by Pavon, Tabak and Trigila (2021)
-- [Language models are few-shot learners](https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf) on LLM scaling laws
+- [Language models are few-shot learners](https://proceedings.neurips.cc/paper_files/paper/2020/file/1457c0d6bfcb4967418bfb8ac142f64a-Paper.pdf) on LLM scaling laws.
 - [The Wasserstein GAN paper](https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf) by Arzovsky, Chintala and Bottou (2017)
 - [YOLO](https://arxiv.org/abs/1506.02640), now at its 11th version!
 - [Deep learning for symbolic mathematics](https://arxiv.org/pdf/1912.01412.pdf) by Lample and Charton (2019)
--  [The Convmixer paper](https://arxiv.org/abs/2201.09792): fitting a big convolutional network in a tweet.
+-  [The Convmixer paper](https://arxiv.org/abs/2201.09792): fitting a big convolutional network in a tweet. 
 -  [An image is worth 16x16 words](https://arxiv.org/abs/2010.11929), the original Vision Transformer paper by Dosovitskiy et al. (2020). The paper that started the revolution of transformers in computer vision.
+-  [ViTs need Registers](https://arxiv.org/pdf/2309.16588), by T. Darcet et al. A strikingly simple observation : ViT store some internal informations inside the tokens, because it needs to store them somewhere. Adding a small "memory register" (ie, additional tokens) solves it. A very nice scientific paper.  
 - [Image Segmentation as rendering](https://arxiv.org/pdf/1912.08193)
-- [Per-Pixel Classification is Not All You Need for Semantic Segmentation](https://arxiv.org/pdf/2107.06278)
+- [Per-Pixel Classification is Not All You Need for Semantic Segmentation](https://arxiv.org/pdf/2107.06278) : the paper that convinced me that segmentation is actually *really* hard. 
 - [Segment Anything](https://arxiv.org/pdf/2304.02643), the original paper on segmentation by Kirillov et al. (2023) which really pushed the field forward.
 
 
