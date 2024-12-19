@@ -73,6 +73,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 -  [The Convmixer paper](https://arxiv.org/abs/2201.09792): fitting a big convolutional network in a tweet. 
 -  [An image is worth 16x16 words](https://arxiv.org/abs/2010.11929), the original Vision Transformer paper by Dosovitskiy et al. (2020). The paper that started the revolution of transformers in computer vision.
 -  [ViTs need Registers](https://arxiv.org/pdf/2309.16588), by T. Darcet et al. A strikingly simple observation : ViT store some internal informations inside the tokens, because it needs to store them somewhere. Adding a small "memory register" (ie, additional tokens) solves it. A very nice scientific paper.  
+-  [The Dinov2](https://arxiv.org/pdf/2304.07193) paper from FAIR explains how they scaled a fully self-supervised feature extractor. That is, they learned the feature extractor (a ViT) using a dataset containing ONLY images: no labels, no text. The teacher/student setting is set up in a particularly smart way. 
 - [Image Segmentation as rendering](https://arxiv.org/pdf/1912.08193)
 - [Per-Pixel Classification is Not All You Need for Semantic Segmentation](https://arxiv.org/pdf/2107.06278) : the paper that convinced me that segmentation is actually *really* hard. 
 - [Segment Anything](https://arxiv.org/pdf/2304.02643), the original paper on segmentation by Kirillov et al. (2023) which really pushed the field forward.
