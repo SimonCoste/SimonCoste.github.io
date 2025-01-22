@@ -11,7 +11,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Compact finite difference schemes](https://acoustics.web.illinois.edu/pdfs/lele-1992.pdf) by Lele (1992). The paper that introduced the concept of compact finite difference schemes. 
 - [Generalized Procrustes analysis](https://link.springer.com/article/10.1007/BF02291478) by Gower (1975)
 - [Least Squares Quantization in PCM](http://mlsp.cs.cmu.edu/courses/fall2010/class14/lloyd.pdf) by Stuart P Lloyd (1982 but he got the method twenty years earlier). Definition of Lloyd's algorithm for k-means clustering. 
-
+- [Robbins-Monro](https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-22/issue-3/A-Stochastic-Approximation-Method/10.1214/aoms/1177729586.full), the original paper by Robbins and Monro (1951). The first paper on stochastic optimization.
 
 ## Theoretical Stats/ML/DL
 - [The James-Stein paradox in estimation](http://www.stat.yale.edu/~hz68/619/Stein-1961.pdf) by Jamest and Stein, 1961. Sometimes, Maximum-likelihood is not the best estimator, even in a L2 world. 
