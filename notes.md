@@ -5,6 +5,8 @@
 
 Those are mostly blog posts, notes, talk slides, nice pictures and various things about mathematics, statistics, CS and machine learning. 
 
+{{post papers}}
+
 ## Deep learning
 
 {{post diffusion}}
@@ -63,6 +65,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post gaussian_comp}}
 
+{{post rem}}
+
 ## Nice pictures
 
 
@@ -75,7 +79,6 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 ## Misc
 
-{{post papers}}
 
 {{post tips}}
 
