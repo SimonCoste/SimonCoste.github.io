@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
    <link rel="stylesheet" href="/libs/highlight/github.min.css">
    
   <link rel="stylesheet" href="/css/franklin.css">
@@ -43,7 +44,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: December 19, 2024. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: January 22, 2025. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 
@@ -138,8 +139,11 @@
 </li>
 <li><p><a href="https://leon.bottou.org/publications/pdf/nc-1992.pdf">Local Learning algorithms</a> by Bottou and Vapnik &#40;1992&#41;. The paper that introduced the concept of local learning algorithms.</p>
 </li>
+<li><p><a href="https://www2.math.uu.se/~thulin/mm/breiman.pdf">The two cultures of Stats</a></p>
+</li>
 </ul>
 <h2 id="modern_deep_learning_techniques_and_architectures"><a href="#modern_deep_learning_techniques_and_architectures" class="header-anchor">Modern Deep Learning techniques and architectures</a></h2>
+<h3 id="architectures_and_fundamentals"><a href="#architectures_and_fundamentals" class="header-anchor">Architectures and fundamentals</a></h3>
 <ul>
 <li><p><a href="https://arxiv.org/abs/1412.6980">The ADAM optimizer</a> by Kingma and Ba &#40;2014&#41;.</p>
 </li>
@@ -157,15 +161,13 @@
 </li>
 <li><p><a href="https://arxiv.org/abs/1503.03585">The original paper introducing generative diffusion models</a>, by Sohl-Dickstein et al &#40;2015&#41;</p>
 </li>
-<li><p><a href="https://arxiv.org/abs/2011.13456">The second paper of diffusions</a> by Song et al &#40;2020&#41;</p>
+<li><p><a href="https://arxiv.org/abs/2011.13456">The second paper of diffusions</a> by Song et al &#40;2020&#41;, where they notably detailed the SDE formulation. </p>
 </li>
 <li><p><a href="https://openaccess.thecvf.com/content/CVPR2022/papers/Rombach_High-Resolution_Image_Synthesis_With_Latent_Diffusion_Models_CVPR_2022_paper.pdf">The Stable Diffusion paper</a> by Rombach et al &#40;2021&#41;</p>
 </li>
 <li><p><a href="https://arxiv.org/abs/1806.07366">The Neural ODE paper</a> by Chen et al. &#40;2018&#41;</p>
 </li>
-<li><p><a href="https://arxiv.org/abs/1706.03762">Attention is all you need</a>, 2017. This paper changed the world.</p>
-</li>
-<li><p><a href="Rotary Positional Encoding">https://arxiv.org/abs/2104.09864</a>: previously, positional encoding did not retain <em>relative position</em> information. By working in the complex plane with rotations, this is no longer a problem. This solution is now practically implemented everywhere.  </p>
+<li><p><a href="https://arxiv.org/abs/1706.03762">Attention is all you need</a>, 2017. No comment.</p>
 </li>
 <li><p><a href="https://arxiv.org/abs/2210.02747">Flow matching</a> by Lipman et al, 2022, the most elegant generalization of diffusion models. Flow matching models are now SOTA and it is clear that diffusions will, at some point, disappear. </p>
 </li>
@@ -175,29 +177,43 @@
 </li>
 <li><p><a href="https://proceedings.mlr.press/v70/arjovsky17a/arjovsky17a.pdf">The Wasserstein GAN paper</a> by Arzovsky, Chintala and Bottou &#40;2017&#41;</p>
 </li>
-<li><p><a href="https://arxiv.org/abs/1506.02640">YOLO</a>, now at its 11th version&#33;</p>
+<li><p><a href="https://arxiv.org/abs/2201.09792">The Convmixer paper</a>: fitting a big convolutional network in a tweet. </p>
+</li>
+<li><p><a href="https://arxiv.org/abs/1506.02640">YOLO</a>, now at its 11th version and still improving&#33;</p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/1912.01412.pdf">Deep learning for symbolic mathematics</a> by Lample and Charton &#40;2019&#41;</p>
 </li>
-<li><p><a href="https://arxiv.org/abs/2201.09792">The Convmixer paper</a>: fitting a big convolutional network in a tweet. </p>
-</li>
 <li><p><a href="https://arxiv.org/abs/2010.11929">An image is worth 16x16 words</a>, the original Vision Transformer paper by Dosovitskiy et al. &#40;2020&#41;. The paper that started the revolution of transformers in computer vision.</p>
 </li>
-<li><p><a href="https://arxiv.org/pdf/2309.16588">ViTs need Registers</a>, by T. Darcet et al. A strikingly simple observation : ViT store some internal informations inside the tokens, because it needs to store them somewhere. Adding a small &quot;memory register&quot; &#40;ie, additional tokens&#41; solves it. A very nice scientific paper.  </p>
-</li>
 <li><p><a href="https://arxiv.org/pdf/2304.07193">The Dinov2</a> paper from FAIR explains how they scaled a fully self-supervised feature extractor. That is, they learned the feature extractor &#40;a ViT&#41; using a dataset containing ONLY images: no labels, no text. The teacher/student setting is set up in a particularly smart way. </p>
-</li>
-<li><p><a href="https://arxiv.org/pdf/1912.08193">Image Segmentation as rendering</a></p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/2107.06278">Per-Pixel Classification is Not All You Need for Semantic Segmentation</a> : the paper that convinced me that segmentation is actually <em>really</em> hard. </p>
 </li>
 <li><p><a href="https://arxiv.org/pdf/2304.02643">Segment Anything</a>, the original paper on segmentation by Kirillov et al. &#40;2023&#41; which really pushed the field forward.</p>
 </li>
 </ul>
+<h3 id="clever_tricks_and_techniques"><a href="#clever_tricks_and_techniques" class="header-anchor">Clever tricks and techniques</a></h3>
+<ul>
+<li><p><a href="https://arxiv.org/pdf/1912.08193">Image Segmentation as rendering</a></p>
+</li>
+<li><p><a href="https://arxiv.org/pdf/2309.16588">ViTs need Registers</a>, by T. Darcet et al. A strikingly simple observation : ViT store some internal informations inside the tokens, because it needs to store them somewhere. Adding a small &quot;memory register&quot; &#40;ie, additional tokens&#41; solves it. A very nice scientific paper.  </p>
+</li>
+<li><p><a href="https://papers.nips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html">Chain-of-Thought</a>, a landmark technique for having better at inference time. Partly responsible for the huge gap in reasonning quality of LLMs between 23 and 24.</p>
+</li>
+<li><p><a href="https://arxiv.org/abs/2104.09864">Rotary Positional Encoding</a>: previously, positional encoding did not retain <em>relative position</em> information. By working in the complex plane with rotations, this is no longer a problem. This solution is now practically implemented everywhere.  </p>
+</li>
+<li><p><a href="https://arxiv.org/pdf/2411.04282">LatRon</a>, the very recent Latent Reasonning paper : instead of asking a LLM to generate an answer <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> to a question <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>, you can fine-tune it to generate &quot;the&quot; question <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span></span></span></span> which, given to the LLM, maximizes the probability of answer <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> –- and it&#39;s often <em>not</em> the raw question <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> &#33; A very clever and simple trick. </p>
+</li>
+</ul>
 <!-- 
   Page footer is in the sidebar. 
  --></div><!-- CONTENT ENDS HERE -->
     </div>  <!-- div: content container -->
+    
+        
+
+
+
     
     
         
