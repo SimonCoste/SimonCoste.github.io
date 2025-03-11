@@ -11,6 +11,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post diffusion}}
 
+{{post flowmatching}}
+
 {{post doubledescent}}
 
 {{post invequiv}}

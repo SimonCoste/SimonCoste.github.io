@@ -25,7 +25,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [On spectral clustering](https://proceedings.neurips.cc/paper/2001/file/801272ee79cfde7fa5960571fee36b9b-Paper.pdf) by Ng, Jordan and Weiss (2001).
 - [Hyvärinen's Score Matching paper](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf) in 2005. 
 - [Exact Matrix Completion via Convex Optimization](https://dl.acm.org/doi/pdf/10.1145/2184319.2184343) by Candes and Recht (2009). Matrix completion via optimization.
-- [Matrix completion from a few entries](https://arxiv.org/pdf/0901.3150.pdf) by Keshavan, Montanari and Oh (2009). Matrix completion from SVD tresholding is (was ?) the go-to method for sparse matric completion. 
+- [Matrix completion from a few entries](https://arxiv.org/pdf/0901.3150.pdf) by Keshavan, Montanari and Oh (2009). Matrix completion from SVD tresholding is (was ?) the go-to method for sparse matrix completion. 
 - [Adaptive mixtures of experts](https://www.cs.toronto.edu/~hinton/absps/jjnh91.pdf) by Jacobs et al. Introduces the famous MoE method that was popularized recently by Mistral. 
 - [Emergence of scaling in random networks](https://arxiv.org/pdf/cond-mat/9910332), the original paper by Barabasi and Albert (1999)
 - [Error in high-dimensional GLMs](https://www.pnas.org/doi/full/10.1073/pnas.1802705116?doi=10.1073/pnas.1802705116) by Barbier et al. (2018)
@@ -41,6 +41,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Tweediess formula and selection bias](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf), a landmark paper by Bradley Efron. Tweedie's formula is key to many techniques in statistics, including diffusion-based generative models.  
 - [Local Learning algorithms](https://leon.bottou.org/publications/pdf/nc-1992.pdf) by Bottou and Vapnik (1992). The paper that introduced the concept of local learning algorithms.
 - [The two cultures of Stats](https://www2.math.uu.se/~thulin/mm/breiman.pdf)
+- [Why isn't everyone a Bayesian?](https://www2.stat.duke.edu/courses/Spring09/sta122/Readings/EfronWhyEveryone.pdf) by Efron (2013). It seems to me, as of 2025, that almost no one remains a Bayesian -- except academics living in the bubble of Bayesian statistics, of course. 
 
   
 ## Modern Deep Learning and AI
