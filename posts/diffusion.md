@@ -1,5 +1,5 @@
 +++
-titlepost = "Diffusion models"
+titlepost = "Flow models I: Diffusion models"
 date = "March 2023"
 abstract = "A small mathematical summary. "
 +++

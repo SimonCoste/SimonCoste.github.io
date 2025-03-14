@@ -1,5 +1,5 @@
 +++
-titlepost = "Flow matching"
+titlepost = "Flow models II: Flow Matching"
 date = "March 2025"
 abstract = "A small mathematical summary on flow matching and generator matching. "
 +++
@@ -52,15 +52,6 @@ $$ -\nabla \cdot \left[\int v_t(x \mid x_1)\frac{p_t(x \mid x_1)p_1(x_1)}{p_t(x)
 which is exactly $-\nabla \cdot (v_t p_t)(x)$, thus proving that the annealed flow $p_t$ satisfies the continuity equation with the velocity field $v_t$.
 @@
 
-## Examples of conditional flows
-
-The flow \eqref{toosimple} is a very simple example of a conditional flow: it is a straight line going from $X_0$ to $X_1$. We can still keep the linearity but modulate it using conditional flows like 
-$$ \sigma_t(x_1)x + \mu_t(x_1)$$
-where $\sigma_t(\cdot)$ is a scalar function satisfying $\sigma_0(x) = 1$ and $\mu_t$ is a vector function satisfying $\mu_1(x) = x$ and $\mu_0(x) = 0$. If everything here is time-differentiable, then \eqref{condvelo} immediately gives the conditional velocity field. We first need to inverse the flow : if $x = \sigma_t(x_1)x_0 + \mu_t(x_1)$ then $x_0 = (x - \mu_t(x_1)) / \sigma_t(x_1)$. Consequently, the conditional velocity field is
-
-$$v_t(x \mid x_1) = \frac{\dot{\sigma}_t(x_1)}{\sigma_t(x_1)}(x - \mu_t(x_1)) + \dot{\mu}_t(x_1).$$
-
-When $X_0$ is a standard Gaussian, then this $X_t$ has distribution $N(\mu_t(x_1), \sigma_t(x_1)^2 I_d)$, hence the name **conditional Gaussian flow**.
 
 ## Learning the flow 
 
@@ -103,13 +94,48 @@ Everything is now tractable. We can
 
 It is remarkable that when the conditional velocity field comes from a conditional flow as in \eqref{condvelo}, then the conditional flow matching loss \eqref{CFM} features the term 
 $$v_t(X_t \mid X_1) = \dot{\psi}_t(\psi_t^{-1}(X_t \mid X_1) \mid X_1) = \dot{\psi}_t(X_0 \mid X_1),$$
+and the (unconditional) velocity is 
+\begin{equation}\label{formula_uncond_velo}v_t(x) = \mathbb{E}[\dot{\psi}_t(X_0 \mid X_1) \mid X_t = x].\end{equation}
 the last identity coming from the fact that $X_t = \psi_t(X_0 \mid X_1)$. Hence, the loss becomes 
 $$L(\theta) = \mathbb{E}[|u^\theta_\tau(X_\tau) - \dot{\psi}_\tau(X_0 \mid X_1)|^2].$$
 
 
+
+
+## Examples of conditional flows
+
+### « Gaussian » flows
+
+The flow \eqref{toosimple} is a very simple example of a conditional flow: it is a straight line going from $X_0$ to $X_1$, often called the **rectified flow**. We can still keep the linearity but modulate it using conditional flows like 
+$$ \sigma_t(x_1)x + \mu_t(x_1)$$
+where $\sigma_t(\cdot)$ is a scalar function satisfying $\sigma_0(x) = 1$ and $\mu_t$ is a vector function satisfying $\mu_1(x) = x$ and $\mu_0(x) = 0$. If everything here is time-differentiable, then \eqref{condvelo} immediately gives the conditional velocity field. We first need to inverse the flow : if $x = \sigma_t(x_1)x_0 + \mu_t(x_1)$ then $x_0 = (x - \mu_t(x_1)) / \sigma_t(x_1)$. Consequently, the conditional velocity field is
+
+$$v_t(x \mid x_1) = \frac{\dot{\sigma}_t(x_1)}{\sigma_t(x_1)}(x - \mu_t(x_1)) + \dot{\mu}_t(x_1).$$
+
+When $X_0$ is a standard Gaussian, then this $X_t$ has distribution $N(\mu_t(x_1), \sigma_t(x_1)^2 I_d)$, hence the name **conditional Gaussian flow**.
+
+### Optimal transport flows 
+
+In general, we seek a probability path $p_t$ governed by a velocity flow $v_t$, and connecting $p_0$ and $p_1$. These conditions are perfectly encoded in the continuity equation $\partial_t p_t = -\nabla \cdot (p_t v_t)$ and the boundary conditions $p_0, p_1$. The optimal transport problem is to find the velocity field $v_t$ that minimizes a cost, which in this case is the kinetic energy of the flow, $\mathbb{E}\int_0^1 |v_t(X_t)|^2 dt$ where $X_t$ is a sample from $p_t$. Formally, the problem can be stated as finding 
+$$(p^\mathrm{OT}, v^\mathrm{OT}) = \arg\min_{(p, v) \in \mathscr{C}} \int_0^1 \int_{\mathbb{R}^d} |v_t(x)|^2 p_t(x)dx dt $$
+where $\mathscr{C}$ is the set of all probability paths and velocity fields satisfying the continuity equation and the boundary conditions. This problem is widely studied and can be solved: it is quite intuitive that the optimal flows are straight lines, so the optimal velocity fields are constants. The flow is given by 
+$$ \psi_t^\mathrm{OT}(x) = x + t(\phi(x) - x)$$
+where $\phi$ is the optimal transport map from $p_0$ to $p_1$. The velocity field is $v^\mathrm{OT}_t(x) = \phi(x) - x$. 
+
+This solves the **unconditional** OT problem, but we need **conditional** flows. One nice trick goes as follows: using Jensen's inequality and de-conditioning, we can write 
+\begin{align}\mathbb{E}\int_0^1 |v_t(X_t)|^2 dt &= \mathbb{E}\int_0^1 |\mathbb{E}[\dot\psi_t(X_t \mid X_1) \mid X_t]|^2 dt \\
+&\leqslant \mathbb{E}\int_0^1 \mathbb{E}[|\dot\psi_t(X_0 \mid X_1)|^2 \mid X_t] dt \\
+&= \mathbb{E}\int_0^1 \mathbb{E}[|\dot\psi_t(X_0 \mid X_1)|^2] dt \\
+&= \mathbb{E}\int_0^1 |\dot\psi_t(X_0 \mid X_1)|^2 dt. 
+\end{align}
+This last bound is the expected kinetic energy of the conditional flow over the boundary distributions $X_0 \sim p_0, X_1 \sim p_1$. For each sample $x_0, x_1$, we can try to find the optimal transport map $\gamma_t$ which minimizes $\int_0^1 |\dot\gamma_t|^2 dt$ subject to the boundary conditions $\gamma_0 = x_0$ and $\gamma_1 = x_1$. Hereagain, the solution is a straight line $\gamma_t = x_0 + t(x_1 - x_0)$ (this can be found formally using the Euler-Lagrange condition). The conclusion of these considerations is that the (conditional) linear flow is a minimizer of a bound on the Kinetic Energy among all the conditional flows. It might not be a minimizer of the Kinetic Energy itself, but it is a good starting point. 
 
 ## References 
 
 [The original Flow Matching paper](https://arxiv.org/abs/2210.02747) by Lipman et al.
 
 [META's excellent survey of Flow Matching](https://ai.meta.com/research/publications/flow-matching-guide-and-code/) by Lipman and coauthors. 
+
+[A super nice blog post on the topic](https://dl.heeere.com/conditional-flow-matching/blog/conditional-flow-matching/)
+
+[Training FM « at scale »](https://arxiv.org/pdf/2403.03206), by the Stability team. 

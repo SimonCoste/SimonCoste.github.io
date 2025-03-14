@@ -7,11 +7,16 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 {{post papers}}
 
-## Deep learning
+## Flow-based generative models
 
 {{post diffusion}}
 
 {{post flowmatching}}
+
+{{post guidance}}
+
+
+## Deep learning
 
 {{post doubledescent}}
 
