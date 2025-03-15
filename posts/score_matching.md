@@ -6,6 +6,8 @@ abstract = "Old-school methods for learning the score of a density from its samp
 
 Let $p$ be any smooth probability density function. Its *score* is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is the key to sample from $p$ using the Langevin dynamics, and we've seen it to be the key when reversing diffusion processes. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
 
+\tableofcontents
+
 ## The Fisher divergence
 
 The L2-distance between the scores of two probability densities is often called the *Fisher divergence*: 
@@ -14,7 +16,7 @@ Since our goal is to learn $\nabla\log p(x)$, it is natural to choose a parametr
 $$\int p(x)|\nabla\log p(x) - s_\theta(x)|^2dx $$
 is as small as possible. However, this optimization problem is intractable, due to the presence of the explicit form of $p$ inside the integral. This is where Score Matching techniques come into play. 
 
-### Vanilla score matching
+## Vanilla score matching
 
 Let $p$ be a smooth probability density function supported over $\mathbb{R}^d$ and let $X$ be a random variable with density $p$. The following elementary identity is due to [Hyvärinen, 2005](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf); it is the basis for score matching estimation in statistics. 
 
@@ -35,9 +37,9 @@ $$2\int  \nabla \log p(x)\cdot p(x)s(x) dx = 2\int \nabla p(x) \cdot s(x) dx = -
 and the identity is proved. 
 @@ 
 
-Practically, learning the score of a density $p$ from samples $x^1, \dots, x^n$ is done by minimizing the empirical version of the right-hand side of \eqref{SM}:
+The loss we want to minimize is thus
 \begin{equation}\label{opt_theta} \theta \in \argmin_\theta \mathbb{E}[\vert \nabla \log p(X) - s_{\theta}(X)\vert^2] = \argmin_\theta \mathbb{E}[|s_{\theta}(X)|^2 + 2 \nabla \cdot (s_{\theta}(X))].\end{equation}
-When one has access to samples $x^i$, a proxy of this loss is given by its empirical version:
+Practically, learning the score of a density $p$ from samples $x^1, \dots, x^n$ is done by minimizing the empirical version of the right-hand side of \eqref{SM}:
 $$ \ell(\theta) = \frac{1}{n}\sum_{i=1}^n |s_{\theta}(x^i)|^2 + 2 \nabla \cdot (s_{\theta}(x^i)).$$
 
 ### How do we empirically optimize \eqref{opt_theta} in the context of diffusion models? 
@@ -51,6 +53,8 @@ In the context of diffusion models, we have a whole family of densities $p_t$ an
 $$ \ell(\theta) =\frac{1}{n}\sum_{t \in \{t_0, \dots, t_N\}} w(t)\sum_{i=1}^n |s_{\theta}(t, x_t^i)|^2 + 2 \nabla\cdot(s_{\theta}(t, x_t^i))$$
 which looks computable… except it's not ideal.  Suppose we perform a gradient descent on $\theta$ to find the optimal $\theta$ for time $t$. Then at each gradient descent step, we need to evaluate $s_{\theta}$ as well as its divergence; *and then* compute the gradient in $\theta$ of the divergence in $x$, in other words to compute $\nabla_\theta \nabla_x \cdot s_\theta$. In high dimension, this can be too costly. 
 
+## Noisy samples: denoising score matching and Tweedie's formula 
+
 ### Denoising Score Matching
 
 Fortunately, there is another way to perform score matching when $p_t$ is the distribution of a random variable with gaussian noise added, as in our setting. We'll present this result in a fairly abstract setting; we suppose that $p$ is a density function, and $q = p*g$ where $g$ is an other density. The following result is due to [Vincent, 2010](https://www.iro.umontreal.ca/~vincentp/Publications/smdae_techreport.pdf). 
@@ -60,24 +64,58 @@ Fortunately, there is another way to perform score matching when $p_t$ is the di
 @@important
 **Denoising Score Matching Objective**
 
-Let $s:\mathbb{R}^d \to \mathbb{R}^d$ be a smooth function. Let $X$ be a random variable with density $p$, $\varepsilon$ an independent random variable with density $g$, and $X_\varepsilon = X + \varepsilon$, whose density is $p_g = p * g$. Then, 
+Let $s:\mathbb{R}^d \to \mathbb{R}^d$ be a smooth function. Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with density $g$. We call $p_{\mathrm{noisy}}$ the distribution of $X_{\mathrm{noisy}}=X + \varepsilon$. Then, 
 \begin{equation}\label{dsm}
-\mathbb{E}[\vert \nabla \log p_g(X_\varepsilon) - s(X_\varepsilon)\vert^2] = c + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X_\varepsilon)|^2]
+\mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(X+\varepsilon) - s(X+\varepsilon)\vert^2] = c + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X+\varepsilon)|^2]
 \end{equation}
 where $c$ is a constant not depending on $s$. 
 @@
 
 @@proof
-**Proof.** By the same computation as for vanilla score matching, we have 
-$$ \mathbb{E}[\vert \nabla \log p_g(X_\varepsilon) - s(X_\varepsilon)\vert^2] = c + \int p_g(x)|s(x)|^2dx -2\int \nabla p_g(x)\cdot s(x)dx.$$
-Now by definition, $p_g(x) = \int p(y)g(x-y)dy$, hence $\nabla p_g(x) = \int p(y)\nabla g(x-y)dy$, and the last term above is equal to 
+**Proof.** Note that $p_{\mathrm{noisy}} = p * g$. By expanding the square, we see that $ \mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(X+\varepsilon) - s(X+\varepsilon)\vert^2]$ is equal to 
+$$ c + \int p_{\mathrm{noisy}}(x)|s(x)|^2dx -2\int \nabla p_{\mathrm{noisy}}(x)\cdot s(x)dx.$$
+Now by definition, $p_{\mathrm{noisy}}(x) = \int p(y)g(x-y)dy$, hence $\nabla p_{\mathrm{noisy}}(x) = \int p(y)\nabla g(x-y)dy$, and the last term above is equal to 
 \begin{align} -2\int \int p(y)\nabla g(x-y)\cdot s(x)dxdy &= -2\int \int p(y)g(x-y)\nabla \log g(x-y)\cdot s(x)dydx\\
 &= -2\mathbb{E}[\nabla \log g(\varepsilon)\cdot s(X + \varepsilon)].
 \end{align}
-This last term is equal to $-2\mathbb{E}[\nabla \log g(\varepsilon)\cdot s(X_\varepsilon)]$. But then, upon adding and subtracting the term $\mathbb{E}[|\nabla \log g(\varepsilon)|^2]$ which does not depend on $s$, we get another constant $c'$ such that
-$$ \mathbb{E}[\vert \nabla \log p_g(X) - s(X)\vert^2] = c' + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X + \varepsilon)|^2].$$
+But then, upon adding and subtracting the term $\mathbb{E}[|\nabla \log g(\varepsilon)|^2]$ which does not depend on $s$, we get another constant $c'$ such that
+$$ \mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(X) - s(X)\vert^2] = c' + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X + \varepsilon)|^2].$$
 @@ 
 
+### Tweedie's formula 
+
+It turns out that the Denoising Score Matching objective is just an avatar of a deep, not so-well-known result, called Tweedie's formula. Herbert Robbins is often credited with the first discovery of this formula in the context of exponential (Poisson) distributions; Maurice Tweedie extended it, and Bradley Efron popularized it in [his excellent paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on selection bias. 
+
+@@deep 
+
+**Tweedie's formula**
+
+Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with distribution $N(0, \sigma^2)$. We still note $p_{\mathrm{noisy}}$ the distribution of $X + \varepsilon$. Then,
+\begin{equation}\label{tweedie}
+\mathbb{E}[X \mid X_{\mathrm{noisy}}] = X_{\mathrm{noisy}} + \sigma^2 \nabla \ln p_{\mathrm{noisy}}(X_{\mathrm{noisy}}).
+\end{equation}
+@@
+
+@@proof 
+
+The proof is almost identical to the DNS proof. 
+
+@@
+
+Since $X_{\mathrm{noisy}}$ is centered around $X$, the classical ("frequentist") estimate for $X$ given $X_{\mathrm{noisy}}$ is $X_{\mathrm{noisy}}$. Tweedie's formula corrects this estimate by adding a term accounting for the fact that $X$ is itself random: for instance, if $X_{\mathrm{noisy}}$ lands in a region where $X$ is extremely unlikely to live in, then it is probable that the noise is responsible for this, and the estimate for $X$.  
+
+Now, what's the link between this and Denoising Score Matching ? Well, the conditional expectation is precisely the function $s$ of $X_{\mathrm{noisy}}$, which is the closest of $X$ in the $L^2$ sense: 
+$$\mathbb{E}[|f(X_{\mathrm{noisy}}) - X|^2].$$
+Now, in DSM, the term $\nabla \ln g(\varepsilon)$ is easily computed when $g$ is the density of $N(0, \sigma^2)$, and is shown to be equal to $\varepsilon / \sigma^2 = X_\mathrm{noisy}/\sigma^2 - X/\sigma^2$. The DNS objective is thus equal to a constant times
+$$\mathbb{E}\left[\left|\frac{X_{\mathrm{noisy}}}{\sigma^2}-s(X_{\mathrm{noisy}}) + \frac{X}{\sigma^2} \right|\right]  = \sigma^{-2}\mathbb{E}[|s(X_{\mathrm{noisy}})\sigma^2 - X_{\mathrm{noisy}} - X|^2].$$
+Upon noting $f(x) = \sigma^2 s(x)+x$, we see that the Denoising Score Matching objective is the same as the objective which is minimized by the $\mathbb{E}[X \mid X_{\mathrm{noisy}}]$. This also makes it clear that
+-  $s(X_{\mathrm{noisy}})$ is actually trained to predict the rescaled noise $\varepsilon/\sigma^2$ from the observation of $X_{\mathrm{noisy}}$; 
+-  while $\sigma^2 s(X_{\mathrm{noisy}}) - X_{\mathrm{noisy}}$ predicts the true value of $X$ from the observation of $X_{\mathrm{noisy}}$.
+-  
+
+In conclusion, Tweedie's formula says that $L^2$-approximation of $\nabla \ln p_{\mathrm{noisy}}$ is equivalent to learning how to predict the noise from the observation of $X_{\mathrm{noisy}}$.
+
+## Back to diffusions
 
 Now, this Denoising Score Matching loss does not involve any computation of a « double gradient » like $\nabla_\theta \nabla_x \cdot s_\theta$. 
 
@@ -85,5 +123,10 @@ Let us apply this to our setting. Remember that $p_t$ is the density of $e^{-\mu
 $$ \argmin_\theta \int_0^T w(t)\mathbb{E}\left[\left|-\frac{\varepsilon_t}{\bar{\sigma}_t^2} - s_\theta(t, e^{-\mu_t}X_0 + \varepsilon_t) \right|^2\right]dt.$$
 This can be further simplified. Indeed, let us slightly change the parametrization and use $r_\theta(t,x) = -\bar{\sigma}_t s_\theta(t,x)$. Then,  
 $$ \argmin_\theta \int_0^T \frac{w(t)}{\bar{\sigma}_t}\mathbb{E}\left[\left|\xi - r_\theta(t, e^{-\mu_t}X_0 + \bar{\sigma}_t \xi) \right|^2\right]dt.$$
-Intuitively, the neural network $r_\theta$ tries to guess the scaled noise $\xi$ from the observation of $X_t$. 
+Intuitively, the neural network $r_\theta$ tries to guess the scaled noise $\xi$ from the observation of $X_t$.
+
+
+## References
+
+[Efron's paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on Tweedie's formula - a gem in statistics. 
 
