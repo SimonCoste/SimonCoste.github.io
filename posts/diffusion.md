@@ -1,11 +1,11 @@
 +++
 titlepost = "Flow models I: Diffusion models"
 date = "March 2023"
-abstract = "A small mathematical summary. "
+abstract = "Add noise to stuff, then remove it. "
 +++
 
 
-These notes focus on diffusion-based generative models, like the celebrated Denoising Diffusion Probabilistic Models; the material was presented as a series of lectures I gave at some working groups of mathematicians, so the style is tailored for this audience. In particular, everything is fitted into the continuous-time framework (which is not how it is done in practice). 
+These series of notes focus on diffusion-based generative models, like the celebrated Denoising Diffusion Probabilistic Models; they contain the material I regularly present as lectures in some working groups for mathematicians or math graduate students, so the style is tailored for this audience. In particular, everything is fitted into the continuous-time framework (which is not exactly how it is done in practice). 
 
 A special attention is given to the differences between ODE sampling and SDE sampling. The analysis of the time evolution of the densities $p_t$ is done using only Fokker-Planck Equations or Transport Equations.  
 
@@ -13,30 +13,45 @@ A special attention is given to the differences between ODE sampling and SDE sa
 
 ## The problem 
 
-Let $p$ be a probability density on $\mathbb{R}^d$. The goal of generative modelling is twofold: given samples $x^1, \dotsc, x^n$ from $p$, we want to 
-1) learn $p$; 
-2) generate new samples from $p$. 
+Let $p$ be a probability density on $\mathbb{R}^d$. The goal of generative modelling is twofold: given samples $x^1, \dotsc, x^n$ from $p$, we want to estimate $p$ and generate new samples from $p$. 
 
-There are various methods for tackling these challenges: Energy-Based Models, Normalizing Flows and the famous Neural ODEs, vanilla Score-Matching. However, each method has its limitations. For example, EBMs are very challenging to train, NFs lack expressivity and SM fails to capture multimodal distributions. Diffusion models offer sufficient flexibility to (partially) overcome these limitations. 
+Many methods were designed for tackling these challenges: Energy-Based Models, Normalizing Flows and the famous Neural ODEs, vanilla Score-Matching, GANs. Each has its limitations: for example, EBMs are challenging to train, NFs lack expressivity and SM fails to capture multimodal distributions. Diffusion models, and their successors flow-based models, offer sufficient flexibility to partially overcome these limitations. Their ability to be guided towards conditional generations using Classifier-Free Guidance is also a major advantage, and will be reviewed in the [third note](/posts/guidance) of the series.
 
 
 ### Stochastic interpolation
 
-Diffusion models fall into the general framework of [stochastic interpolants](https://arxiv.org/abs/2303.08797). The central idea is to continuously transform the density $p$ into another easy-to-sample density $\pi$ (often called *the target*), while also transforming the samples $x^i$ from $p$ into samples from $\pi$; and then, to reverse the process: that is, to generate a sample from $\pi$, and to inverse the transformation to get a new sample from $p$. In other words, we seek a path $(p_t: t\in [0,T])$ with $p_0=p$ and $p_T=q$, such that generating samples $x_t \sim p_t$ is doable. 
+Diffusion models fall into the framework of [stochastic interpolants](https://arxiv.org/abs/2303.08797). The idea is to continuously transform the density $p$ into another easy-to-sample density $\pi$ (often called *the target*), while also transforming the samples $x^i$ from $p$ into samples from $\pi$; and then, to reverse the process: that is, to generate a sample from $\pi$, and to inverse the transformation to get a new sample from $p$. In other words, we seek a path $(p_t: t\in [0,T])$ with $p_0=p$ and $p_T=q$, such that generating samples $x_t \sim p_t$ is doable. 
 
 The success of *diffusion models* came from the realization that some stochastic processes, such as Ornstein-Uhlenbeck processes that connect $p_0$ with a distribution $p_T$ very close to pure noise $\mathscr{N}(0,I)$, can be reversed when the *score function* $\nabla \log p_t$ is available at each time $t$. Although unknown, this score can efficiently be learnt using statistical procedures called *score matching*. 
 
 
 ## Original formulation: Gaussian noising process and its inversion
 
+### Time-Reversal of diffusions
+
 Let $(t,x)\to f_t(x)$ and $t\to \sigma_t$ be two smooth functions. Consider the stochastic differential equation
 \begin{align}\label{SDE}& dX_t = f_t(X_t)dt + \sqrt{2\sigma_t ^2}dB_t, \\ & X_0 \sim p\end{align}
-where $dB_t$ denotes integration with respect to a Brownian motion. Under mild conditions on $f$, an almost-surely continuous stochastic process satisfying this SDE exists. Let $p_t$ be the probability density of $X_t$; it is known that this process [could easily be reversed in time](https://www.sciencedirect.com/science/article/pii/0304414982900515). More precisely, the SDE
-\begin{align}\label{bsde} & dY_t = -\left(  f_t(Y_t)+ 2\sigma_t^2 \nabla \log p_t(Y_t) \right)dt + \sqrt{2\sigma_t^2}dB_t \\ & Y_T \sim p_T 
+where $dB_t$ denotes integration with respect to a Brownian motion. Under mild conditions on $f$, an almost-surely continuous stochastic process satisfying this SDE exists. Let $p_t$ be the probability density of $X_t$; it is a non-trivial fact that this process [can be reversed in time](https://www.sciencedirect.com/science/article/pii/0304414982900515). More precisely, the following SDE is exactly the time-reversal of \eqref{SDE}:
+\begin{align}\label{bsde} & dY_t = -\left(  f_t(Y_t)+ 2\sigma_t^2 \nabla \log p_t(Y_t) \right)dt + \sqrt{2\sigma_t^2}dB_t \\ & Y_T \sim p_T.
 \end{align}
-has the same marginals as $X_t$ reversed in time: more precisely $Y_{T-t}$ has the same distribution as $X_t$, with density noted $p_t$. This inversion needs access to $\nabla \log p_t$, and we'll explain later how this can be done. 
+
+@@deep 
+
+**Theorem (Anderson, 1982)**. The law of the stochastic process $(Y_t)_{t \in [0,T]}$ is the same as the law of $(X_{T-t})_{t \in [0,T]}$. 
+
+@@ 
+
+While this theorem is not easy to prove, we will later check using the Fokker-Planck equation that the *marginals* $p_{T-t}$ of the process $X_{T-t}$ are indeed the same as the marginals $q_{T-t}$ of the process $Y_t$.
+
 
 ![](/posts/img/score_based_dog.png)
+
+
+
+Sampling paths from the reverse SDE \eqref{bsde} needs access to $\nabla \log p_t$. The key point of diffusion-like methods is that this quantity can be estimated.
+
+### Working out the Ornstein-Uhlenbeck process
+
 
 For simple functions $f$, the process \eqref{SDE} has an explicit representation.  Here we focus on the case where $f_t(x) = -\alpha_t x$ for some function $\alpha$, that is
 \begin{equation}\label{ou}
@@ -47,7 +62,7 @@ Define $\mu_t = \int_0^t \alpha_s ds$. Then, the solution of \eqref{ou} is given
 \begin{equation}\label{sde_sol} X_t  = e^{-\mu_t}X_0 + \sqrt{2}\int_0^t e^{\mu_s-\mu_t} \sigma_s dB_s.\end{equation}
 @@
 In particular, the second term reduces to a Wiener Integral; it is a centered Gaussian with variance $2\int_0^t e^{2(\mu_s-\mu_t)}\sigma_s^2 ds$, hence 
-\begin{equation}\label{pt} X_t \stackrel{\mathrm{law}}{=} e^{-t}X_0 + \mathscr{N}\left(0, 2\int_0^t e^{2\mu_s - 2\mu_t}\sigma_s^2 ds\right).\end{equation}
+\begin{equation}\label{pt} X_t \stackrel{\mathrm{law}}{=} e^{-\mu_t}X_0 + \mathscr{N}\left(0, 2\int_0^t e^{2\mu_s - 2\mu_t}\sigma_s^2 ds\right).\end{equation}
 In the pure Orstein-Uhlenbeck case where $\sigma_t = \sigma$ and $\alpha_t = 1$, we get $\mu_t = t$ and $X_t = e^{-t}X_0 + \mathscr{N}(0,1 - e^{-2t})$. 
 
 @@proof 
@@ -61,16 +76,27 @@ Consequently, $Y_t = Y_0 + \int_0^t \sqrt{2\sigma_s^2e^{2\mu_t}}dB_s$ and the re
 
 
 
-A consequence of the preceding result is that when the variance $$\bar{\sigma}_t^2 = 2\int_0^t e^{2\mu_s - 2\mu_t}\sigma_s^2 ds$$ is big compared to $e^{-\mu_t}$, then the distribution of $X_t$ is well-approximated by $\mathscr{N}(0,\bar{\sigma}_t^2)$. Indeed, for $\sigma_t = 1$, we have $\bar{\sigma}_T = \sqrt{1 - e^{-2T}} \approx 1$ if $T$ is sufficiently large. 
+A consequence of the preceding result is that when the variance $$\bar{\sigma}_t^2 = 2\int_0^t e^{2\mu_s - 2\mu_t}\sigma_s^2 ds$$ is big compared to $e^{-\mu_t}$, then the distribution of $X_t$ is well-approximated by $\mathscr{N}(0,\bar{\sigma}_t^2)$. Indeed, for $\sigma_t = 1$, we have $\bar{\sigma}_T = \sqrt{1 - e^{-2T}} \approx 1$ if $T$ is sufficiently large, like $T>10$.
 
 ### The Fokker-Planck point of view
 
-It has recently been recognized that the Ornstein-Uhlenbeck representation of $p_t$ as in \eqref{SDE}, as well as the stochastic process \eqref{BSDE} that has the same marginals as $p_t$, are not necessarily unique or special. Instead, what matters are two key features: (i) $p_t$ provides a path connecting $p$ and $p_T\sim N(0,I)$, and (ii) its marginals are easy to sample. There are many other processes besides \eqref{SDE} that have $p_t$ as their marginals, and that can also be reversed. The crucial point is that $p_t$ is a solution of the [Fokker-Planck equation](https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation): 
+It has recently been recognized that the Ornstein-Uhlenbeck representation of $p_t$ as in \eqref{SDE}, as well as the stochastic process \eqref{BSDE} that has the same marginals as $p_t$, are not necessarily unique or special. Instead, what matters are two key features: (i) $p_t$ provides a path connecting $p$ and $p_T\approx N(0,I)$, and (ii) its marginals are easy to sample. There are other processes besides \eqref{SDE} that have $p_t$ as their marginals, and that can also be reversed. The crucial point is that $p_t$ is a solution of the [Fokker-Planck equation](https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation): 
 @@important
 \begin{equation}\label{FP} \partial_t p_t(x) = \Delta (\sigma_t^2 p_t(x)) - \nabla \cdot (f_t(x)p_t(x)).\end{equation}
 @@
 
 Just to settle the notations once and for all: $\nabla$ is the gradient, and for a function $\rho : \mathbb{R}^d \to \mathbb{R}^d$, $\nabla \cdot \rho(x)$ stands for the divergence, that is $\sum_{i=1}^d \partial_{x_i} \rho(x_1, \dotsc, x_d)$, and $\nabla \cdot \nabla = \Delta = \sum_{i=1}^d \partial^2_{x_i}$ is the Laplacian.  
+
+
+@@proof 
+
+**Proof (informal).** For a compactly supported smooth test function $\varphi$, we have $\partial_t \mathbb{E}[\varphi(X_t)] = \int \varphi(x)\partial_t p_t(x)dx$. On the other hand, this quantity is also equal to $\mathbb{E}[d\varphi(X_t)]$. Itô's formula says that $d\varphi(X_t) = \nabla \varphi(X_t) \cdot dX_t + \frac{1}{2}\Delta \varphi(X_t)dt$, which is also equal to $\nabla \varphi(X_t)f_t(X_t) + M_t + \frac{1}{2}\Delta \varphi(X_t)dt$, where $M_t$ is a Brownian martingale started at 0, whose exapectation is thus 0. Gathering everything, we see that $\mathbb{E}[d\varphi(X_t)]$ is also equal to $\mathbb{E}[\nabla \varphi(X_t) \cdot f_t(X_t)dt + \frac{1}{2}\Delta \varphi(X_t)dt]$, that is
+$$ \int \nabla\varphi(x)\cdot f_t(x) p_t(x)dx + \frac{1}{2}\int\Delta \varphi(x)\sigma_t^2 p_t(x) dx.$$
+One integration by parts on the first integral, and two on the second, lead to the expression
+$$ \int \varphi(x) \left[-\nabla \cdot (p_t(x)f_t(x)) + \frac{\sigma_t^2}{2}\Delta p_t(x)\right]dx. $$
+Comparing this with the first expression for $\partial_t \mathbb{E}[\varphi(X_t)]$ gives the result.
+@@ 
+
 
 Importantly, equation \eqref{FP} can be recast as a transport equation: with a **velocity field** defined as $$v_t(x) = \sigma_t^2 \nabla \log p_t(x) - f_t(x),$$ the equation \eqref{FP} is equivalent to
 @@important
@@ -83,7 +109,7 @@ Importantly, equation \eqref{FP} can be recast as a transport equation: with a *
 
 ### An associated ODE 
 
-Transport equations like \eqref{TE} come from simple ODEs; that is, there is a *deterministic* process with the same marginals as \eqref{SDE}. 
+Equations like \eqref{TE} are called *transport equations* or *continuity equations*. They come from simple ODEs; that is, there is a *deterministic* process with the same marginals as \eqref{SDE}. 
 @@important
 Let $x(t)$ be the solution of the differential equation with random initial condition
 \begin{equation}\label{ode}x'(t) = -v_t(x(t))\qquad \qquad x(0) =X_0.\end{equation}
@@ -141,81 +167,7 @@ Both of these two processes can be sampled using a range of ODE and SDE solver
 
 ## Methods for learning the score
 
-The L2-distance between the scores of two probability densities is often called the *Fisher divergence*: 
-$$ \mathrm{fisher}(\rho_1 \mid \rho_2) = \int \rho_1(x)|\nabla\log\rho_1(x) - \nabla\log\rho_2(x)|^2dx.$$
-Since our goal is to learn $\nabla\log p_t(x)$, it is natural to choose a parametrized family of functions $s_\theta$ and to optimize $\theta$ so that the divergence 
-$$\int p_t(x)|\nabla\log p_t(x) - s_\theta(x)|^2dx $$
-is as small as possible. However, this optimization problem is intractable, due to the presence of the explicit form of $p_t$ inside the integral. This is where Score Matching techniques come into play. 
-
-### Vanilla score matching
-
-Let $p$ be a smooth probability density function supported over $\mathbb{R}^d$ and let $X$ be a random variable with density $p$. The following elementary identity is due to [Hyvärinen, 2005](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf); it is the basis for score matching estimation in statistics. 
-
-@@important
-Let $s : \mathbb{R}^d \to \mathbb{R}^d$ be any smooth function with sufficiently fast decay at $\infty$, and $X \sim p$. Then,
-\begin{equation}\label{SM}
-\mathbb{E}[\vert \nabla \log p(X) - s(X)\vert^2] = c + \mathbb{E}\left[|s(X)|^2 +  2 \nabla \cdot s(X)\right]
-\end{equation}
-where $c$ is a constant not depending on $s$. 
-@@ 
-
-@@proof
-**Proof.** We start by expanding the square norm: 
-\begin{align}\int p(x)|\nabla \log p(x) - s(x)|^2 dx &= \int p(x)|\nabla \log p(x)|^2 dx + \int p(x)|s(x)|^2 dx - 2\int  \nabla \log p(x)\cdot p(x)s(x) dx.
-\end{align} 
-The first term does not depend on $s$, it is our constant $c$. For the last term, we use $\nabla \log p = \nabla p / p$ then we use the integration-by-parts formula: 
-$$2\int  \nabla \log p(x)\cdot p(x)s(x) dx = 2\int \nabla p(x) \cdot s(x) dx = -2 \int p(x)( \nabla \cdot s(x))dx$$
-and the identity is proved. 
-@@ 
-
-Now, \eqref{SM} is particularly interesting for us. Remember that if we want to reverse \eqref{ode}, we do not really need to estimate $p_t$ but only $\nabla \log p_t$. We do so by approximating it using a parametrized family of functions, say $s_\theta$ (typically, a neural network): 
-\begin{equation}\label{opt_theta} \theta_t \in \argmin_\theta \mathbb{E}[\vert \nabla \log p_t(X_t) - s_{\theta}(X_t)\vert^2] = \argmin_\theta \mathbb{E}[|s_{\theta}(X_t)|^2 + 2 \nabla \cdot (s_{\theta}(X_t))].\end{equation}
-
-
-### How do we empirically optimize \eqref{opt_theta}? 
-
-1) First, we need not solve this optimization problem for every $t$. We could obviously discretize $[0,T]$ with $t_1, \dots, t_N$ and only solve for $\theta_{t_i}$ independently,  but it is actually smarter and cheaper to approximate the whole function $(t,x) \to \nabla \log p_t(x)$ by a single neural network (a U-net, in general). That is, we use a parametrized family $s_\theta(t,x)$. This enforces a form of time-continuity which seems natural. Now, since we want to aggregate the losses at each time, we solve the following problem: 
-\begin{equation}\label{20}\argmin_\theta \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t)|^2 + 2 \nabla \cdot (s_{\theta}(t, X_t))]dt\end{equation} where $w(t)$ is a weighting function (for example, $w(t)$ can be higher for $t\approx 0$, since we don't really care about approximating $p_T$ as precisely as $p_0$). 
-
-2) In the preceding formulation we cannot exactly compute the expectation with respect to $p_t$, but we can approximate it with our samples $x_t^i$. Additionnaly, we need to approximate the integral, for instance we can discretize the time steps with $t_0=0 < t_1 < \dots < t_N = T$. Our objective function becomes
-$$ \ell(\theta) =\frac{1}{n}\sum_{t \in \{t_0, \dots, t_N\}} w(t)\sum_{i=1}^n |s_{\theta}(t, x_t^i)|^2 + 2 \nabla\cdot(s_{\theta}(t, x_t^i))$$
-which looks computable… except it's not ideal.  Suppose we perform a gradient descent on $\theta$ to find the optimal $\theta$ for time $t$. Then at each gradient descent step, we need to evaluate $s_{\theta}$ as well as its divergence; *and then* compute the gradient in $\theta$ of the divergence in $x$, in other words to compute $\nabla_\theta \nabla_x \cdot s_\theta$. In high dimension, this can be too costly. 
-
-### Denoising Score Matching
-
-Fortunately, there is another way to perform score matching when $p_t$ is the distribution of a random variable with gaussian noise added, as in our setting. We'll present this result in a fairly abstract setting; we suppose that $p$ is a density function, and $q = p*g$ where $g$ is an other density. The following result is due to [Vincent, 2010](https://www.iro.umontreal.ca/~vincentp/Publications/smdae_techreport.pdf). 
-
-
-
-@@important
-**Denoising Score Matching Objective**
-
-Let $s:\mathbb{R}^d \to \mathbb{R}^d$ be a smooth function. Let $X$ be a random variable with density $p$, $\varepsilon$ an independent random variable with density $g$, and $X_\varepsilon = X + \varepsilon$, whose density is $p_g = p * g$. Then, 
-\begin{equation}\label{dsm}
-\mathbb{E}[\vert \nabla \log p_g(X_\varepsilon) - s(X_\varepsilon)\vert^2] = c + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X_\varepsilon)|^2]
-\end{equation}
-where $c$ is a constant not depending on $s$. 
-@@
-
-@@proof
-**Proof.** By the same computation as for vanilla score matching, we have 
-$$ \mathbb{E}[\vert \nabla \log p_g(X_\varepsilon) - s(X_\varepsilon)\vert^2] = c + \int p_g(x)|s(x)|^2dx -2\int \nabla p_g(x)\cdot s(x)dx.$$
-Now by definition, $p_g(x) = \int p(y)g(x-y)dy$, hence $\nabla p_g(x) = \int p(y)\nabla g(x-y)dy$, and the last term above is equal to 
-\begin{align} -2\int \int p(y)\nabla g(x-y)\cdot s(x)dxdy &= -2\int \int p(y)g(x-y)\nabla \log g(x-y)\cdot s(x)dydx\\
-&= -2\mathbb{E}[\nabla \log g(\varepsilon)\cdot s(X + \varepsilon)].
-\end{align}
-This last term is equal to $-2\mathbb{E}[\nabla \log g(\varepsilon)\cdot s(X_\varepsilon)]$. But then, upon adding and subtracting the term $\mathbb{E}[|\nabla \log g(\varepsilon)|^2]$ which does not depend on $s$, we get another constant $c'$ such that
-$$ \mathbb{E}[\vert \nabla \log p_g(X) - s(X)\vert^2] = c' + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X + \varepsilon)|^2].$$
-@@ 
-
-
-Now, this Denoising Score Matching loss does not involve any computation of a « double gradient » like $\nabla_\theta \nabla_x \cdot s_\theta$. 
-
-Let us apply this to our setting. Remember that $p_t$ is the density of $e^{-\mu_t}X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. The objective in \eqref{20} becomes
-$$ \argmin_\theta \int_0^T w(t)\mathbb{E}\left[\left|-\frac{\varepsilon_t}{\bar{\sigma}_t^2} - s_\theta(t, e^{-\mu_t}X_0 + \varepsilon_t) \right|^2\right]dt.$$
-This can be further simplified. Indeed, let us slightly change the parametrization and use $r_\theta(t,x) = -\bar{\sigma}_t s_\theta(t,x)$. Then,  
-$$ \argmin_\theta \int_0^T \frac{w(t)}{\bar{\sigma}_t}\mathbb{E}\left[\left|\xi - r_\theta(t, e^{-\mu_t}X_0 + \bar{\sigma}_t \xi) \right|^2\right]dt.$$
-Intuitively, the neural network $r_\theta$ tries to guess the scaled noise $\xi$ from the observation of $X_t$. 
+Learning the *score* $\nabla_x \ln p(x)$ of a probability density $p$ is a well-known problem in statistics, and is somehow orthogonal to the world of generative flow models. I gathered the main ideas in [this note](/posts/score_matching). 
 
 ## Generative models: training and sampling
 

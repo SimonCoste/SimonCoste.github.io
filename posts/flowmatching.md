@@ -1,7 +1,7 @@
 +++
-titlepost = "Flow models II: Flow Matching"
+titlepost = "Flow models III: Flow Matching"
 date = "March 2025"
-abstract = "A small mathematical summary on flow matching and generator matching. "
+abstract = "Flow straight, flow fast: velocity is everything. "
 +++
 
 

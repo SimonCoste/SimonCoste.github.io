@@ -1,5 +1,5 @@
 +++
-titlepost = "Flow Models III: What is Classifier-Free Guidance?"
+titlepost = "Flow Models IV: What is Classifier-Free Guidance?"
 date = "March 2025"
 abstract = "From unconditional to conditional generative models "
 +++
