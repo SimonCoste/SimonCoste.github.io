@@ -1,7 +1,7 @@
 +++
 titlepost = "Flow models II: Score Matching Techniques"
 date = "March 2025"
-abstract = "Old-school methods for learning the score of a density from its samples. "
+abstract = "Learning the score of a density from its samples and Tweedie's formula. "
 +++
 
 Let $p$ be any smooth probability density function. Its *score* is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is the key to sample from $p$ using the Langevin dynamics, and we've seen it to be the key when reversing diffusion processes. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
