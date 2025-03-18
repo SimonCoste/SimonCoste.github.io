@@ -4,7 +4,12 @@ date = "March 2025"
 abstract = "Flow straight, flow fast: velocity is everything. "
 +++
 
+In the preceding notes, we've seen how [diffusion models](/posts/diffusion.md) are trained and sampled from and we've seen how the score function $\nabla \ln p_t$ is efficiently learnt using [score matching](/posts/score_matching.md). However, since their inception, diffusion models felt a little bit weird for various reasons. 
+- First, they did not « really » bridge $p_0$ with $N(0,I_d)$. They bridge $p_0$ with $p_T$ which is only approximately $N(0,I_d)$. This is not important practically, but from a theoretical point of view, it is a bit unsatisfactory. There should be a way to bridge $p_0$ with $N(0,I_d)$ exactly in finite time. 
+- Second, the design of a diffusion feels a little bit clunky. How do we choose $\alpha_t, \sigma_t$ ? There are lots of noise schedules and their influence on the path $p_t$ is not very clear.
+- Finally, this ODE/SDE duality is a bit confusing. In the end, the SDE formulation is not really useful since we are only interested in the marginals $p_t$, and the ODE sampling feels really simpler. There was a time when it was not clear why SDEs seem to work better (while there was absolutely no theoretical reason for that).
 
+For these reasons, the community has been looking for a new model that would be more intuitive, more flexible, and more powerful, able to bridge any two distributions in finite time, with deterministic (ODE) sampling. 
 
 ## Flow matching
 
@@ -139,3 +144,14 @@ This last bound is the expected kinetic energy of the conditional flow over the 
 [A super nice blog post on the topic](https://dl.heeere.com/conditional-flow-matching/blog/conditional-flow-matching/)
 
 [Training FM « at scale »](https://arxiv.org/pdf/2403.03206), by the Stability team. 
+
+[These excellent slides](https://bamos.github.io/presentations/2024.transport-between-distributions-over-distributions.pdf) by Brandon Amos present a history of the topic and how we evolved from diffusions to flows through neural ODEs and normalizing flows. 
+
+[Probability flow for FP](https://arxiv.org/pdf/2206.04642.pdf)
+
+[Stochastic interpolants](https://arxiv.org/abs/2303.08797)
+
+[Consistency models](https://arxiv.org/pdf/2303.01469.pdf)
+
+[Rectified Flow](https://arxiv.org/pdf/2209.03003.pdf)
+

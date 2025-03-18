@@ -167,7 +167,8 @@ Both of these two processes can be sampled using a range of ODE and SDE solver
 
 ## Methods for learning the score
 
-Learning the *score* $\nabla_x \ln p(x)$ of a probability density $p$ is a well-known problem in statistics, and is somehow orthogonal to the world of generative flow models. I gathered the main ideas in [this note](/posts/score_matching). 
+Learning the *score* $\nabla_x \ln p(x)$ of a probability density $p$ is a well-known problem in statistics, and is somehow orthogonal to the world of generative flow models. I gathered the main ideas in [this note](/posts/score_matching). In short, it turns out that training a neural network $s(t,x)$ to *denoise* $X_t$ (that is, to remove the added noise $\varepsilon_t$, where $X_t = e^{-\mu_t}X_0 + \varepsilon_t$) with the loss $\mathbb{E}[|s(t,X_t) - \varepsilon_t|^2]$ directly leads to an estimator of the score, 
+$$\nabla \ln p_t(x) \approx -\frac{s(t,x)}{\bar{\sigma}_t^2}.$$
 
 ## Generative models: training and sampling
 
@@ -178,34 +179,35 @@ Let us wrap everything up in this section.
 @@important
 **The Denoising Diffusion Score Matching loss**
 
-Let $\tau$ be a random time on $[0,T]$ with density proportional to $w(t)$; let $\xi$ be a standard Gaussian random variable. The DDPM theoretical objective is
+Let $\tau$ be a random time on $[0,T]$ with density proportional to $w(t)$; let $\xi$ be a standard Gaussian random variable. The **denoising diffusion** theoretical objective is
 \begin{equation}
-\ell(\theta) =  \mathbb{E}\left[\frac{1}{\bar{\sigma}_\tau}\left|\xi - r_\theta(\tau, e^{-\mu_\tau}X_0 + \bar{\sigma}_\tau \xi )\right|^2\right].
+\ell(\theta) =  \mathbb{E}\left[\frac{1}{\bar{\sigma}_\tau}\left|\xi - s_\theta(\tau, e^{-\mu_\tau}X_0 + \bar{\sigma}_\tau \xi )\right|^2\right].
 \end{equation}
 @@
 
 Since we have access to samples $(x^i, \xi^i, \tau^i)$ (at the cost of generating iid samples $\xi^i$ from a standard Gaussian and $\tau^i$ uniform over $[0,T]$), we get the empirical version: 
-\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[\frac{1}{\bar{\sigma}_\tau}|\xi^i - r_\theta(e^{-\mu_\tau}x^i + \bar{\sigma}_\tau \xi^i)|^2\right].\end{equation}
-Up to the constants and the choice of the drift $\alpha_t$ and variance $\sigma_t$, this is exactly the loss function (14) from the paper [DDPM](https://arxiv.org/abs/2006.11239), for instance. 
+\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[\frac{1}{\bar{\sigma}_\tau}|\xi^i - s_\theta(e^{-\mu_\tau}x^i + \bar{\sigma}_\tau \xi^i)|^2\right].\end{equation}
+Up to the constants and the choice of the drift $\alpha_t$ and variance $\sigma_t$, this is *exactly* the loss function (14) from the [DDPM paper](https://arxiv.org/abs/2006.11239). 
 
-In practice, for image generations, the go-to choice for the architecture of $r_\theta$ is a [U-net](https://twitter.com/marc_lelarge/status/1632708387589832705), a special kind of convolutional neural networks with a downsampling phase, an upsampling phase, and skip-connections in between.  
+### Choice of architecture
+
+In practice, for image generations, the go-to choice for the architecture of $s_\theta$ was first chosen to be a [U-net](https://twitter.com/marc_lelarge/status/1632708387589832705), a special kind of convolutional neural networks with a downsampling phase, an upsampling phase, and skip-connections in between. After 2023 it seemed that everyone switched to pure-transformers models, following the landmark [DiT paper](https://arxiv.org/abs/2212.09748) from Peebles and Xie. 
+
 
 ### Sampling
 
 
-Once the algorithm has converged to $\theta$, we get $s_\theta(t,x)$ which is a proxy for $\nabla \log p_t(x)$. Now, we simply plug this expression in the functions $\vbt$ if we want to solve the ODE \eqref{BODE} or $\wbt$ if we want to solve the SDE \eqref{BSDE2}. 
+Once the algorithm has converged to $\theta$, we get $s_\theta(t,x)$ which is a proxy for $\nabla \log p_t(x)$ (we absorbed the constant $\bar{\sigma}_t^2$ into the definition of $s$). Now, we simply plug this expression in the functions $\vbt$ if we want to solve the ODE \eqref{BODE} or $\wbt$ if we want to solve the SDE \eqref{BSDE2}. 
 
 \newcommand{\hbt}{\hat{v}^{\mathrm{b}}_t}
 \newcommand{\hwbt}{\hat{w}^{\mathrm{b}}_t}
 
-@@important
-The **ODE sampler** solves $ y'(t) = -\hbt(y(t))$ started at $y(0) \sim \mathscr{N}(0,I)$, 
-where $\hbt(x) = -\sigma_{T-t}^2 s_\theta(T-t,x) - \alpha_{T-t} x$. 
-@@
 
-@@important 
-The **SDE sampler** solves $dY_t = \hwbt(Y_t)dt + \sqrt{2\sigma_t^2}dB_t$ started at $Y_0 \sim \mathscr{N}(0,I)$, where $\hwbt(x) = 2\sigma_{T-t}^2 s_\theta(T-t,x) + \alpha_{T-t} x$. 
-@@
+- The **ODE sampler (DDIM)** solves $ y'(t) = -\hbt(y(t))$ started at $y(0) \sim \mathscr{N}(0,I)$, 
+where $\hbt(x) = -\sigma_{T-t}^2 s_\theta(T-t,x) - \alpha_{T-t} x$. 
+- The **SDE sampler (DDPM)** solves $dY_t = \hwbt(Y_t)dt + \sqrt{2\sigma_t^2}dB_t$ started at $Y_0 \sim \mathscr{N}(0,I)$, where $\hwbt(x) = 2\sigma_{T-t}^2 s_\theta(T-t,x) + \alpha_{T-t} x$. 
+
+
 \newcommand{\qo}{q^{\mathrm{ode}}_t}
 \newcommand{\qs}{q^{\mathrm{sde}}_t}
 We must stress a subtle fact. Equations \eqref{FP} and \eqref{TE}, or their backward counterparts, are exactly the same equation accounting for $p_t$. But since now we replaced $\nabla \log p_t$ by its *approximation* $s_\theta$, this is no longer the case for our two samplers: their probability densities are not the same. In fact, let us note $\qo,\qs$ the densities of $y(t)$ and $Y_{t}$; the first one solves a Transport Equation, the second one a Fokker-Planck equation, and these two equations are different. 
@@ -331,20 +333,6 @@ There is a significant difference between the score matching objective function 
 
 [Maximum likelihood training of Diffusions](https://arxiv.org/abs/2101.09258) (proofs of the variational lower-bound)
 
-[Sampling is as easy as learning the score](https://arxiv.org/abs/2209.11215) (theoretical analysis under minimal assumptions)
+[Probability flow for FP](https://arxiv.org/pdf/2206.04642.pdf), containing the proof of the variational lower-bound for the FP equation.
 
-
-### Beyond diffusions
-
-[Diffusion Schrodinger Bridge](https://proceedings.neurips.cc/paper/2021/file/940392f5f32a7ade1cc201767cf83e31-Paper.pdf)
-
-[Probability flow for FP](https://arxiv.org/pdf/2206.04642.pdf)
-
-[Flow matching paper](https://arxiv.org/abs/2210.02747)
-
-[Stochastic interpolants](https://arxiv.org/abs/2303.08797)
-
-[Consistency models](https://arxiv.org/pdf/2303.01469.pdf)
-
-[Rectified Flow](https://arxiv.org/pdf/2209.03003.pdf)
 

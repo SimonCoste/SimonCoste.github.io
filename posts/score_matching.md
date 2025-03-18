@@ -90,43 +90,56 @@ It turns out that the Denoising Score Matching objective is just an avatar of a 
 
 **Tweedie's formula**
 
-Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with distribution $N(0, \sigma^2)$. We still note $p_{\mathrm{noisy}}$ the distribution of $X + \varepsilon$. Then,
+Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with distribution $N(0, \sigma^2)$. We still note $p_{\mathrm{noisy}}$ the distribution of $X_{\mathrm{noisy}} = X + \varepsilon$. Then,
 \begin{equation}\label{tweedie}
 \mathbb{E}[X \mid X_{\mathrm{noisy}}] = X_{\mathrm{noisy}} + \sigma^2 \nabla \ln p_{\mathrm{noisy}}(X_{\mathrm{noisy}}).
+\end{equation}
+Equivalently, 
+\begin{equation}\label{tweedie2}
+\mathbb{E}\left[\left. \varepsilon  \right| X_{\mathrm{noisy}}\right] = -\sigma^2 \nabla \ln p_{\mathrm{noisy}}(X_{\mathrm{noisy}}).
 \end{equation}
 @@
 
 @@proof 
 
-The proof is almost identical to the DNS proof. 
-
+**Proof.** The joint distribution of $(X, X_{\mathrm{noisy}})$ is $p(x)g(z-x)$, hence the conditional expectation of $X$ given $X_{\mathrm{noisy}} = z$ is
+$$\frac{\int x p(x)g(z-x)dx}{q(z)} = z -  \frac{\int  (z-x)g(z-x)p(x)dx}{p_{\mathrm{noisy}}(z)}.$$
+Note that $p_{\mathrm{noisy}}(z) = \int p(x)g(z-x)dx$. 
+Now, since $g$ is the density of $N(0,\sigma^2 I_d)$, we have $\nabla g(x) = -x/\sigma^2 g(x)$, and the term above is equal to
+$$z +\sigma^2  \frac{\int  \nabla_z g(z-x)p(x)dx}{p_{\mathrm{noisy}}(z)} = z + \sigma^2 \nabla_z \ln \int g(z-x)p(x)dx$$
+which is the desired result. For the second formula, just note that $X_{\mathrm{noisy}} = \mathbb{E}[X_{\mathrm{noisy}}|X_{\mathrm{noisy}}] = \mathbb{E}[X \mid X_{\mathrm{noisy}}] + \mathbb{E}[\varepsilon \mid X_{\mathrm{noisy}}]$ then simplify.
 @@
 
 Since $X_{\mathrm{noisy}}$ is centered around $X$, the classical ("frequentist") estimate for $X$ given $X_{\mathrm{noisy}}$ is $X_{\mathrm{noisy}}$. Tweedie's formula corrects this estimate by adding a term accounting for the fact that $X$ is itself random: for instance, if $X_{\mathrm{noisy}}$ lands in a region where $X$ is extremely unlikely to live in, then it is probable that the noise is responsible for this, and the estimate for $X$.  
 
-Now, what's the link between this and Denoising Score Matching ? Well, the conditional expectation is precisely the function $s$ of $X_{\mathrm{noisy}}$, which is the closest of $X$ in the $L^2$ sense: 
-$$\mathbb{E}[|f(X_{\mathrm{noisy}}) - X|^2].$$
-Now, in DSM, the term $\nabla \ln g(\varepsilon)$ is easily computed when $g$ is the density of $N(0, \sigma^2)$, and is shown to be equal to $\varepsilon / \sigma^2 = X_\mathrm{noisy}/\sigma^2 - X/\sigma^2$. The DNS objective is thus equal to a constant times
-$$\mathbb{E}\left[\left|\frac{X_{\mathrm{noisy}}}{\sigma^2}-s(X_{\mathrm{noisy}}) + \frac{X}{\sigma^2} \right|\right]  = \sigma^{-2}\mathbb{E}[|s(X_{\mathrm{noisy}})\sigma^2 - X_{\mathrm{noisy}} - X|^2].$$
-Upon noting $f(x) = \sigma^2 s(x)+x$, we see that the Denoising Score Matching objective is the same as the objective which is minimized by the $\mathbb{E}[X \mid X_{\mathrm{noisy}}]$. This also makes it clear that
--  $s(X_{\mathrm{noisy}})$ is actually trained to predict the rescaled noise $\varepsilon/\sigma^2$ from the observation of $X_{\mathrm{noisy}}$; 
--  while $\sigma^2 s(X_{\mathrm{noisy}}) - X_{\mathrm{noisy}}$ predicts the true value of $X$ from the observation of $X_{\mathrm{noisy}}$.
--  
+Now, what's the link between this and Denoising Score Matching ? Well, the conditional expectation of any $X$ given $Z$ minimizes the $L^2$-distance, in the sense that $\mathbb{E}[X \mid Z] = f(Z)$ where $f$ minimizes $\mathbb{E}[|f(Z) - X|^2]$. Formula \eqref{tweedie2} says that $\nabla \ln p_{\mathrm{noisy}}$, the quantity we need to estimate, is nothing but the « best denoiser » up to a scaling $-\sigma^2$: 
+$$ \nabla \ln p_{\mathrm{noisy}} \in \arg \min \mathbb{E}[|f(X + \varepsilon) - (-\varepsilon/\sigma^2)|^2].$$
+Replacing $f$ with a neural network, we exactly find the Denoising Score Matching objective in \eqref{dsm}.
 
-In conclusion, Tweedie's formula says that $L^2$-approximation of $\nabla \ln p_{\mathrm{noisy}}$ is equivalent to learning how to predict the noise from the observation of $X_{\mathrm{noisy}}$.
+I find this result to give some intuition on score matching and how to parametrize the network. 
+- If $s(x)$ is « noise predictor » trained with the objective $\mathbb{E}[|s(X+\varepsilon) - \varepsilon|^2]$, then $-s(x)/\sigma^2$ is a proxy for $\nabla \ln p_{\mathrm{noisy}}$. **This is called « noise prediction » training**.  
+- If $s(x)$ had rather been trained on a pure denoising objective $\mathbb{E}[|s(X+\varepsilon) - X|^2]$, then $x - s(x)$ is a noise predictor for $X$, hence $\sigma^{-2} (s(x) - x)$ is a proxy for $\nabla \ln p_{\mathrm{noisy}}$. **This is called « data prediction » training**, or simply **denoising training**. 
+
+Both formulations are found in the litterature, as well as affine mixes of both. 
+
 
 ## Back to diffusions
 
-Now, this Denoising Score Matching loss does not involve any computation of a « double gradient » like $\nabla_\theta \nabla_x \cdot s_\theta$. 
 
-Let us apply this to our setting. Remember that $p_t$ is the density of $e^{-\mu_t}X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. The objective in \eqref{20} becomes
-$$ \argmin_\theta \int_0^T w(t)\mathbb{E}\left[\left|-\frac{\varepsilon_t}{\bar{\sigma}_t^2} - s_\theta(t, e^{-\mu_t}X_0 + \varepsilon_t) \right|^2\right]dt.$$
-This can be further simplified. Indeed, let us slightly change the parametrization and use $r_\theta(t,x) = -\bar{\sigma}_t s_\theta(t,x)$. Then,  
-$$ \argmin_\theta \int_0^T \frac{w(t)}{\bar{\sigma}_t}\mathbb{E}\left[\left|\xi - r_\theta(t, e^{-\mu_t}X_0 + \bar{\sigma}_t \xi) \right|^2\right]dt.$$
-Intuitively, the neural network $r_\theta$ tries to guess the scaled noise $\xi$ from the observation of $X_t$.
+Let us apply this to our setting. Remember that $p_t$ is the density of $e^{-\nu_t}X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. The « pure denoising » parametrization of the neural network would minimize the objective 
+$$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) - e^{-\nu_t} X_0|^2]dt.$$
+Once this is done, the proxy for $\nabla \ln p_t$ would be 
+$$\nabla \ln p_t(x) \approx \frac{x - s_{\theta}(t,x)}{\bar{\sigma}_t^2}.$$
+Plugging this back into the SDE (DDPM) sampling formula, we get 
+$$ dY_t = \alpha_{T-t}Y_t + 2\frac{\sigma^2_{T-t}}{\bar{\sigma}_{T-t}^2}(Y_t - s_{\theta}(T-t,Y_t))dt + \sqrt{2\sigma_{T-t}}dB_t$$
+or 
+$$ dY_t = \left(\alpha_{T-t} + 2\frac{\sigma^2_{T-t}}{\bar{\sigma}_{T-t}^2}\right)Y_t - 2\frac{\sigma^2_{T-t}}{\bar{\sigma}_{T-t}^2}s_{\theta}(T-t,Y_t)dt + \sqrt{2\sigma_{T-t}}dB_t.$$
+
 
 
 ## References
+
+[Hyvärinen's paper](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf) on Score Matching. 
 
 [Efron's paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on Tweedie's formula - a gem in statistics. 
 
