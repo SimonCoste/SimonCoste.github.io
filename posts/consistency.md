@@ -14,7 +14,7 @@ The ODE $\dot{X}_t = v_t(X_t)$ started at $x_0$ produces a *flow* $\Psi_t(x_0)$
 
 @@ 
 
-## Flow map 
+## Learning the flow map 
 
 The ODE \begin{equation}\label{ODE}\dot{x}_t = v_t(x_t)\end{equation} started at $x_0 \sim p_0$ has density at time $t$ noted $p_t$. This probability path solves the continuity equation 
 $$ \partial_t p_t = - \nabla \cdot (v_t p_t). $$
@@ -51,6 +51,15 @@ among all maps $S_{s,t}:\mathbb{R}^d \to \mathbb{R}^d$ that are differentiable i
 **Proof.** It is an evidence that if $p_t(x)>0$ everywhere (which we implicitly assume), then the loss above is minimized (and equal to 0) only when $\partial_t S_{s,t} = v_t(S_{s,t})$, that is, when $S_{s,t}$ satisfies equation \eqref{lagrange}. Unicity in the preceding theorem implies that the minimizer is $\Psi_{s,t}$. 
 
 @@
+
+
+Now, suppose that we have at our disposal a diffusion model or a flow matching model. By parametrizing a family of functions $S_{s,t}$, with a neural network, we can minimize the loss $L(S)$. Since $v_t$ is already a neural network, this is a kind of distillation, where we train a  neural network to mimic the behavior of another neural network. In  the end, we obtain a proxy $S_{s,t}$ of the flow map $\Psi_{s,t}$.
+
+## Few-steps sampling
+
+The learnt flow map $S$ can be used in various ways to sample from $p_1$. 
+- for super fast sampling, we can directly sample $x_0 \sim p_0$ and apply $S_{0,1}(x_0)$ to get a sample from $p_1$. Indeed, the first « flow map learning » method did directly learn $S_{0,t}$ for all $t$ and was called **consistency distillation**. However, it can happen that this map is not accurate: it is quite intuitive that learning how to go from $s$ to $s + \Delta s$ is easier than going directly from $0$ to $1$, so it can happen that $S_{0,1}$ is not very accurate.
+- One can trade speed for accuracy by using the full flow map for a few time steps: typically, using $S_{0.66, 1} \circ S_{0.33, 0.66} \circ S_{0, 0.33}$. This needs two more feedforward passes but the resulting $x_1$ is probably closer to the real solution of \eqref{ODE} started at $x_0$. 
 
 ## References 
 

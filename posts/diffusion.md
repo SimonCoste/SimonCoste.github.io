@@ -55,34 +55,39 @@ Sampling paths from the reverse SDE \eqref{bsde} needs access to $\nabla \log p_
 
 For simple functions $f$, the process \eqref{SDE} has an explicit representation.  Here we focus on the case where $f_t(x) = -\alpha_t x$ for some function $\alpha$, that is
 \begin{equation}\label{ou}
-dX_t = -\alpha_t X_t + \sqrt{2\sigma_t^2}dB_t.
+dX_t = -\mu_t X_t + \sqrt{2w_t^2}dB_t.
 \end{equation}
 @@important
-Define $\mu_t = \int_0^t \alpha_s ds$. Then, the solution of \eqref{ou} is given by the following stochastic process: 
-\begin{equation}\label{sde_sol} X_t  = e^{-\mu_t}X_0 + \sqrt{2}\int_0^t e^{\mu_s-\mu_t} \sigma_s dB_s.\end{equation}
+Define $\alpha_t = e^{-A_t}$ where $A_t =\int_0^t \mu_s ds$. Then, the solution of \eqref{ou} is given by the following stochastic process: 
+\begin{equation}\label{sde_sol} X_t  = \alpha_t X_0 + \sqrt{2}\int_0^t e^{A_s-A_t} w_s dB_s.\end{equation}
+In particular, noting $$\bar{\sigma}_t^2 = 2\int_0^t e^{-2\int_s^t \mu_u du}w_s^2 ds$$ we have 
+$$ X_t \stackrel{\mathrm{law}}{=} \alpha_t X_0 + \bar{\sigma}_t \varepsilon$$
+where $\varepsilon \sim \mathscr{N}(0,1)$.
 @@
-In particular, the second term reduces to a Wiener Integral; it is a centered Gaussian with variance $2\int_0^t e^{2(\mu_s-\mu_t)}\sigma_s^2 ds$, hence 
-\begin{equation}\label{pt} X_t \stackrel{\mathrm{law}}{=} e^{-\mu_t}X_0 + \mathscr{N}\left(0, 2\int_0^t e^{2\mu_s - 2\mu_t}\sigma_s^2 ds\right).\end{equation}
-In the pure Orstein-Uhlenbeck case where $\sigma_t = \sigma$ and $\alpha_t = 1$, we get $\mu_t = t$ and $X_t = e^{-t}X_0 + \mathscr{N}(0,1 - e^{-2t})$. 
+
+In the pure Orstein-Uhlenbeck case where $w_t = w$ and $\mu_t = 1$, we get $\alpha_t = e^{-t}$ and $X_t = e^{-t}X_0 + \mathscr{N}(0,1 - e^{-2t})$. 
 
 @@proof 
-**Proof of \eqref{sde_sol}.** We set $F(x,t) = xe^{\mu_t}$ and $Y_t = F(X_t, t) = X_t e^{\mu_t}$; it turns out that $Y_t$ satisfies a nicer SDE. Since $\Delta_x f = 0$, $\partial_t f(x,t) = xe^{\mu_t}\alpha_t$ and $\nabla_x f(x,t) = e^{\mu_t}$, [Itô's formula](https://en.wikipedia.org/wiki/It%C3%B4%27s_lemma) says that 
-\begin{align}dY_t &= \partial_tF(t,X_t)dt + \partial_x F(t,X_t)dX_t + \frac{1}{2}\Delta_x F(t,X_t)dt \\
-&= X_te^{\mu_t}\alpha_tdt + e^{\mu_t} dX_t \\
-&= \sqrt{2\sigma_t^2 e^{2\mu_t}}dB_t.
+**Proof of \eqref{sde_sol}.** We set $F(x,t) = xe^{A_t}$ and $Y_t = F(X_t, t) = X_t e^{A_t}$; it turns out that $Y_t$ satisfies a nicer SDE. Since $\Delta_x f = 0$, $\partial_t f(x,t) = xe^{A_t}\mu_t$ and $\nabla_x f(x,t) = e^{A_t}$, [Itô's formula](https://en.wikipedia.org/wiki/It%C3%B4%27s_lemma) says that 
+\begin{align}dY_t &= \partial_tF(t,X_t)dt + \nabla_x F(t,X_t)dX_t + \frac{2w_t^2}{2}\Delta_x F(t,X_t)dt \\
+&= X_te^{A_t}\mu_tdt + e^{A_t} dX_t \\
+&= \sqrt{2w_t^2 e^{2A_t}}dB_t.
 \end{align}
-Consequently, $Y_t = Y_0 + \int_0^t \sqrt{2\sigma_s^2e^{2\mu_t}}dB_s$ and the result holds. 
+Consequently, $Y_t = Y_0 + \int_0^t \sqrt{2w_s^2e^{2A_s}}dB_s$ and the result holds when we multiply everything by $e^{-A_t}$.
+
+The second term in \eqref{sde_sol} reduces to a Wiener Integral; it is a centered Gaussian with variance $2\int_0^t e^{2(A_s-A_t)}w_s^2 ds$, hence 
+\begin{equation}\label{pt} X_t \stackrel{\mathrm{law}}{=} e^{-A_t}X_0 + \mathscr{N}\left(0, 2\int_0^t e^{2A_s - 2A_t}w_s^2 ds\right).\end{equation}
 @@ 
 
 
 
-A consequence of the preceding result is that when the variance $$\bar{\sigma}_t^2 = 2\int_0^t e^{2\mu_s - 2\mu_t}\sigma_s^2 ds$$ is big compared to $e^{-\mu_t}$, then the distribution of $X_t$ is well-approximated by $\mathscr{N}(0,\bar{\sigma}_t^2)$. Indeed, for $\sigma_t = 1$, we have $\bar{\sigma}_T = \sqrt{1 - e^{-2T}} \approx 1$ if $T$ is sufficiently large, like $T>10$.
+A consequence of the preceding result is that when the variance $\bar{\sigma}_t^2$ is big compared to $\alpha_t$, then the distribution of $X_t$ is well-approximated by $\mathscr{N}(0,\bar{\sigma}_t^2)$. Indeed, for $\mu_t = w_t = 1$, we have $\alpha_T = e^{-T}$ and $\bar{\sigma}_T = \sqrt{1 - e^{-2T}} \approx 1$ if $T$ is sufficiently large, like $T>10$.
 
 ### The Fokker-Planck point of view
 
 It has recently been recognized that the Ornstein-Uhlenbeck representation of $p_t$ as in \eqref{SDE}, as well as the stochastic process \eqref{BSDE} that has the same marginals as $p_t$, are not necessarily unique or special. Instead, what matters are two key features: (i) $p_t$ provides a path connecting $p$ and $p_T\approx N(0,I)$, and (ii) its marginals are easy to sample. There are other processes besides \eqref{SDE} that have $p_t$ as their marginals, and that can also be reversed. The crucial point is that $p_t$ is a solution of the [Fokker-Planck equation](https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation): 
 @@important
-\begin{equation}\label{FP} \partial_t p_t(x) = \Delta (\sigma_t^2 p_t(x)) - \nabla \cdot (f_t(x)p_t(x)).\end{equation}
+\begin{equation}\label{FP} \partial_t p_t(x) = \Delta (w_t^2 p_t(x)) - \nabla \cdot (f_t(x)p_t(x)).\end{equation}
 @@
 
 Just to settle the notations once and for all: $\nabla$ is the gradient, and for a function $\rho : \mathbb{R}^d \to \mathbb{R}^d$, $\nabla \cdot \rho(x)$ stands for the divergence, that is $\sum_{i=1}^d \partial_{x_i} \rho(x_1, \dotsc, x_d)$, and $\nabla \cdot \nabla = \Delta = \sum_{i=1}^d \partial^2_{x_i}$ is the Laplacian.  
@@ -91,20 +96,20 @@ Just to settle the notations once and for all: $\nabla$ is the gradient, and fo
 @@proof 
 
 **Proof (informal).** For a compactly supported smooth test function $\varphi$, we have $\partial_t \mathbb{E}[\varphi(X_t)] = \int \varphi(x)\partial_t p_t(x)dx$. On the other hand, this quantity is also equal to $\mathbb{E}[d\varphi(X_t)]$. Itô's formula says that $d\varphi(X_t) = \nabla \varphi(X_t) \cdot dX_t + \frac{1}{2}\Delta \varphi(X_t)dt$, which is also equal to $\nabla \varphi(X_t)f_t(X_t) + M_t + \frac{1}{2}\Delta \varphi(X_t)dt$, where $M_t$ is a Brownian martingale started at 0, whose exapectation is thus 0. Gathering everything, we see that $\mathbb{E}[d\varphi(X_t)]$ is also equal to $\mathbb{E}[\nabla \varphi(X_t) \cdot f_t(X_t)dt + \frac{1}{2}\Delta \varphi(X_t)dt]$, that is
-$$ \int \nabla\varphi(x)\cdot f_t(x) p_t(x)dx + \frac{1}{2}\int\Delta \varphi(x)\sigma_t^2 p_t(x) dx.$$
+$$ \int \nabla\varphi(x)\cdot f_t(x) p_t(x)dx + \frac{1}{2}\int\Delta \varphi(x)w_t^2 p_t(x) dx.$$
 One integration by parts on the first integral, and two on the second, lead to the expression
-$$ \int \varphi(x) \left[-\nabla \cdot (p_t(x)f_t(x)) + \frac{\sigma_t^2}{2}\Delta p_t(x)\right]dx. $$
+$$ \int \varphi(x) \left[-\nabla \cdot (p_t(x)f_t(x)) + \frac{w_t^2}{2}\Delta p_t(x)\right]dx. $$
 Comparing this with the first expression for $\partial_t \mathbb{E}[\varphi(X_t)]$ gives the result.
 @@ 
 
 
-Importantly, equation \eqref{FP} can be recast as a transport equation: with a **velocity field** defined as $$v_t(x) = \sigma_t^2 \nabla \log p_t(x) - f_t(x),$$ the equation \eqref{FP} is equivalent to
+Importantly, equation \eqref{FP} can be recast as a transport equation: with a **velocity field** defined as $$v_t(x) = w_t^2 \nabla \log p_t(x) - f_t(x),$$ the equation \eqref{FP} is equivalent to
 @@important
 \begin{equation}\label{TE} \partial_t p_t(x) = \nabla \cdot (v_t(x)p_t(x)).\end{equation}
 @@ 
 
 @@proof 
-**Proof.** $\nabla \cdot v_t(x)p_t(x) = \nabla\cdot \nabla (\log p_t(x))p_t(x) - \nabla\cdot f_t(x)p_t(x)= \nabla\cdot \nabla p_t(x) - \nabla\cdot f_t(x)p_t(x)      $
+**Proof.** $\nabla \cdot v_t(x)p_t(x) = \nabla\cdot (w_t^2\nabla \log p_t(x))p_t(x) - \nabla\cdot f_t(x)p_t(x)= w_t^2 \nabla\cdot \nabla p_t(x) - \nabla\cdot f_t(x)p_t(x)$, and since $\nabla\cdot\nabla = \Delta$, this is equal to $w_t^2 \Delta p_t(x) - \nabla \cdot f_t(x)p_t(x) = \partial_t p_t(x). $
 @@
 
 ### An associated ODE 
@@ -141,12 +146,12 @@ We now have various processes $x(t), X_t$ starting at a density $p_0$ and evolvi
 @@important
 The density $\pbt$ solves the *backward* Transport Equation: 
 \begin{equation}\label{BTE}\partial \pbt(x)= \nabla \cdot \vbt(x) \pbt(x) \end{equation}
-where $$\vbt(x) = -v_t(x) = -\sigma_{T-t}^2 \nabla \log p_t(x) - \alpha_{T-t} x.$$
+where $$\vbt(x) = -v_t(x) = -w_{T-t}^2 \nabla \log p_t(x) - \mu_{T-t} x.$$
 @@ 
 @@important
 The density $\pbt$ also solves the *backward* Fokker-Planck Equation: 
-\begin{equation}\label{BFP}\partial \pbt(x) =\sigma_{T-t}^2 \Delta \pbt(x) - \nabla \cdot w_t^{\mathrm{b}}(x)\pbt(x)\end{equation}
-where $$w^{\mathrm{b}}_t(x) = 2\sigma_{T-t}^2 \nabla \log \pbt(x) + \alpha_{T-t} x.$$ 
+\begin{equation}\label{BFP}\partial \pbt(x) =w_{T-t}^2 \Delta \pbt(x) - \nabla \cdot u_t^{\mathrm{b}}(x)\pbt(x)\end{equation}
+where $$u^{\mathrm{b}}_t(x) = 2w_{T-t}^2 \nabla \log \pbt(x) + \mu_{T-t} x.$$ 
 @@ 
 
 @@proof
@@ -156,18 +161,18 @@ where $$w^{\mathrm{b}}_t(x) = 2\sigma_{T-t}^2 \nabla \log \pbt(x) + \alpha_{T-t}
 Of course, these two equations are the same, but they represent the time-evolution of the density of two different random processes. As explained before, the Transport version \eqref{BTE} represents the time-evolution of the density of the ODE system 
 \begin{align}\label{BODE}& y'(t) = -\vbt(y(t)) \\ & y(0) \sim p_T\end{align} 
 while the Fokker-Planck version \eqref{BFP} represents the time-evolution of the SDE system
-\begin{align}\label{BSDE2}&dY_t = w^{\mathrm{b}}_t(Y_t)dt + \sqrt{2\sigma_{T-t}^2}dB_t \\ & Y_0 \sim p_T.\end{align}
+\begin{align}\label{BSDE2}&dY_t = u^{\mathrm{b}}_t(Y_t)dt + \sqrt{2w_{T-t}^2}dB_t \\ & Y_0 \sim p_T.\end{align}
 
 Both of these two processes can be sampled using a range of ODE and SDE solvers, the simplest of which being the Euler scheme and the Euler-Maruyama scheme. However, this requires access to the functions $\vbt$ and $\wbt$, which in turn depend on the unknown score $\nabla \log p_t$. Fortunately, $\nabla \log p_t$ can efficiently be *estimated* due to two factors. 
 
-1) **First: we have samples from $p_t$**. Remember that our only information about $p$ is a collection $x^1, \dotsc, x^n$ of samples. But thanks to the representation \eqref{pt}, we can represent $x^i_t = e^{-\mu_t}x^i + \bar{\sigma}_t \xi^i$ with $\xi^i \sim \mathscr{N}(0,I)$ are samples from $p_t$. They are extremely easy to access, since we only need to generate iid standard Gaussian variables $\xi^i$. 
+1) **First: we have samples from $p_t$**. Remember that our only information about $p$ is a collection $x^1, \dotsc, x^n$ of samples. Thanks to the representation \eqref{pt}, we can represent $x^i_t = \alpha_t x^i + \bar{\sigma}_t \xi^i$ with $\xi^i \sim \mathscr{N}(0,I)$ are samples from $p_t$. They are extremely easy to access, since we only need to generate iid standard Gaussian variables $\xi^i$. 
 
 2) **Second: score matching.** If $p$ is a probability density and $x^i$ are samples from $p$, estimating $\nabla \log p$ (called *score*) has been thoroughly examined and is fairly doable, a technique known as *score matching*. 
 
 
 ## Methods for learning the score
 
-Learning the *score* $\nabla_x \ln p(x)$ of a probability density $p$ is a well-known problem in statistics, and is somehow orthogonal to the world of generative flow models. I gathered the main ideas in [this note](/posts/score_matching). In short, it turns out that training a neural network $s(t,x)$ to *denoise* $X_t$ (that is, to remove the added noise $\varepsilon_t$, where $X_t = e^{-\mu_t}X_0 + \varepsilon_t$) with the loss $\mathbb{E}[|s(t,X_t) - \varepsilon_t|^2]$ directly leads to an estimator of the score, 
+Learning the *score* $\nabla_x \ln p(x)$ of a probability density $p$ is a well-known problem in statistics, and is somehow orthogonal to the world of generative flow models. I gathered the main ideas in [the next note on flow matching and Tweedie-s formula](/posts/score_matching). In short, it turns out that training a neural network $s(t,x)$ to *denoise* $X_t$ (that is, to remove the added noise $\varepsilon_t$, where $X_t = \alpha_t X_0 + \varepsilon_t$) with the loss $\mathbb{E}[|s(t,X_t) - \varepsilon_t|^2]$ directly leads to an estimator of the score, 
 $$\nabla \ln p_t(x) \approx -\frac{s(t,x)}{\bar{\sigma}_t^2}.$$
 
 ## Generative models: training and sampling
@@ -181,13 +186,13 @@ Let us wrap everything up in this section.
 
 Let $\tau$ be a random time on $[0,T]$ with density proportional to $w(t)$; let $\xi$ be a standard Gaussian random variable. The **denoising diffusion** theoretical objective is
 \begin{equation}
-\ell(\theta) =  \mathbb{E}\left[\frac{1}{\bar{\sigma}_\tau}\left|\xi - s_\theta(\tau, e^{-\mu_\tau}X_0 + \bar{\sigma}_\tau \xi )\right|^2\right].
+\ell(\theta) =  \mathbb{E}\left[\frac{1}{\bar{\sigma}_\tau}\left|\xi - s_\theta(\tau, \alpha_\tau X_0 + \bar{\sigma}_\tau \xi )\right|^2\right].
 \end{equation}
 @@
 
 Since we have access to samples $(x^i, \xi^i, \tau^i)$ (at the cost of generating iid samples $\xi^i$ from a standard Gaussian and $\tau^i$ uniform over $[0,T]$), we get the empirical version: 
-\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[\frac{1}{\bar{\sigma}_\tau}|\xi^i - s_\theta(e^{-\mu_\tau}x^i + \bar{\sigma}_\tau \xi^i)|^2\right].\end{equation}
-Up to the constants and the choice of the drift $\alpha_t$ and variance $\sigma_t$, this is *exactly* the loss function (14) from the [DDPM paper](https://arxiv.org/abs/2006.11239). 
+\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[\frac{1}{\bar{\sigma}_\tau}|\xi^i - s_\theta(\alpha_\tau x^i + \bar{\sigma}_\tau \xi^i)|^2\right].\end{equation}
+Up to the constants and the choice of the drift $\mu_t$ and variance $w_t$, this is *exactly* the loss function (14) from the [DDPM paper](https://arxiv.org/abs/2006.11239). 
 
 ### Choice of architecture
 
@@ -200,12 +205,12 @@ In practice, for image generations, the go-to choice for the architecture of $s_
 Once the algorithm has converged to $\theta$, we get $s_\theta(t,x)$ which is a proxy for $\nabla \log p_t(x)$ (we absorbed the constant $\bar{\sigma}_t^2$ into the definition of $s$). Now, we simply plug this expression in the functions $\vbt$ if we want to solve the ODE \eqref{BODE} or $\wbt$ if we want to solve the SDE \eqref{BSDE2}. 
 
 \newcommand{\hbt}{\hat{v}^{\mathrm{b}}_t}
-\newcommand{\hwbt}{\hat{w}^{\mathrm{b}}_t}
+\newcommand{\hwbt}{\hat{u}^{\mathrm{b}}_t}
 
 
 - The **ODE sampler (DDIM)** solves $ y'(t) = -\hbt(y(t))$ started at $y(0) \sim \mathscr{N}(0,I)$, 
-where $\hbt(x) = -\sigma_{T-t}^2 s_\theta(T-t,x) - \alpha_{T-t} x$. 
-- The **SDE sampler (DDPM)** solves $dY_t = \hwbt(Y_t)dt + \sqrt{2\sigma_t^2}dB_t$ started at $Y_0 \sim \mathscr{N}(0,I)$, where $\hwbt(x) = 2\sigma_{T-t}^2 s_\theta(T-t,x) + \alpha_{T-t} x$. 
+where $\hbt(x) = -w_{T-t}^2 s_\theta(T-t,x) - \mu_{T-t} x$. 
+- The **SDE sampler (DDPM)** solves $dY_t = \hwbt(Y_t)dt + \sqrt{2w_t^2}dB_t$ started at $Y_0 \sim \mathscr{N}(0,I)$, where $\hwbt(x) = 2w_{T-t}^2 s_\theta(T-t,x) + \mu_{T-t} x$. 
 
 
 \newcommand{\qo}{q^{\mathrm{ode}}_t}
@@ -214,21 +219,49 @@ We must stress a subtle fact. Equations \eqref{FP} and \eqref{TE}, or their back
 @@important 
 **Backward Equations for the samplers**
 \begin{equation}\label{TE-a}\partial_t \qo(x) = \nabla \cdot \hbt(x)\qo(x)\qquad \qquad q_0^{\mathrm{ode}} = \pi \end{equation}
-\begin{equation}\label{FP-a}\partial_t \qs(x) = \nabla \cdot [\sigma_{T-t}^2\nabla \log \qs(x) - \hwbt(x)]\qs(x) \qquad \qquad q_0^{\mathrm{sde}} = \pi \end{equation}
+\begin{equation}\label{FP-a}\partial_t \qs(x) = \nabla \cdot [w_{T-t}^2\nabla \log \qs(x) - \hwbt(x)]\qs(x) \qquad \qquad q_0^{\mathrm{sde}} = \pi \end{equation}
 @@
-Importantly, the velocity $\sigma_{T-t}^2\nabla \log \qs(x) - \hwbt(x)$ is in general *not equal* to the velocity $\hbt(x)$. They would be equal only in the case $s_\theta(t,x) = \nabla \log p_t(x)$. 
+Importantly, the velocity $w_{T-t}^2\nabla \log \qs(x) - \hwbt(x)$ is in general *not equal* to the velocity $\hbt(x)$. They would be equal only in the case $s_\theta(t,x) = \nabla \log p_t(x)$. 
 @@proof 
 **Proof.** Since $y(t)$ is an ODE, it directly satisfies the transport equation with velocity $\hbt$. Since $Y_t$ is an SDE, it satisfies the Fokker-Planck equation associated with the drift $\hwbt$, which in turn can be transformed in the transport equation shown above. 
 @@ 
 
-### Special choices for $\alpha_t$ and $\sigma_t$
+## Design choices for $\mu_t$ and $w_t$
 
-Considerable work has been done (mostly experimentally) to find good functions $\alpha_t,\beta_t$. Some choices seem to stand out. 
+We recall that the SDE equation is given by 
+$$ dX_t = -\mu_t X_t dt + \sqrt{2w_t^2}dB_t.$$
+We showed that the solution of this equation at time $t$ has the same distribution as $\alpha_t X_t + \bar{\sigma}_t \varepsilon$ where $\varepsilon \sim \mathscr{N}(0,1)$. Here, the $\alpha_t, \bar{\sigma}_t$ are related to $\mu_t, w_t$ by 
+$$ \alpha_t = \exp\left\lbrace -\int_0^t \mu_s ds \right\rbrace$$
+$$\bar{\sigma}_t^2 = 2\int_0^t e^{-2\int_s^t \mu_u du}w_s^2 ds. $$
+Considerable work has been done (mostly experimentally) to find good functions $\mu_t,w_t$. Some choices seem to stand out. 
 
-- the **Variance Exploding** path takes $\alpha_t = 0$ (that is, no drift) and $\sigma_t$ a continuous, increasing function over $[0,1)$, such that $\sigma_0 = 0$ and $\sigma_1 = +\infty$; typically, $\sigma_t = (1-t)^{-1}$. 
-- the **Variance-Preserving** path takes $\sigma_t = \sqrt{\alpha_t}$. 
-- the **pure Ornstein-Uhlenbeck** path takes $\alpha_t = \sigma_t = 1$, it is a special case of the previous one, mostly suitable for theoretical purposes. 
+### Variance Exploding path
 
+The VE path takes $\mu_t = 0$ (that is, no drift) and $w_t$ a continuous, increasing function over $[0,1)$, such that $\sigma_0 = 0$ and $\sigma_1 = +\infty$; typically, $w_t = (1-t)^{-1}$. This gives parameters 
+$$\alpha_t = 1, \qquad \bar{\sigma}_t^2 = 2\int_0^t w_s^2 ds = 2\int_0^t (1-s)^{-2}ds = 2\frac{t}{1-t}.$$
+
+
+
+### Variance-Preserving path
+
+The VP takes $w_t = \sqrt{\mu_t}$. In this case we see that in this case, $\alpha_t = e^{-\int_0^t \mu_s ds}$ and 
+$$ \bar{\sigma}_t^2 = 2\int_0^t e^{-2\int_s^t \mu_u du}\mu_s ds = 1 - e^{-2\int_0^t \mu_s ds}.$$
+The name « variance preserving » comes from the fact that the element-wise variance of $X_t = \alpha_t X_0 + \bar{\sigma}_t \varepsilon$ is exactly $\alpha_t^2 + \bar{\sigma}_t^2$, which in this case is equal to 1 (we supposed without loss of generality that $X_0$ had been standardized to have element-wise variance 1). 
+
+
+### The **pure Ornstein-Uhlenbeck** path 
+
+The OU path takes $w_t = \mu_t = 1$, so that in this case we've already seen that
+$$ \alpha_t = e^{-t}, \qquad \bar{\sigma}_t^2 = 1 - e^{-2t}.$$
+This is not used in practice and is more for theoretical purposes. 
+
+
+### Toward Flow Matching
+
+The design choice for a diffusion reduces to the drift and diffusion coefficients $\mu_t, w_t$. These choices restrict the actual variances $\alpha_t, \bar{\sigma}_t$. But there might be a way **to directly choose $\alpha_t, \bar{\sigma}_t$** and specify paths having distribution $\alpha_t X_0 + \bar{\sigma}_t \varepsilon$. Typically, we would like to choose 
+$$ \alpha_t = \cos(\pi t / 2), \qquad \bar{\sigma}_t^2 = \sin(\pi t /2).$$
+Of course we could find $\mu_t, w_t$ to solve these equations, but this is weird. 
+This decoupling is done through stochastic interpolation and will be reviewed in the [third note](/posts/flow_matching) of the series.
 
 ## A variational bound for the SDE sampler
 
@@ -236,9 +269,9 @@ Let $s : [0,T]\times \mathbb{R}^d \to \mathbb{R}^d$ be a smooth function, meant
 
 ### Small recap on notations 
 The true density is $\pbt = p_{T-t}$, it satisfies the backward equation \eqref{BTE}: 
-$$ \partial_t \pbt(x) = \nabla \cdot \vbt(x)\pbt(x)\qquad \qquad \vbt(x) = -\sigma_{T-t}^2\nabla \log \pbt(x) - \alpha_{T-t}x.$$
+$$ \partial_t \pbt(x) = \nabla \cdot \vbt(x)\pbt(x)\qquad \qquad \vbt(x) = -w_{T-t}^2\nabla \log \pbt(x) - \mu_{T-t}x.$$
 The density of the generative process is $\qs$, but we'll simply note $q_t$. It satisfies the backward equation \eqref{FP-a}
-$$\partial_t q_t(x) = \nabla\cdot u_t(x)q_t(x)$$ where $$ u_t(x) = \sigma_{T-t}^2\nabla \log q_t(x) - 2\sigma_{T-t}^2s(t,x) - \alpha_{T-t}x. $$
+$$\partial_t q_t(x) = \nabla\cdot u_t(x)q_t(x)$$ where $$ u_t(x) = w_{T-t}^2\nabla \log q_t(x) - 2w_{T-t}^2s(t,x) - \mu_{T-t}x. $$
 The original distribution we want to sample is $p = p_0 = p^{\mathrm{b}}_T$, and the output distribution of our SDE sampler is $q^{\mathrm{sde}}_T = q_T$. Finally, the distribution $p_T = p_0^{\mathrm{b}}$ is approximated with $\pi$ (in practice, $\mathscr{N}(0,I)$).  
 
 The KL divergence between densities $\rho_1, \rho_2$ is $$ \mathrm{kl}(\rho_1 \mid \rho_2) = \int \rho_2(x)\log(\rho_2(x)/ \rho_1(x))dx.$$
@@ -252,7 +285,7 @@ This theorem restricts to the case where the weights $w(t)$ are constant, and fo
 **Variational lower-bound for score-based diffusion models with SDE sampler**
 
 \begin{equation}\label{vlb}
-\mathrm{kl}(p \mid q_T^{\mathrm{sde}}) \leqslant \mathrm{kl}(p_T \mid \pi) +\int_0^T \sigma^2_{t}  \mathbb{E}[ |\nabla \log p_t(X_t) - s(t,X_t)\vert^2 ] dt. 
+\mathrm{kl}(p \mid q_T^{\mathrm{sde}}) \leqslant \mathrm{kl}(p_T \mid \pi) +\int_0^T w^2_{t}  \mathbb{E}[ |\nabla \log p_t(X_t) - s(t,X_t)\vert^2 ] dt. 
 \end{equation}
 @@
 
