@@ -100,7 +100,10 @@ Equivalently,
 \end{equation}
 @@
 
+
 @@proof 
+
+
 
 **Proof.** The joint distribution of $(X, X_{\mathrm{noisy}})$ is $p(x)g(z-x)$, hence the conditional expectation of $X$ given $X_{\mathrm{noisy}} = z$ is
 $$\frac{\int x p(x)g(z-x)dx}{q(z)} = z -  \frac{\int  (z-x)g(z-x)p(x)dx}{p_{\mathrm{noisy}}(z)}.$$

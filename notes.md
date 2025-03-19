@@ -19,6 +19,8 @@ These series of notes focus on diffusion-based generative models, like the celeb
 
 {{post guidance}}
 
+{{post consistency}}
+
 
 ## Deep learning
 
