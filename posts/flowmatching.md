@@ -11,6 +11,7 @@ In the preceding notes, we've seen how [diffusion models](/posts/diffusion.md) a
 
 For these reasons, the community has been looking for a new model that would be more intuitive, more flexible, and more powerful, able to bridge any two distributions in finite time, with deterministic (ODE) sampling. In the end, it turns out that Flow-Matching is **almost entirely equivalent** to diffusion score mathching, except that the presentation and the way we're doing things is slightly different -- but way more flexible. 
 
+\tableofcontents
 
 ## Flow matching
 
@@ -125,42 +126,78 @@ In the simplest setting $\alpha_t  =1-t$ and $\sigma_t = t$, the velocity is con
 
 In practice, the goal of (most) generative models is to sample from $p_0$, which leaves open the choice for $p_1$. The natural choice goes for simplicity, with $p_1 = N(0, I_d)$. In this case, noting $\varepsilon$ instead of $X_1$, the marginals of \eqref{linearflow} are exactly the ones we found for the noising process in diffusions. The conditional velocity $v_t(x) = \mathbb{E}[\dot{X}_t \mid X_t=x]$ is simply
 $$v_t(x) = \dot{\alpha_t}\mathbb{E}[X_0 \mid X_t=x]+\dot{\sigma_t}\mathbb{E}[\varepsilon \mid X_t = x].$$
-Tweedie's formula, as seen in the [preceding note on score matching](/posts/score_matching.md), directly gives 
-$$v_t(x) = \dot{\alpha_t}\mathbb{E}[X_0 \mid X_t=x]+\dot{\sigma_t}\mathbb{E}[\varepsilon \mid X_t = x].$$
+Tweedie's formula, as seen in the [preceding note on score matching](/posts/score_matching/), gives 
+@@important 
+
+\begin{equation}\label{velocity_gaussian}v_t(x) = \frac{\dot{\alpha}_t}{\alpha_t}x + \sigma_t^2 \nabla \ln p_t(x)\left[ \frac{\dot{\alpha}_t}{\alpha_t} - \frac{\dot{\sigma}_t}{\sigma_t} \right].\end{equation}
+
+@@ 
+
+@@proof 
+
+**Proof.** 
+Tweedie's denoising formula says that since $p_t$ is the distribution of $\alpha_t X_0$ noised by $\sigma_t \varepsilon \sim N(0, \sigma_t^2 I_d)$, then 
+$$\mathbb{E}[\varepsilon \mid X_t] = \frac{\mathbb{E}[\sigma_t \varepsilon \mid X_t]}{\sigma_t} = -\sigma_t \nabla \ln p_t(X_t).$$
+Similarly, 
+$$\mathbb{E}[X_0 \mid X_t] = \frac{X_t + \sigma_t^2\nabla \ln p_t(X_t)}{\alpha_t}.$$
+Gathering the two yields the formula. 
+@@ 
+
+Formula \eqref{velocity_gaussian} tells us (once again!) that the only thing that matters given the choice of $\alpha_t, \sigma_t$ is the knowledge of the score $\nabla \ln p_t$. How this score was learnt is actually a secondary problem: we don't care if the learning was done in a diffusion framework or whatever. When we have it, we can plug it in \eqref{velocity_gaussian} and sample. 
+
+By carefully looking at the derivations, we can see that there are one-to-one linear connections between 
+
+- $\nabla \ln p_t$ (the score)
+- $\mathbb{E}[\varepsilon \mid X_t]$ (the denoising model)
+- $\mathbb{E}[X_0 \mid X_t]$ (the data prediction model)
+- $v_t$ (the velocity model). 
+Only one of them needs to be learned, and we can convert it into the three others. If one wants to use a pretrained model for sampling, one thus needs to keep track of *how the model was learned*: is it a score, a denoiser, a data predictor or a velocity? 
+
+We close this part with an important note: given a score model for $\nabla \ln p_t$, regardless of how it is formulated and trained, using it to sample from the flow $\dot{x}_t = v_t(x_t)$ or to sample from the DDIM ODE in diffusion models is **exactly the same**. 
 
 ### Optimal transport flows 
 
-In general, we seek a probability path $p_t$ governed by a velocity flow $v_t$, and connecting $p_0$ and $p_1$. These conditions are perfectly encoded in the continuity equation $\partial_t p_t = -\nabla \cdot (p_t v_t)$ and the boundary conditions $p_0, p_1$. The optimal transport problem is to find the velocity field $v_t$ that minimizes a cost, which in this case is the kinetic energy of the flow, $\mathbb{E}\int_0^1 |v_t(X_t)|^2 dt$ where $X_t$ is a sample from $p_t$. Formally, the problem can be stated as finding 
-$$(p^\mathrm{OT}, v^\mathrm{OT}) = \arg\min_{(p, v) \in \mathscr{C}} \int_0^1 \int_{\mathbb{R}^d} |v_t(x)|^2 p_t(x)dx dt $$
-where $\mathscr{C}$ is the set of all probability paths and velocity fields satisfying the continuity equation and the boundary conditions. This problem is widely studied and can be solved: it is quite intuitive that the optimal flows are straight lines, so the optimal velocity fields are constants. The flow is given by 
-$$ \psi_t^\mathrm{OT}(x) = x + t(\phi(x) - x)$$
-where $\phi$ is the optimal transport map from $p_0$ to $p_1$. The velocity field is $v^\mathrm{OT}_t(x) = \phi(x) - x$. 
+There is room for the choice of the connection $\varphi_t$; among these choices, some of them should be better than the others. The choice of one of these connections provides a velocity field $v_t$ transporting samples from $p_0$ to samples from $p_1$. Consider all the possibles fields $u_t$ such that the solutions of the ODE $\dot{x}_t = -u_(x_t)$ started at $x_0 \sim p_0$ and at $x_1 \sim p_1$. The best possible one should minimize the **total kinetic energy**, 
+$$\mathbb{E}\int_0^1 |u_t(x_t)|^2dt$$
+where the expection is over $p_0$. 
+This problem is widely studied and can be solved: it is quite intuitive that the optimal flows are straight lines, so the optimal velocity fields are constants, and indeed the flows are given by $u^\star_t(x) = x+t(\phi(x)-x)$ where $\varphi$ is Brenier's potentiel, the unique (under some conditions) map $\phi : \mathbb{R}^d \to \mathbb{R}^d$ such that $\phi(X_0)$ has distribution $p_1$ and which minimizes the square transport distance $\mathbb{E}[|x - \varphi(x)|^2]$. Of course, computing $\phi$ is in general intractable. 
 
-This solves the **unconditional** OT problem, but we need **conditional** flows. One nice trick goes as follows: using Jensen's inequality and de-conditioning, we can write 
-\begin{align}\mathbb{E}\int_0^1 |v_t(X_t)|^2 dt &= \mathbb{E}\int_0^1 |\mathbb{E}[\dot\psi_t(X_t \mid X_1) \mid X_t]|^2 dt \\
-&\leqslant \mathbb{E}\int_0^1 \mathbb{E}[|\dot\psi_t(X_0 \mid X_1)|^2 \mid X_t] dt \\
-&= \mathbb{E}\int_0^1 \mathbb{E}[|\dot\psi_t(X_0 \mid X_1)|^2] dt \\
-&= \mathbb{E}\int_0^1 |\dot\psi_t(X_0 \mid X_1)|^2 dt. 
+This solves the **unconditional** OT problem, and we need **conditional** flows. One nice trick goes as follows: using Jensen's inequality and de-conditioning, we can write 
+\begin{align}\mathbb{E}\int_0^1 |v_t(X_t)|^2 dt &= \mathbb{E}\int_0^1 |\mathbb{E}[\dot{X}_t \mid X_t]|^2 dt \\
+&\leqslant \mathbb{E}\int_0^1 \mathbb{E}[|\dot{X}_t|^2 \mid X_t] dt \\
+&= \mathbb{E}\int_0^1 \mathbb{E}[|\dot{X}_t|^2] dt \\
+&= \mathbb{E}\int_0^1 |\dot{X}_t|^2 dt. 
 \end{align}
-This last bound is the expected kinetic energy of the conditional flow over the boundary distributions $X_0 \sim p_0, X_1 \sim p_1$. For each sample $x_0, x_1$, we can try to find the optimal transport map $\gamma_t$ which minimizes $\int_0^1 |\dot\gamma_t|^2 dt$ subject to the boundary conditions $\gamma_0 = x_0$ and $\gamma_1 = x_1$. Hereagain, the solution is a straight line $\gamma_t = x_0 + t(x_1 - x_0)$ (this can be found formally using the Euler-Lagrange condition). The conclusion of these considerations is that the (conditional) linear flow is a minimizer of a bound on the Kinetic Energy among all the conditional flows. It might not be a minimizer of the Kinetic Energy itself, but it is a good starting point. 
+This last bound is the expected kinetic energy of the conditional flow over the boundary distributions $X_0 \sim p_0, X_1 \sim p_1$. For each realization $X_0, X_1$, we can try to find the optimal transport map $\gamma_t$ which minimizes $\int_0^1 |\dot\gamma_t|^2 dt$ subject to the boundary conditions $\gamma_0 = X_0$ and $\gamma_1 = X_1$. The solution is obvisouly the straight line $\gamma_t = x_0 + t(x_1 - x_0)$ (this can be found formally using the Euler-Lagrange conditions). 
+
+
+The conclusion of these considerations is as follows. 
+
+@@deep 
+
+The conditional linear flow $X_t = (1-t)X_0 + tX_1$ is a minimizer of **a bound on the Kinetic Energy among all the flows transporting $p_0$ to $p_1$**.
+
+@@ 
+
+ It might not be a minimizer of the Kinetic Energy itself, but it is a good starting point. In any ways, it is important to keep in mind that **flowing straight between two points** is absolutely not the same as **flowing straight between two distributions**. 
 
 ## References 
 
-[The original Flow Matching paper](https://arxiv.org/abs/2210.02747) by Lipman et al.
+The three seminal papers who found (independently) the Flow Matching formulation of generative diffusion models are 
 
-[META's excellent survey of Flow Matching](https://ai.meta.com/research/publications/flow-matching-guide-and-code/) by Lipman and coauthors. 
+- [The original Flow Matching paper](https://arxiv.org/abs/2210.02747) by Lipman et al.
 
-[A super nice blog post on the topic](https://dl.heeere.com/conditional-flow-matching/blog/conditional-flow-matching/)
+- The [Probability flow for FP](https://arxiv.org/pdf/2206.04642.pdf) and its rewriting [Stochastic interpolants](https://arxiv.org/abs/2303.08797) by Albergo, Boffi and Vanden-Eijnden.
 
-[Training FM « at scale »](https://arxiv.org/pdf/2403.03206), by the Stability team. 
+- The [Rectified Flow](https://arxiv.org/pdf/2209.03003.pdf) paper by Liu, Gong and Liu. 
+
+I find the *stochastic interpolant* formulation way cleaner and nicer than Lipman's one. 
+
+Since then, there were many surveys on the topics. I pretty much like [META's excellent survey of Flow Matching](https://ai.meta.com/research/publications/flow-matching-guide-and-code/) by Lipman and coauthors, for its depths and variety. There is also  this [nice blog post on the topic](https://dl.heeere.com/conditional-flow-matching/blog/conditional-flow-matching/) by Mathurin Massias and others, and [this very recent one](https://diffusionflow.github.io/) by people at DeepMind, clarifying the link between diffusions and FM. 
+
 
 [These excellent slides](https://bamos.github.io/presentations/2024.transport-between-distributions-over-distributions.pdf) by Brandon Amos present a history of the topic and how we evolved from diffusions to flows through neural ODEs and normalizing flows. 
 
-[Probability flow for FP](https://arxiv.org/pdf/2206.04642.pdf)
+[Training FM « at scale »](https://arxiv.org/pdf/2403.03206), by the Stability team, who in my knowledge were the first ones to scale FM training. They later produced the FLUX family of models. 
 
-[Stochastic interpolants](https://arxiv.org/abs/2303.08797)
-
-[Consistency models](https://arxiv.org/pdf/2303.01469.pdf)
-
-[Rectified Flow](https://arxiv.org/pdf/2209.03003.pdf)
-
+[Brenier's theorem](https://www.ceremade.dauphine.fr/~carlier/Brenier91.pdf), a little bit mathy. 

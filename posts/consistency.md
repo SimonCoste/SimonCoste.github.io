@@ -63,8 +63,5 @@ The learnt flow map $S$ can be used in various ways to sample from $p_1$.
 
 ## References 
 
-- [Consistency models](https://arxiv.org/abs/2303.01469)
+Although present earlier in the litterature, the first paper to systematically distillate diffusion models was the [Consistency models](https://arxiv.org/abs/2303.01469) paper. The [Flow Map Matching](https://arxiv.org/pdf/2406.07507) interprets it and generalizes it in the stochastic interpolant framework, which is the one I follow here. Very recently, the [Inductive Moment Matching](https://arxiv.org/pdf/2503.07565) technique was designed to be even more efficient. 
 
-- [Inductive Moment Matching](https://arxiv.org/pdf/2503.07565)
-
-- [Flow Map Matching](https://arxiv.org/pdf/2406.07507)

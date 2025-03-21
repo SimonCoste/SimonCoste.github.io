@@ -129,14 +129,14 @@ Both formulations are found in the litterature, as well as affine mixes of both.
 ## Back to diffusions
 
 
-Let us apply this to our setting. Remember that $p_t$ is the density of $e^{-\nu_t}X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. The « pure denoising » parametrization of the neural network would minimize the objective 
-$$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) - e^{-\nu_t} X_0|^2]dt.$$
+Let us apply this to our setting. Remember that $p_t$ is the density of $\alpha_t X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. The « pure denoising » parametrization of the neural network would minimize the objective 
+$$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) - \alpha_t X_0|^2]dt.$$
 Once this is done, the proxy for $\nabla \ln p_t$ would be 
 $$\nabla \ln p_t(x) \approx \frac{x - s_{\theta}(t,x)}{\bar{\sigma}_t^2}.$$
 Plugging this back into the SDE (DDPM) sampling formula, we get 
-$$ dY_t = \alpha_{T-t}Y_t + 2\frac{\sigma^2_{T-t}}{\bar{\sigma}_{T-t}^2}(Y_t - s_{\theta}(T-t,Y_t))dt + \sqrt{2\sigma_{T-t}}dB_t$$
+$$ dY_t = \mu_{T-t}Y_t + 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}(Y_t - s_{\theta}(T-t,Y_t))dt + \sqrt{2w_{T-t}}dB_t$$
 or 
-$$ dY_t = \left(\alpha_{T-t} + 2\frac{\sigma^2_{T-t}}{\bar{\sigma}_{T-t}^2}\right)Y_t - 2\frac{\sigma^2_{T-t}}{\bar{\sigma}_{T-t}^2}s_{\theta}(T-t,Y_t)dt + \sqrt{2\sigma_{T-t}}dB_t.$$
+$$ dY_t = \left(\mu_{T-t} + 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}\right)Y_t - 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}s_{\theta}(T-t,Y_t)dt + \sqrt{2w_{T-t}}dB_t.$$
 
 
 
