@@ -294,11 +294,11 @@ The original proof can be found in [this paper](https://arxiv.org/abs/2101.09258
 
 The following lemma is interesting on its own since it gives an exact expression for the KL divergence between transport equations. 
 @@important 
-\begin{equation}\label{36}\frac{d}{dt}\mathrm{kl}(\pbt \mid q_t) = \sigma^2_{T-t} \int \pbt(x) \nabla \log\left(\frac{\pbt(x)}{q_t(x)}\right) \cdot \left(u_t(x)- \vbt(x) \right)dx\end{equation}
+\begin{equation}\label{36}\frac{d}{dt}\mathrm{kl}(\pbt \mid q_t) = w^2_{T-t} \int \pbt(x) \nabla \log\left(\frac{\pbt(x)}{q_t(x)}\right) \cdot \left(u_t(x)- \vbt(x) \right)dx\end{equation}
 @@
 In our case with the specific shape assumed by $u_t, \vbt$, we get the following bound:
 @@important
-\begin{align}\label{37}\frac{d}{dt}\mathrm{kl}(p_t \mid q_t) \leqslant \sigma^2_{T-t}\int \pbt(x) |s(t,x) - \nabla \log \pbt(x) |^2 dx \end{align}
+\begin{align}\label{37}\frac{d}{dt}\mathrm{kl}(p_t \mid q_t) \leqslant w^2_{T-t}\int \pbt(x) |s(t,x) - \nabla \log \pbt(x) |^2 dx \end{align}
 
 @@
 
@@ -315,14 +315,14 @@ By an integration by parts, the first term is also equal to $-\int \pbt(x)\vbt(x
 \end{align}
 
 **Proof of \eqref{37}.**
-We recall that $$u_t(x) = \sigma^2_{T-t}\nabla \log q_t(x) - 2\sigma^2_{T-t}s(t,x) - \alpha_{T-t}x$$ and $$\vbt(x) = -\sigma^2_{T-t}\nabla \log \pbt(x) - \alpha_{T-t}x,$$ so that
-\begin{align}  u_t - \vbt &= \sigma^2_{T-t}\nabla \log q_t - 2\sigma^2_{T-t}s + \sigma^2_{T-t}\nabla \log \pbt\\ &= \sigma^2_{T-t} \left( \nabla \log q_t - \nabla \log \pbt + 2 (\nabla \log \pbt - s) \right).\end{align}
+We recall that $$u_t(x) = w^2_{T-t}\nabla \log q_t(x) - 2w^2_{T-t}s(t,x) - \mu_{T-t}x$$ and $$\vbt(x) = -w^2_{T-t}\nabla \log \pbt(x) - \mu_{T-t}x,$$ so that
+\begin{align}  u_t - \vbt &= w^2_{T-t}\nabla \log q_t - 2w^2_{T-t}s + w^2_{T-t}\nabla \log \pbt\\ &= w^2_{T-t} \left( \nabla \log q_t - \nabla \log \pbt + 2 (\nabla \log \pbt - s) \right).\end{align}
 We momentarily note $a = \nabla \log \pbt(x)$ and $b = \nabla \log q_t(x)$ and $s=s(t,x)$. Then, \eqref{36} shows that
 \begin{align} \frac{d}{dt}\mathrm{kl}(\pbt \mid q_t) &=  \sigma^2_{T-t}\int \pbt(x)(a - b)\cdot ((b-a) + 2(s - a))dx\\
-&= - \sigma^2_{T-t}\int p_t(x)|a-b|^2 dx + 2 \sigma^2_{T-t}\int p_t(x)(a-b)\cdot (s-a)dx.
+&= - w^2_{T-t}\int p_t(x)|a-b|^2 dx + 2 w^2_{T-t}\int p_t(x)(a-b)\cdot (s-a)dx.
 \end{align}
 We now use the classical inequality $2(x\cdot y) \leqslant  |x|^2  + |y|^2$; we get
-$$ \frac{d}{dt}\mathrm{kl}(\pbt \mid q_t) \leqslant \sigma^2_{T-t} \int \pbt(x)|s(t,x) - \nabla\log \pbt(x)|^2dx.$$
+$$ \frac{d}{dt}\mathrm{kl}(\pbt \mid q_t) \leqslant w^2_{T-t} \int \pbt(x)|s(t,x) - \nabla\log \pbt(x)|^2dx.$$
 
 **Proof of \eqref{vlb}.**
 

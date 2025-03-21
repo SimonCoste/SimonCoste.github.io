@@ -5,119 +5,128 @@ abstract = "Flow straight, flow fast: velocity is everything. "
 +++
 
 In the preceding notes, we've seen how [diffusion models](/posts/diffusion.md) are trained and sampled from and we've seen how the score function $\nabla \ln p_t$ is efficiently learnt using [score matching](/posts/score_matching.md). However, since their inception, diffusion models felt a little bit weird for various reasons. 
-- First, they did not « really » bridge $p_0$ with $N(0,I_d)$. They bridge $p_0$ with $p_T$ which is only approximately $N(0,I_d)$. This is not important practically, but from a theoretical point of view, it is a bit unsatisfactory. There should be a way to bridge $p_0$ with $N(0,I_d)$ exactly in finite time. 
-- Second, the design of a diffusion feels a little bit clunky. How do we choose $\alpha_t, \sigma_t$ ? There are lots of noise schedules and their influence on the path $p_t$ is not very clear.
+- First, they did not « really » bridge $p_0$ with $N(0,I_d)$. They bridge $p_0$ with $p_T$ which is only approximately $N(0,I_d)$. This is absolutely not important practically, but from a theoretical point of view, it is a bit unsatisfactory. There should be a way to bridge $p_0$ with $N(0,I_d)$  **exactly** in finite time. 
+- Second, the design of a diffusion feels a little bit clunky. How do we choose the drift and diffusion coefficients $\mu_t, w_t$? In the end, it looks that the coefficients $\alpha_t, \sigma_t$ such that $x_t$ has the same law as $\alpha_t x_0 + \sigma_t \varepsilon$ are the ones who matter, so why note directly choose them?
 - Finally, this ODE/SDE duality is a bit confusing. In the end, the SDE formulation is not really useful since we are only interested in the marginals $p_t$, and the ODE sampling feels really simpler. There was a time when it was not clear why SDEs seem to work better (while there was absolutely no theoretical reason for that).
 
-For these reasons, the community has been looking for a new model that would be more intuitive, more flexible, and more powerful, able to bridge any two distributions in finite time, with deterministic (ODE) sampling. 
+For these reasons, the community has been looking for a new model that would be more intuitive, more flexible, and more powerful, able to bridge any two distributions in finite time, with deterministic (ODE) sampling. In the end, it turns out that Flow-Matching is **almost entirely equivalent** to diffusion score mathching, except that the presentation and the way we're doing things is slightly different -- but way more flexible. 
+
 
 ## Flow matching
 
-Consider the simple ODE started from a random point and driven by the **velocity field** $v_t$. 
-$$\dot{X}_t = v_t(X_t), \qquad X_0 \sim p_0$$
-We note $p_t$ the probability density of $X_t$ : this **probability path** gives a connection between the initial distribution $p_0$ and the final distribution $p_1$ of the random variable $X_1$. It satisfies the continuity equation, also called transport equation: 
-$$ \partial_t p_t(x) = - \nabla \cdot (v_t(x) p_t(x)).$$
-It is is also associated with a **flow**: since the whole path $t\mapsto X_t$ is deterministic as long as we know $X_0$, we can write $X_t$ as a deterministic function of $X_0$. 
+Let $(X_0, X_1)$ be a couple of random variables sampled from $p_0$ and $p_1$. Actually, they can even be dependent: we only impose that their marginal distributions are $p_0$ and $p_1$, so we note $\pi$ their joint distribution and we suppose that $\int \pi(x,y)dx = p_1(y)$ and $\int \pi(x,y)dy = p_0(x)$. From a probabilistic perspective, $(X_0, X_1)$ can be **any coupling** between $p_0, p_1$. 
 
+**Conditional and annealed flows**
 
-In general, there is no simple expression for the distribution $p_1$ at the end of the path. The goal of **flow matching** is to find a velocity field $v_t$ that generates a given probability path $p_t$ which starts at $p_0$ (typically, a simple distribution like a Gaussian) and ends at $p_1$ (typically, a complex distribution). 
+@@important 
 
-### Conditional flows
+Suppose that there is a smooth function $\varphi : (t, x, y) \to \varphi_t(x,y)$ such that $\varphi_0(x,y) = x$ and $\varphi_1(x,y)=y$. This provides a connection between $p_0$ and $p_1$ by defining random variables 
+$$X_t = \varphi_t(X_0, X_1).$$
+This connection is called the **conditional flow** of the system. We note $p_t$ the density of $X_t$. 
 
-Let $(X_0, X_1)$ be a couple of random variables sampled from $p_0$ and $p_1$. We can easily define flows and velocities that transport $X_0$ to $X_1$. A very simple way of doing so is to simply write 
-\begin{equation}\label{toosimple}X_t = (1-t)X_0 + tX_1.\end{equation}
-This can be written in terms of a family of flows noted $\psi_t^y(x) = (1-t)x + ty$. Clearly, the flow $\psi_t^{X_1}$ transports any sample $X_0 \sim p_0$ to $X_1$. 
-This flow will be called « **conditional flow** » since it will always end in $X_1$, that is: $\psi_1(x\mid y) = y$. We can also compute the **conditional velocity field** that generates this flow:
-\begin{equation}\label{condvelo}v_t(x \mid X_1) = \dot \psi_t \left((\psi_t^{-1}(x \mid X_1) \mid X_1 \right).\end{equation}
-It is easily checked that the ODE $\dot X_t = v_t(X_t \mid X_1)$ with initial condition $X_0 = x$ has solution $X_t = \psi_t(x \mid X_1)$. We will note $p_t(\cdot \mid X_1)$ the density of this solution (which depends on $X_1$), and call it the **conditional path**.
-
-Suppose now that we average these conditional flows over the distribution of the endpoint $X_1\sim p_1$. This is going to be called the **annealed flow**, and it is defined by $\psi_t(x) = \mathbb{E}[\psi_t(x \mid X_1)]$. Since $\psi_1(x \mid X_1) = X_1$, this annealed flow has the right property: it bridges any starting point to a sample $X_1 \sim p_1$. But what is the velocity field that generates this annealed flow? In general, it not the annealing of $v_t(\cdot \mid X_1)$, but rather its *conditional average*. We will note $$p_t(x) = \int p_t(x \mid x_1)p_1(x_1)dx_1 = \mathbb{E}[p_t(x \mid X_1)]$$ the **annealed probability path**, ie the density of the annealed path.  
-
-@@deep
-
-The velocity field 
-\begin{equation}\label{vt}v_t(x)= \int_{\mathbb{R}^d} v_t(x \mid x_1)\frac{p_t(x \mid x_1)p_1(x_1)}{p_t(x)}dx_1\end{equation}
-generates the annealed flow $p_t$. 
-
-@@
-
-Since $p_t(x\mid x_1)p_1(x_1)$ is actually the joint density of $X_t$ and $X_1$, the formula \eqref{vt} is exactly 
-$$v_t(x) = \mathbb{E}[v_t(x \mid X_1) \mid X_t = x].$$
-
-@@proof 
-
-**Proof.** Differentiating $p_t$ in $t$ yields 
-$$\partial_t p_t(x) = \int p_1(x_1) \partial_t p_t(x\mid x_1) dx_1.$$
-Since the conditional probability path $p_t(\cdot \mid x_1)$ satisfies the continuity equation with the flow $v_t(\cdot \mid X_1)$, the RHS is equal to 
-$$ - \int p_1(x_1)\nabla \cdot [v_t(x\mid x_1) p_t(x \mid x_1)] dx_1 .$$
-Swapping the divergence and the integral, this is also 
-$$ - \nabla \cdot \int p_1(x_1) v_t(x \mid x_1) p_t(x \mid x_1) dx_1. $$
-We artificially add $p_t(x)$ and we get 
-$$ -\nabla \cdot \left[\int v_t(x \mid x_1)\frac{p_t(x \mid x_1)p_1(x_1)}{p_t(x)}dx_1 \times p_t(x)\right]$$
-which is exactly $-\nabla \cdot (v_t p_t)(x)$, thus proving that the annealed flow $p_t$ satisfies the continuity equation with the velocity field $v_t$.
-@@
-
-
-## Learning the flow 
-
-Let $u^\theta$ be any parametric function (typically, a neural network). We would like to learn the velocity field $v_t$ by minimizing a simple loss function, like 
-$$L_\star(\theta) = \int_0^1 \mathbb{E}[|u_t^\theta(X_t) - v_t(X_t)|^2]dt = \mathbb{E}[|u_\tau^\theta(X_\tau) - v_\tau(X_\tau)|^2]$$
-where $\tau$ is a uniform distribution over $[0,1]$. Unfortunately, even with \eqref{vt}, this is intractable, since we do not know how to compute $p_t$ for instance. Fortunately, this loss has the same minimizers as a tractable loss. 
+@@ 
 
 @@deep 
 
-$L$ has the same minimizers as the **conditional flow matching** loss, 
-\begin{equation}\label{CFM}L(\theta) = \mathbb{E}[|u^\theta_\tau(X_\tau) - v_\tau(X_\tau \mid X_1)|^2].\end{equation}
+**The flow comes from an ODE.** The probability path $p_t$ satisfies the continuity equation $\partial_t p_t = -\nabla \cdot (v_t p_t)$ where \begin{equation}\label{velocity}v_t(x) = \mathbb{E}[\dot{X_t}| X_t = x].\end{equation} In other words, $X_t$ has the same marginals as the ODE system
+\begin{equation}\label{ode_x}\dot{x}_t = v_t(x_t), \qquad x_0 \sim p_0.\end{equation}
 
 @@ 
+
+We emphasize the fact that $X_t$ does not satisfy \label{ode_x} in general. The main point is that $X_t$ (the conditional flow) and $x_t$ (the unconditional, or **annealed flow**, defined by the ODE) have the same marginals $p_t$. This is more or less what happened for diffusions, where the SDE and ODE paths had the same marginals but not the same distribution. 
 
 @@proof 
 
-**Proof.** We can ignore the fact that $\tau$ is random and replace it with a fixed $t$, then integrate over $[0,1]$. 
+**Proof.** We follow the proofs in the Stochastic Interpolant paper. The Fourier transform of $p_t$ is $\hat{p}_t(\xi) = \mathbb{E}[e^{i \langle \xi,  X_t\rangle}]$. Differentiating in $t$ yields $\partial_t \hat{p}_t(\xi) = \widehat{\partial_t p}(\xi)$ since time-differentiation and Fourier transform commute. On the other hand, by passing $\partial_t$ inside the expectation and conditioning on $X_t$, we get 
+\begin{align}
+\widehat{\partial_t p_t}(\xi) &= \mathbb{E}[i\xi \dot{X}_t e^{i\langle\xi, X_t\rangle}]\\ 
+&=\mathbb{E}[i\xi e^{i\langle\xi, X_t\rangle}\mathbb{E}[\dot{X}_t\mid X_t]]\\ 
+&=\mathbb{E}[i\xi e^{i\langle\xi, X_t\rangle} v_t(X_t)] \\ 
+&= \int p_t(x)v_t(x) \nabla_x e^{i\langle \xi, x \rangle}dx.
+\end{align} 
 
-Start by developing the square in $L_\star(\theta)$ to get
-\begin{equation}\label{proof_cfm}\mathbb{E}|v_\tau(X_t)|^2 + \mathbb{E}|u_t^\theta(X_t)|^2 - 2\mathbb{E}\langle v_\tau(X_t), u_t^\theta(X_t)\rangle.\end{equation}
-The first term is a constant with respect to $\theta$. Let us examine the last term, which thanks to \eqref{vt} is equal to
-$$ -2\mathbb{E}\int_{\mathbb{R}^d} \langle v_t(X_t \mid x_1), u^\theta_t(X_t) \rangle \frac{p_t(X_t \mid x_1)p_1(x_1)}{p_t(X_t)} dx_1.$$
-Writing the expectation as an integral over $x$ with density $p_t(x)$, we can simplify this into:
-$$ -2\int \int \langle v_t(x \mid x_1), u^\theta_t(x) \rangle p_t(x \mid x_1)p_1(x_1)dx_1 dx.$$
-That is exactly 
-$$-2\mathbb{E}\langle v_t(X_t \mid X_1), u_t^\theta(X_t)\rangle.$$
-Plug this back in \eqref{proof_cfm}, add then substract $\mathbb{E}[|v_t(X_t \mid X_1)|^2]$, and conclude that 
-$$ L_\star(\theta) = \mathrm{constant} + \mathbb{E}[|u_t^\theta(X_t) - v_t(X_t \mid X_1)|^2] + \mathbb{E}[|v_t(X_t \mid X_1)|^2].$$
-The last term is (again!) a constant with respect to $\theta$, so finally we get $L_\star(\theta) = L(\theta) + \mathrm{constants}$. 
+Also, since $\nabla_x e^{i\langle \xi, x\rangle} = i\xi e^{i\langle \xi, x\rangle}$, the last integral is equal to
+$$-\int \nabla_x \cdot [v_t(x)p_t(x)] e^{i\langle \xi, x\rangle}dx = \widehat{-\nabla \cdot v_tp_t}(\xi). $$
+Since the Fourier transform is injective, we get $\partial_t p_t = -\nabla \cdot v_t p_t$.
 
 @@ 
 
+The joint distribution of $X_t$ and $X_1$ is given by $\pi(x_0, x_1)p_t(x \mid x_0, x_1)$. Consequently, the conditional distribution of $X_t$ given $X_1$ is $\pi(x_0, x_1)p_t(x \mid x_0, x_1) / p_t(x)$, where $p_t(x)$ is the marginal density of $X_t$.
+Formally, we can thus write the velocity field as the following integral: 
 
-Everything is now tractable. We can 
-- sample batches from $\tau, X_1, X_\tau$, 
-- compute $v_t^{X_1}(x)$ because we typically have access to this quantity, 
-- compute the discrepancy $|u^\theta(X_t) - v_t^{X_1}(X_t)|^2$ for all samples in the batch, 
-- backpropagate the gradient of this discrepancy to update $\theta$.
+$$v_t(x) = \int_{\mathbb{R}^d} \dot{\varphi}_t(x_0, x_1)\frac{p_t(x \mid x_0, x_1)\pi(x_0, x_1)}{p_t(x)}dx_0dx_1.$$
+This is the formula appearing in Lipman's paper.
+
+**Sampling the probability path.**
+
+Sampling $X_t$ is easy when we have at our disposal samples $X_0, X_1$ from $p_0, p_1$. But when we have only one of them, say $X_0$, we cannot use this formula, so we have to sample the ODE $\dot{x}_t = v_t(x_t)$ started at $X_0$: but this would need knowledge of $v_t$. That is not directly doable, since its expression needs knowledge of $p_t$. However, the $L^2$ loss $\mathbb{E}[|s(X_t) - v_t(X_t)|^2]$ can efficiently be minimized without knowing $v_t$. 
+
+**Learning the velocity**
+
+@@deep
+
+**Flow Matching Loss.** 
+
+Let $s$ be any function. Then, 
+$$\mathbb{E}[|s(X_t) - v_t(X_t)|^2] = \mathbb{E}[|s(X_t) - \dot{X}_t|^2] + c,$$
+where $c = \mathbb{E}[|\dot{X}_t|^2] - \mathbb{E}[|v_t(X_t)|^2]$ is a constant with respect to $s$. 
+
+@@
+
+The practical consequence is that if $s^\theta$ is smoothly parametrized by $\theta$, then the $L^2$-loss
+$$L_\star(\theta) = \mathbb{E}[|s^\theta(X_t) - v_t(X_t)|^2]$$
+and the Flow-Matching loss 
+$$L(\theta) = \mathbb{E}[|s^\theta(X_t) - \dot{X}_t|^2]$$
+have the same gradients and the same minimizers. 
 
 
-It is remarkable that when the conditional velocity field comes from a conditional flow as in \eqref{condvelo}, then the conditional flow matching loss \eqref{CFM} features the term 
-$$v_t(X_t \mid X_1) = \dot{\psi}_t(\psi_t^{-1}(X_t \mid X_1) \mid X_1) = \dot{\psi}_t(X_0 \mid X_1),$$
-and the (unconditional) velocity is 
-\begin{equation}\label{formula_uncond_velo}v_t(x) = \mathbb{E}[\dot{\psi}_t(X_0 \mid X_1) \mid X_t = x].\end{equation}
-the last identity coming from the fact that $X_t = \psi_t(X_0 \mid X_1)$. Hence, the loss becomes 
-$$L(\theta) = \mathbb{E}[|u^\theta_\tau(X_\tau) - \dot{\psi}_\tau(X_0 \mid X_1)|^2].$$
+@@proof
+
+**Proof.** Develop the square: 
+\begin{align}\mathbb{E}[|s(X_t) - v_t(X_t)|^2] &= \mathbb{E}[|s(X_t)|^2] + \mathbb{E}[|v_t(X_t)|^2] - 2\mathbb{E}[\langle s(X_t), v_t(X_t)\rangle]. \\
+\end{align}
+The last term is equal to 
+$$\mathbb{E}[\langle s(X_t), \mathbb{E}[\dot{X}_t \mid X_t]\rangle].$$
+Since averages commute with any linear operator, we can write this as $\mathbb{E}[\mathbb{E}[ \langle s(X_t), \dot{X}_t \rangle \mid X_t]]$, then we can decondition and get $\mathbb{E}[\langle s(X_t), \dot{X}_t\rangle]$. Going back to the first line, adding and subtracting $\mathbb{E}[|\dot{X} t|^2]$, we get 
+\begin{align}\mathbb{E}[|s(X_t) - v_t(X_t)|^2] &= \mathbb{E}[|s(X_t)|^2] + \mathbb{E}[|v_t(X_t)|^2] - 2\mathbb{E}[\langle s(X_t), \dot{X}_t\rangle] + \mathbb{E}[|\dot{X}_t|^2] - \mathbb{E}[|\dot{X}_t|^2]. \\
+&= \mathbb{E}[|s(X_t) - \dot{X}_t|^2] + \mathbb{E}[|\dot{X}_t|^2] - \mathbb{E}[|v_t(X_t)|^2].
+\end{align}
+The last two terms are constants with respect to $s$. 
+
+@@
 
 
 
 
-## Examples of conditional flows
+Everything is now tractable. In practice, to learn $v_t$ we use a parametrized family of smooth functions $s^\theta_t$ and we minimize $L$ for "any" time $t$: we 
+- sample batches from $X_0, X_1$ from the coupling $\pi$; 
+- sample random times $\tau$ in $[0, 1]$ using a distribution $g$ which can be uniform or not; 
+- we compute the conditional flows $X_\tau$ and the conditional velocities $\dot{X}_t$ for all the samples of the batch; 
+- we compute the discrepancy $|s^\theta_\tau(X_\tau) - \dot{X}_t|^2$ for all samples of the batch, 
+- we backpropagate the gradient of this discrepancy to update $\theta$.
 
-### « Gaussian » flows
 
-The flow \eqref{toosimple} is a very simple example of a conditional flow: it is a straight line going from $X_0$ to $X_1$, often called the **rectified flow**. We can still keep the linearity but modulate it using conditional flows like 
-$$ \sigma_t(x_1)x + \mu_t(x_1)$$
-where $\sigma_t(\cdot)$ is a scalar function satisfying $\sigma_0(x) = 1$ and $\mu_t$ is a vector function satisfying $\mu_1(x) = x$ and $\mu_0(x) = 0$. If everything here is time-differentiable, then \eqref{condvelo} immediately gives the conditional velocity field. We first need to inverse the flow : if $x = \sigma_t(x_1)x_0 + \mu_t(x_1)$ then $x_0 = (x - \mu_t(x_1)) / \sigma_t(x_1)$. Consequently, the conditional velocity field is
 
-$$v_t(x \mid x_1) = \frac{\dot{\sigma}_t(x_1)}{\sigma_t(x_1)}(x - \mu_t(x_1)) + \dot{\mu}_t(x_1).$$
+## Design of conditional flows
 
-When $X_0$ is a standard Gaussian, then this $X_t$ has distribution $N(\mu_t(x_1), \sigma_t(x_1)^2 I_d)$, hence the name **conditional Gaussian flow**.
+Now that everything is set, we have to design an efficient conditional flow $\varphi_t$. 
+
+### Linear flows
+
+The simplest (and, indeed, very powerful) flow is the linear one, $\varphi_t(x,y) = \alpha_t x + \sigma_t y$, giving 
+\begin{equation}\label{linearflow}X_t = \alpha_t X_0 + \sigma_t X_1.\end{equation}
+where $\alpha, \sigma$ are differentiable and satisfy $\alpha_0 = \sigma_1 = 1$ and $\alpha_1 = \sigma_0 = 0$. 
+The trajectories are straight lines going from $X_0$ to $X_1$ at a velocity given by 
+\begin{equation}\label{linearvelo}\dot{X}_t = \dot{\alpha}_t X_0 + \dot{\sigma}_t X_1.\end{equation}
+In the simplest setting $\alpha_t  =1-t$ and $\sigma_t = t$, the velocity is constant, $\dot{X}_t = X_1 - X_0$, so that the flow-matching loss minimizes $\mathbb{E}[|s(X_t) - (X_1 - X_0)|^2]$. 
+
+### "Gaussian" flows 
+
+
+In practice, the goal of (most) generative models is to sample from $p_0$, which leaves open the choice for $p_1$. The natural choice goes for simplicity, with $p_1 = N(0, I_d)$. In this case, noting $\varepsilon$ instead of $X_1$, the marginals of \eqref{linearflow} are exactly the ones we found for the noising process in diffusions. The conditional velocity $v_t(x) = \mathbb{E}[\dot{X}_t \mid X_t=x]$ is simply
+$$v_t(x) = \dot{\alpha_t}\mathbb{E}[X_0 \mid X_t=x]+\dot{\sigma_t}\mathbb{E}[\varepsilon \mid X_t = x].$$
+Tweedie's formula, as seen in the [preceding note on score matching](/posts/score_matching.md), directly gives 
+$$v_t(x) = \dot{\alpha_t}\mathbb{E}[X_0 \mid X_t=x]+\dot{\sigma_t}\mathbb{E}[\varepsilon \mid X_t = x].$$
 
 ### Optimal transport flows 
 
