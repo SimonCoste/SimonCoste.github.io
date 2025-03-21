@@ -8,7 +8,9 @@ Let $p$ be any smooth probability density function. Its *score* is the gradient 
 
 \tableofcontents
 
-## The Fisher divergence
+## Vanilla Score Matching
+
+**The Fisher Divergence**
 
 The L2-distance between the scores of two probability densities is often called the *Fisher divergence*: 
 $$ \mathrm{fisher}(\rho_1 \mid \rho_2) = \int \rho_1(x)|\nabla\log\rho_1(x) - \nabla\log\rho_2(x)|^2dx.$$
@@ -16,7 +18,7 @@ Since our goal is to learn $\nabla\log p(x)$, it is natural to choose a parametr
 $$\int p(x)|\nabla\log p(x) - s_\theta(x)|^2dx $$
 is as small as possible. However, this optimization problem is intractable, due to the presence of the explicit form of $p$ inside the integral. This is where Score Matching techniques come into play. 
 
-## Vanilla score matching
+**The score matching trick**
 
 Let $p$ be a smooth probability density function supported over $\mathbb{R}^d$ and let $X$ be a random variable with density $p$. The following elementary identity is due to [Hyvärinen, 2005](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf); it is the basis for score matching estimation in statistics. 
 
@@ -42,7 +44,7 @@ The loss we want to minimize is thus
 Practically, learning the score of a density $p$ from samples $x^1, \dots, x^n$ is done by minimizing the empirical version of the right-hand side of \eqref{SM}:
 $$ \ell(\theta) = \frac{1}{n}\sum_{i=1}^n |s_{\theta}(x^i)|^2 + 2 \nabla \cdot (s_{\theta}(x^i)).$$
 
-### How do we empirically optimize \eqref{opt_theta} in the context of diffusion models? 
+**How do we empirically optimize \eqref{opt_theta} in the context of diffusion models?** 
 
 In the context of diffusion models, we have a whole family of densities $p_t$ and we want to learn the score for every $t \in [0,T]$. 
 
@@ -53,7 +55,7 @@ In the context of diffusion models, we have a whole family of densities $p_t$ an
 $$ \ell(\theta) =\frac{1}{n}\sum_{t \in \{t_0, \dots, t_N\}} w(t)\sum_{i=1}^n |s_{\theta}(t, x_t^i)|^2 + 2 \nabla\cdot(s_{\theta}(t, x_t^i))$$
 which looks computable… except it's not ideal.  Suppose we perform a gradient descent on $\theta$ to find the optimal $\theta$ for time $t$. Then at each gradient descent step, we need to evaluate $s_{\theta}$ as well as its divergence; *and then* compute the gradient in $\theta$ of the divergence in $x$, in other words to compute $\nabla_\theta \nabla_x \cdot s_\theta$. In high dimension, this can be too costly. 
 
-## Noisy samples: denoising score matching and Tweedie's formula 
+## Tweedie's formula for denoising
 
 ### Denoising Score Matching
 
@@ -129,8 +131,22 @@ Both formulations are found in the litterature, as well as affine mixes of both.
 ## Back to diffusions
 
 
-Let us apply this to our setting. Remember that $p_t$ is the density of $\alpha_t X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. The « pure denoising » parametrization of the neural network would minimize the objective 
+Let us apply this to our setting. Remember that $p_t$ is the density of $\alpha_t X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. 
+
+**Data prediction model**
+
+The « data prediction » (or denoising) parametrization of the neural network would minimize the objective 
 $$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) - \alpha_t X_0|^2]dt.$$
+
+**Noise prediction model**
+
+Alternatively, the « noise prediction » parametrization of the neural network would minimize the objective 
+$$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) -  \varepsilon|^2]dt$$
+where I noted $\varepsilon$ instead of $X_1$ to emphasize we're predicting noise. 
+
+Since we have access to samples $(x^i, \varepsilon^i, \tau^i)$ where $\tau \sim w$, we get the empirical version: 
+\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[|\varepsilon^i - s_\theta(\alpha_\tau x^i + \bar{\sigma}_\tau \varepsilon^i)|^2\right].\end{equation}
+Up to the constants and the choice of the drift $\mu_t$ and variance $w_t$, this is *exactly* the loss function (14) from the [DDPM paper](https://arxiv.org/abs/2006.11239). 
 Once this is done, the proxy for $\nabla \ln p_t$ would be 
 $$\nabla \ln p_t(x) \approx \frac{x - s_{\theta}(t,x)}{\bar{\sigma}_t^2}.$$
 Plugging this back into the SDE (DDPM) sampling formula, we get 
@@ -138,6 +154,10 @@ $$ dY_t = \mu_{T-t}Y_t + 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}(Y_t - s_{\theta
 or 
 $$ dY_t = \left(\mu_{T-t} + 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}\right)Y_t - 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}s_{\theta}(T-t,Y_t)dt + \sqrt{2w_{T-t}}dB_t.$$
 
+
+## Conclusion
+
+We are now equipped with learning $\nabla \ln p_t$ when $p_t$ is the distribution of something like $\alpha_t X_0+\sigma_t \varepsilon$. The diffusion models we presented earlier provide such distributions given the drift and diffusion coefficients, $\mu_t$ and $\sigma_t$. But in general, we should be able to directly choose $\alpha$ and $\sigma$ without relying on the (intricate) maths behind the Fokker-Planck equation. This is where the [flow matching formulation](/posts/flowmatching/) enters the game. 
 
 
 ## References

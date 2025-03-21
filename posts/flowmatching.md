@@ -181,6 +181,12 @@ The conditional linear flow $X_t = (1-t)X_0 + tX_1$ is a minimizer of **a bound 
 
  It might not be a minimizer of the Kinetic Energy itself, but it is a good starting point. In any ways, it is important to keep in mind that **flowing straight between two points** is absolutely not the same as **flowing straight between two distributions**. 
 
+## Conclusion
+
+Up to now, we've seen how flow matching reformulates and simplifies diffusion sampling. There remains a problem: in practive, to sample from these models, we need to solve an ODE or a SDE, which in practive is done by discretizing time and using a scheme like Euler or Runge-Kutta. But for every time step, this needs a feedforward evaluation of a neural network. Most schemes need 50 time steps, which is why sampling from diffusions can be long. 
+
+[Consistency models](/posts/consistency/) try to directly learn the *flow* $\varphi_t$ and not the velocity $v_t$ - and yes, the naming should have been *velocity matching* from the beginning. 
+
 ## References 
 
 The three seminal papers who found (independently) the Flow Matching formulation of generative diffusion models are 

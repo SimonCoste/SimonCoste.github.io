@@ -175,31 +175,14 @@ Both of these two processes can be sampled using a range of ODE and SDE solver
 Learning the *score* $\nabla_x \ln p(x)$ of a probability density $p$ is a well-known problem in statistics, and is somehow orthogonal to the world of generative flow models. I gathered the main ideas in [the next note on flow matching and Tweedie-s formula](/posts/score_matching). In short, it turns out that training a neural network $s(t,x)$ to *denoise* $X_t$ (that is, to remove the added noise $\varepsilon_t$, where $X_t = \alpha_t X_0 + \varepsilon_t$) with the loss $\mathbb{E}[|s(t,X_t) - \varepsilon_t|^2]$ directly leads to an estimator of the score, 
 $$\nabla \ln p_t(x) \approx -\frac{s(t,x)}{\bar{\sigma}_t^2}.$$
 
-## Generative models: training and sampling
-
-Let us wrap everything up in this section. 
-
-### Training: learning the score
-
-@@important
-**The Denoising Diffusion Score Matching loss**
-
-Let $\tau$ be a random time on $[0,T]$ with density proportional to $w(t)$; let $\xi$ be a standard Gaussian random variable. The **denoising diffusion** theoretical objective is
-\begin{equation}
-\ell(\theta) =  \mathbb{E}\left[\frac{1}{\bar{\sigma}_\tau}\left|\xi - s_\theta(\tau, \alpha_\tau X_0 + \bar{\sigma}_\tau \xi )\right|^2\right].
-\end{equation}
-@@
-
-Since we have access to samples $(x^i, \xi^i, \tau^i)$ (at the cost of generating iid samples $\xi^i$ from a standard Gaussian and $\tau^i$ uniform over $[0,T]$), we get the empirical version: 
-\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[\frac{1}{\bar{\sigma}_\tau}|\xi^i - s_\theta(\alpha_\tau x^i + \bar{\sigma}_\tau \xi^i)|^2\right].\end{equation}
-Up to the constants and the choice of the drift $\mu_t$ and variance $w_t$, this is *exactly* the loss function (14) from the [DDPM paper](https://arxiv.org/abs/2006.11239). 
 
 ### Choice of architecture
 
 In practice, for image generations, the go-to choice for the architecture of $s_\theta$ was first chosen to be a [U-net](https://twitter.com/marc_lelarge/status/1632708387589832705), a special kind of convolutional neural networks with a downsampling phase, an upsampling phase, and skip-connections in between. After 2023 it seemed that everyone switched to pure-transformers models, following the landmark [DiT paper](https://arxiv.org/abs/2212.09748) from Peebles and Xie. 
 
 
-### Sampling
+
+## Sampling
 
 
 Once the algorithm has converged to $\theta$, we get $s_\theta(t,x)$ which is a proxy for $\nabla \log p_t(x)$ (we absorbed the constant $\bar{\sigma}_t^2$ into the definition of $s$). Now, we simply plug this expression in the functions $\vbt$ if we want to solve the ODE \eqref{BODE} or $\wbt$ if we want to solve the SDE \eqref{BSDE2}. 
