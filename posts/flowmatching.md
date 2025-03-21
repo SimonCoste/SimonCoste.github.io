@@ -133,6 +133,8 @@ Tweedie's formula, as seen in the [preceding note on score matching](/posts/scor
 
 @@ 
 
+Note that $\dot{\alpha}_t/\alpha_t - \dot{\sigma}_t/\sigma_t$ is equal to $\dot{\lambda}_t/2$, which is half the time-derivative of the lof-SNR (signel-to-noise) ratio $\lambda_t = \ln(\alpha_t^2/\sigma_t^2)$. 
+
 @@proof 
 
 **Proof.** 
