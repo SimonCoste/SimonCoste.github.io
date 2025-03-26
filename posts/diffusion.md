@@ -29,10 +29,10 @@ The success of *diffusion models* came from the realization that some stochastic
 
 ### Time-Reversal of diffusions
 
-Let $(t,x)\to f_t(x)$ and $t\to \sigma_t$ be two smooth functions. Consider the stochastic differential equation
-\begin{align}\label{SDE}& dX_t = f_t(X_t)dt + \sqrt{2\sigma_t ^2}dB_t, \\ & X_0 \sim p\end{align}
+Let $(t,x)\to f_t(x)$ and $t\to w_t$ be two smooth functions. Consider the stochastic differential equation
+\begin{align}\label{SDE}& dX_t = f_t(X_t)dt + \sqrt{2w_t ^2}dB_t, \\ & X_0 \sim p\end{align}
 where $dB_t$ denotes integration with respect to a Brownian motion. Under mild conditions on $f$, an almost-surely continuous stochastic process satisfying this SDE exists. Let $p_t$ be the probability density of $X_t$; it is a non-trivial fact that this process [can be reversed in time](https://www.sciencedirect.com/science/article/pii/0304414982900515). More precisely, the following SDE is exactly the time-reversal of \eqref{SDE}:
-\begin{align}\label{bsde} & dY_t = -\left(  f_t(Y_t)+ 2\sigma_t^2 \nabla \log p_t(Y_t) \right)dt + \sqrt{2\sigma_t^2}dB_t \\ & Y_T \sim p_T.
+\begin{align}\label{bsde} & dY_t = -\left(  f_t(Y_t)+ 2w_t^2 \nabla \log p_t(Y_t) \right)dt + \sqrt{2w_t^2}dB_t \\ & Y_T \sim p_T.
 \end{align}
 
 @@deep 
@@ -53,7 +53,7 @@ Sampling paths from the reverse SDE \eqref{bsde} needs access to $\nabla \log p_
 ### Working out the Ornstein-Uhlenbeck process
 
 
-For simple functions $f$, the process \eqref{SDE} has an explicit representation.  Here we focus on the case where $f_t(x) = -\alpha_t x$ for some function $\alpha$, that is
+For simple functions $f$, the process \eqref{SDE} has an explicit representation.  Here we focus on the case where $f_t(x) = -\mu_t x$ for some function $\mu$ called *drift coefficient*, that is
 \begin{equation}\label{ou}
 dX_t = -\mu_t X_t + \sqrt{2w_t^2}dB_t.
 \end{equation}
