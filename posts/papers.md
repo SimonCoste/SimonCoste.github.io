@@ -33,6 +33,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Spectral redemption in clustering sparse networks](https://www.pnas.org/doi/pdf/10.1073/pnas.1312486110) by Krzkala et al. (2013): classical versions of spectral clustering are failing for sparse graphs, but the authors show that a simple modification of the Laplacian matrix can lead to a successful clustering.
 - [On Estimation of a Probability Density Function and Mode](https://projecteuclid.org/journals/annals-of-mathematical-statistics/volume-33/issue-3/On-Estimation-of-a-Probability-Density-Function-and-Mode/10.1214/aoms/1177704472.full), the famous kernel density estimation paper by Parzen (1962)
 - [Power laws, Pareto distributions and Zipf’s law](https://arxiv.org/pdf/cond-mat/0412004.pdf), the survey by Newman on heavy-tails
+- [Hill’s estimator](http://www.econ.uiuc.edu/~econ536/Papers/hill75.pdf), a simple way of estimating tails of distributions when they are heavy. 
 - [ISOMAP, nonlinear dimensionality reduction](https://www.robots.ox.ac.uk/~az/lectures/ml/tenenbaum-isomap-Science2000.pdf) for manifold learning. 
 - [t-SNE](https://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf), the paper introducing the t-SNE dimension reduction technique, by van der Maaten and Hinton (2008)
 - [Best subset or Lasso](https://www.stat.cmu.edu/~ryantibs/papers/bestsubset.pdf), by Hastie, Tibshirani and Friedman (2017)
