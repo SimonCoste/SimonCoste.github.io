@@ -4,7 +4,7 @@ date = "March 2025"
 abstract = "Learning the score of a density from its samples and Tweedie's formula. "
 +++
 
-Let $p$ be any smooth probability density function. Its *score* is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is the key to sample from $p$ using the Langevin dynamics, and we've seen it to be the key when reversing diffusion processes. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
+The *score* of a probability density $p$ is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is needed if one needs to sample from the reverse SDE of a diffusion model. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
 
 \tableofcontents
 
@@ -44,16 +44,7 @@ The loss we want to minimize is thus
 Practically, learning the score of a density $p$ from samples $x^1, \dots, x^n$ is done by minimizing the empirical version of the right-hand side of \eqref{SM}:
 $$ \ell(\theta) = \frac{1}{n}\sum_{i=1}^n |s_{\theta}(x^i)|^2 + 2 \nabla \cdot (s_{\theta}(x^i)).$$
 
-**How do we empirically optimize \eqref{opt_theta} in the context of diffusion models?** 
-
-In the context of diffusion models, we have a whole family of densities $p_t$ and we want to learn the score for every $t \in [0,T]$. 
-
-1) First, we need not solve this optimization problem for every $t$. We could obviously discretize $[0,T]$ with $t_1, \dots, t_N$ and only solve for $\theta_{t_i}$ independently,  but it is actually smarter and cheaper to approximate the whole function $(t,x) \to \nabla \log p_t(x)$ by a single neural network (a U-net, in general). That is, we use a parametrized family $s_\theta(t,x)$. This enforces a form of time-continuity which seems natural. Now, since we want to aggregate the losses at each time, we solve the following problem: 
-\begin{equation}\label{20}\argmin_\theta \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t)|^2 + 2 \nabla \cdot (s_{\theta}(t, X_t))]dt\end{equation} where $w(t)$ is a weighting function (for example, $w(t)$ can be higher for $t\approx 0$, since we don't really care about approximating $p_T$ as precisely as $p_0$). 
-
-1) In the preceding formulation we cannot exactly compute the expectation with respect to $p_t$, but we can approximate it with our samples $x_t^i$. Additionnaly, we need to approximate the integral, for instance we can discretize the time steps with $t_0=0 < t_1 < \dots < t_N = T$. Our objective function becomes
-$$ \ell(\theta) =\frac{1}{n}\sum_{t \in \{t_0, \dots, t_N\}} w(t)\sum_{i=1}^n |s_{\theta}(t, x_t^i)|^2 + 2 \nabla\cdot(s_{\theta}(t, x_t^i))$$
-which looks computable… except it's not ideal.  Suppose we perform a gradient descent on $\theta$ to find the optimal $\theta$ for time $t$. Then at each gradient descent step, we need to evaluate $s_{\theta}$ as well as its divergence; *and then* compute the gradient in $\theta$ of the divergence in $x$, in other words to compute $\nabla_\theta \nabla_x \cdot s_\theta$. In high dimension, this can be too costly. 
+This looks computable… except it's not ideal.  Suppose we perform a gradient descent on $\theta$ to find the optimal $\theta$. Then at each gradient descent step, we need to evaluate $s_{\theta}$ as well as its divergence; *and then* compute the gradient in $\theta$ of the divergence in $x$, in other words to compute $\nabla_\theta \nabla_x \cdot s_\theta$. In high dimension, this can be too costly. 
 
 ## Tweedie's formula for denoising
 
@@ -86,40 +77,59 @@ $$ \mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(X) - s(X)\vert^2] = c' + \mat
 
 ### Tweedie's formula 
 
-It turns out that the Denoising Score Matching objective is just an avatar of a deep, not so-well-known result, called Tweedie's formula. Herbert Robbins is often credited with the first discovery of this formula in the context of exponential (Poisson) distributions; Maurice Tweedie extended it, and Bradley Efron popularized it in [his excellent paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on selection bias. 
+It turns out that the Denoising Score Matching objective is just an avatar of a deep, not so-well-known result, called Tweedie's formula. Herbert Robbins is often credited with the first discovery of this formula in 1956 in the context of exponential (Poisson) distributions; a paper by Koichi Miyasawa (1961) was later rediscovered, with the first true appearance of the formula; Maurice Tweedie extended it, and Bradley Efron popularized it in [his excellent paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on selection bias. 
 
 @@deep 
 
-**Tweedie's formula**
+**Tweedie's formulas**
 
-Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with distribution $N(0, \sigma^2)$. We still note $p_{\mathrm{noisy}}$ the distribution of $X_{\mathrm{noisy}} = X + \varepsilon$. Then,
-\begin{equation}\label{tweedie}
-\mathbb{E}[X \mid X_{\mathrm{noisy}}] = X_{\mathrm{noisy}} + \sigma^2 \nabla \ln p_{\mathrm{noisy}}(X_{\mathrm{noisy}}).
+Let $X$ be a random variable on $\mathbb{R}^d$ with density $p$, and let $\varepsilon$ be an independent random variable with distribution $N(0, \sigma^2 I_d)$. We note $p_{\sigma}$ the distribution of $Y = X + \varepsilon$. Then,
+\begin{align}\label{tweedie-0}
+&\nabla \log p_\sigma(y) = - \mathbb{E}\left[\left. \frac{\varepsilon}{\sigma^2} \right| Y\right]\\ 
+&\nabla^2 \log p_\sigma(y) = -\frac{I_d}{\sigma^2} + \mathrm{Cov}\left(\left. \frac{\varepsilon}{\sigma^2} \right| Y\right).
+\end{align}
+These expressions are equivalent to the *noise prediction* formulas, 
+\begin{align}\label{tweedie-1}
+&\mathbb{E}[\varepsilon \mid Y] = - \sigma^2 \nabla \log p_\sigma(Y)\\
+&\mathrm{Cov}(\varepsilon \mid Y) = \sigma^2 I_d + \sigma^4 \nabla^2 \log p_\sigma(Y).
+\end{align} 
+and to the *data prediction* or *denoising* formulas,
+\begin{align}\label{tweedie}
+&\mathbb{E}[X \mid Y] = Y + \sigma^2 \nabla \ln p_{\sigma}(Y)\\
+&\mathrm{Cov}(X \mid Y) = \sigma^2 I_d + \sigma^4 \nabla^2 \log p_\sigma(Y).
+\end{align}
+
+Finally, the optimal denoising error (the Minimum Mean Squared Error) is given by 
+\begin{equation}\label{tweedie-2}
+\mathbb{E}[|X - \mathbb{E}[X \mid Y]|^2] = \mathrm{Tr}\left(\mathrm{Cov}(X \mid Y)\right) = \sigma^2 d + \sigma^4 \mathrm{Tr}\left(\nabla^2 \log p_\sigma(Y)\right).
 \end{equation}
-Equivalently, 
-\begin{equation}\label{tweedie2}
-\mathbb{E}\left[\left. \varepsilon  \right| X_{\mathrm{noisy}}\right] = -\sigma^2 \nabla \ln p_{\mathrm{noisy}}(X_{\mathrm{noisy}}).
-\end{equation}
+
 @@
 
-
+The classical "Tweedie formula" is the first one in \eqref{tweedie}.
 @@proof 
 
+**Proof.** We simply compute $\nabla \log p_\sigma$ and $\nabla^2\log p_\sigma$ by differentiating under the integral sign. Indeed, 
+$$\nabla \log p_\sigma(y) = \frac{\int \nabla_y \log p(x)g(y-x)dx}{p_\sigma(y)}.$$
+Since $\nabla g(z) = -z/\sigma^2 g(z)$, the expression above is equal to 
+\begin{equation}\label{p5}-\int \frac{y-x}{\sigma^2} \frac{p(x)g(y-x)}{p_\sigma(y)}dx.\end{equation}
+The joint distribution of $(X, Y)$ is $p(x)g(y-x)$ and the conditional density of $X$ given $Y = y$ is 
+$p(x|y) = p(x)g(y-x)/p_\sigma(y)$, hence the expression above is equal to $-\mathbb{E}[\varepsilon/\sigma^2 \mid Y]$ as requested. 
 
+Now, by differentiating $\log p_\sigma$ twice, we get 
+$$\nabla^2 \log p_\sigma(y) = \frac{\int \nabla^2 p(x)g(y-x)dx}{p_\sigma(y)} - \left(\nabla \log p_\sigma(y)\right)\left(\nabla \log p_\sigma(y)\right)^\top.$$
+Since $\nabla^2 g(z) = -(\sigma^{-2}I_d -\sigma^{-4}zz^\top )g(z)$, we get 
+$$\nabla^2 \log p_\sigma(y) = -\frac{\int [\sigma^{-2} I_d- \sigma^{-4}(y-x)(y-x)^\top ]  p(x)g(y-x)dx}{p_\sigma(y)} - \mathbb{E}\left[\frac{\varepsilon}{\sigma^2} \mid Y\right]\mathbb{E}\left[\frac{\varepsilon}{\sigma^2} \mid Y\right]^\top.$$
+This is exactly $-\sigma^{-2}I_d + \sigma^{-4}\left(\mathbb{E}[\varepsilon\varepsilon^\top \mid Y] - \mathbb{E}[\varepsilon \mid Y]\mathbb{E}[\varepsilon \mid Y]^\top\right)$, or $-\sigma^{-2}I_d + \mathrm{Cov}(\varepsilon / \sigma^2 \mid Y)$.
 
-**Proof.** The joint distribution of $(X, X_{\mathrm{noisy}})$ is $p(x)g(z-x)$, hence the conditional expectation of $X$ given $X_{\mathrm{noisy}} = z$ is
-$$\frac{\int x p(x)g(z-x)dx}{q(z)} = z -  \frac{\int  (z-x)g(z-x)p(x)dx}{p_{\mathrm{noisy}}(z)}.$$
-Note that $p_{\mathrm{noisy}}(z) = \int p(x)g(z-x)dx$. 
-Now, since $g$ is the density of $N(0,\sigma^2 I_d)$, we have $\nabla g(x) = -x/\sigma^2 g(x)$, and the term above is equal to
-$$z +\sigma^2  \frac{\int  \nabla_z g(z-x)p(x)dx}{p_{\mathrm{noisy}}(z)} = z + \sigma^2 \nabla_z \ln \int g(z-x)p(x)dx$$
-which is the desired result. For the second formula, just note that $X_{\mathrm{noisy}} = \mathbb{E}[X_{\mathrm{noisy}}|X_{\mathrm{noisy}}] = \mathbb{E}[X \mid X_{\mathrm{noisy}}] + \mathbb{E}[\varepsilon \mid X_{\mathrm{noisy}}]$ then simplify.
+The noise prediction formulas \eqref{tweedie-1} directly follow from \eqref{tweedie-0}. For the denoising formulas, we only have to note that since $Y = X + \varepsilon$, we have $\mathbb{E}[X \mid Y] = Y - \mathbb{E}[\varepsilon \mid Y]$ and $\mathrm{Cov}(X \mid Y) = \mathrm{Cov}(\varepsilon \mid Y)$.
+
 @@
 
-Since $X_{\mathrm{noisy}}$ is centered around $X$, the classical ("frequentist") estimate for $X$ given $X_{\mathrm{noisy}}$ is $X_{\mathrm{noisy}}$. Tweedie's formula corrects this estimate by adding a term accounting for the fact that $X$ is itself random: for instance, if $X_{\mathrm{noisy}}$ lands in a region where $X$ is extremely unlikely to live in, then it is probable that the noise is responsible for this, and the estimate for $X$.  
+Since $Y$ is centered around $X$, the classical ("frequentist") estimate for $X$ given $Y$ is $Y$. Tweedie's formula corrects this estimate by adding a term accounting for the fact that $X$ is itself random: if $Y$ lands in a region where $X$ is unlikely to live in, then it is probable that the noise is responsible for this, and the estimate for $X$ needs to be adjusted. 
 
-Now, what's the link between this and Denoising Score Matching ? Well, the conditional expectation of any $X$ given $Z$ minimizes the $L^2$-distance, in the sense that $\mathbb{E}[X \mid Z] = f(Z)$ where $f$ minimizes $\mathbb{E}[|f(Z) - X|^2]$. Formula \eqref{tweedie2} says that $\nabla \ln p_{\mathrm{noisy}}$, the quantity we need to estimate, is nothing but the « best denoiser » up to a scaling $-\sigma^2$: 
-$$ \nabla \ln p_{\mathrm{noisy}} \in \arg \min \mathbb{E}[|f(X + \varepsilon) - (-\varepsilon/\sigma^2)|^2].$$
-Replacing $f$ with a neural network, we exactly find the Denoising Score Matching objective in \eqref{dsm}.
+Now, what's the link between this and Denoising Score Matching ? The conditional expectation of any $X$ given $Z$ minimizes the $L^2$-distance, in the sense that $\mathbb{E}[X \mid Z] = f(Z)$ where $f$ minimizes $\mathbb{E}[|f(Z) - X|^2]$. Formula \eqref{tweedie} says that $\nabla \ln p_{\sigma}(y)$, the quantity we need to estimate, is nothing but the « best denoiser » up to a scaling $-\sigma^2$: 
+$$ \nabla \ln p_{\sigma} \in \arg \min \mathbb{E}[|f(X + \varepsilon) - (-\varepsilon/\sigma^2)|^2].$$
 
 I find this result to give some intuition on score matching and how to parametrize the network. 
 - If $s(x)$ is « noise predictor » trained with the objective $\mathbb{E}[|s(X+\varepsilon) - \varepsilon|^2]$, then $-s(x)/\sigma^2$ is a proxy for $\nabla \ln p_{\mathrm{noisy}}$. **This is called « noise prediction » training**.  
@@ -165,4 +175,6 @@ We are now equipped with learning $\nabla \ln p_t$ when $p_t$ is the distributio
 [Hyvärinen's paper](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf) on Score Matching. 
 
 [Efron's paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on Tweedie's formula - a gem in statistics. 
+
+I didnt find a free version of Miyazawa's paper, *An empirical Bayes estimator of the mean of a normal population* published in Bull. Inst. Internat. Statist., 38:181–188, 1961.
 
