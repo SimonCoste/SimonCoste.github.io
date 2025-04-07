@@ -4,7 +4,7 @@ date = "March 2025"
 abstract = "Learning the score of a density from its samples and Tweedie's formula. "
 +++
 
-The *score* of a probability density $p$ is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is needed if one needs to sample from the reverse SDE of a diffusion model. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
+The *score* of a probability density $p$ is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is needed if one wants to sample from the reverse SDE of a diffusion model. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
 
 \tableofcontents
 
@@ -13,14 +13,16 @@ The *score* of a probability density $p$ is the gradient of its log-density: $\n
 **The Fisher Divergence**
 
 The L2-distance between the scores of two probability densities is often called the *Fisher divergence*: 
-$$ \mathrm{fisher}(\rho_1 \mid \rho_2) = \int \rho_1(x)|\nabla\log\rho_1(x) - \nabla\log\rho_2(x)|^2dx.$$
+\begin{align}\mathrm{fisher}(\rho_1 \mid \rho_2) &= \int \rho_1(x)|\nabla\log\rho_1(x) - \nabla\log\rho_2(x)|^2dx\\
+&= \mathbb{E}_{X \sim \rho_1}[|\nabla\log\rho_1(X) - \nabla\log\rho_2(X)|^2].
+\end{align}
 Since our goal is to learn $\nabla\log p(x)$, it is natural to choose a parametrized family of functions $s_\theta$ and to optimize $\theta$ so that the divergence 
 $$\int p(x)|\nabla\log p(x) - s_\theta(x)|^2dx $$
 is as small as possible. However, this optimization problem is intractable, due to the presence of the explicit form of $p$ inside the integral. This is where Score Matching techniques come into play. 
 
 **The score matching trick**
 
-Let $p$ be a smooth probability density function supported over $\mathbb{R}^d$ and let $X$ be a random variable with density $p$. The following elementary identity is due to [Hyvärinen, 2005](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf); it is the basis for score matching estimation in statistics. 
+Let $p$ be a smooth probability density function supported over $\mathbb{R}^d$ and let $X$ be a random variable with density $p$. The following elementary identity is due to [Hyvärinen, 2005](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf). 
 
 @@important
 Let $s : \mathbb{R}^d \to \mathbb{R}^d$ be any smooth function with sufficiently fast decay at $\infty$, and $X \sim p$. Then,
@@ -46,20 +48,20 @@ $$ \ell(\theta) = \frac{1}{n}\sum_{i=1}^n |s_{\theta}(x^i)|^2 + 2 \nabla \cdot (
 
 This looks computable… except it's not ideal.  Suppose we perform a gradient descent on $\theta$ to find the optimal $\theta$. Then at each gradient descent step, we need to evaluate $s_{\theta}$ as well as its divergence; *and then* compute the gradient in $\theta$ of the divergence in $x$, in other words to compute $\nabla_\theta \nabla_x \cdot s_\theta$. In high dimension, this can be too costly. 
 
-## Tweedie's formula for denoising
+
 
 ### Denoising Score Matching
 
-Fortunately, there is another way to perform score matching when $p_t$ is the distribution of a random variable with gaussian noise added, as in our setting. We'll present this result in a fairly abstract setting; we suppose that $p$ is a density function, and $q = p*g$ where $g$ is an other density. The following result is due to [Vincent, 2010](https://www.iro.umontreal.ca/~vincentp/Publications/smdae_techreport.pdf). 
+Fortunately, there is another way to perform score matching when $p_t$ is the distribution of a random variable corrupted with additive noise, as in our setting. The following result is due to [Vincent, 2010](https://www.iro.umontreal.ca/~vincentp/Publications/smdae_techreport.pdf). 
 
 
 
 @@important
 **Denoising Score Matching Objective**
 
-Let $s:\mathbb{R}^d \to \mathbb{R}^d$ be a smooth function. Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with density $g$. We call $p_{\mathrm{noisy}}$ the distribution of $X_{\mathrm{noisy}}=X + \varepsilon$. Then, 
+Let $s:\mathbb{R}^d \to \mathbb{R}^d$ be a smooth function. Let $X$ be a random variable with density $p$, and let $\varepsilon$ be an independent random variable with density $g$. We call $p_{\mathrm{noisy}}$ the distribution of $Y=X + \varepsilon$. Then, 
 \begin{equation}\label{dsm}
-\mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(X+\varepsilon) - s(X+\varepsilon)\vert^2] = c + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X+\varepsilon)|^2]
+\mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(Y) - s(Y)\vert^2] = c + \mathbb{E}[|\nabla \log g(\varepsilon) - s(Y)|^2]
 \end{equation}
 where $c$ is a constant not depending on $s$. 
 @@
@@ -75,9 +77,18 @@ But then, upon adding and subtracting the term $\mathbb{E}[|\nabla \log g(\varep
 $$ \mathbb{E}[\vert \nabla \log p_{\mathrm{noisy}}(X) - s(X)\vert^2] = c' + \mathbb{E}[|\nabla \log g(\varepsilon) - s(X + \varepsilon)|^2].$$
 @@ 
 
-### Tweedie's formula 
+When $g$ is a centered Gaussian density, $\nabla \log g(\varepsilon) = (-\varepsilon / \mathrm{Var}(\varepsilon))g(\varepsilon)$, hence everything is known in the formula, except for the $\mathbb{E}$ but this can be replaced by an empirical average over the training dataset. 
 
-It turns out that the Denoising Score Matching objective is just an avatar of a deep, not so-well-known result, called Tweedie's formula. Herbert Robbins is often credited with the first discovery of this formula in 1956 in the context of exponential (Poisson) distributions; a paper by Koichi Miyasawa (1961) was later rediscovered, with the first true appearance of the formula; Maurice Tweedie extended it, and Bradley Efron popularized it in [his excellent paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on selection bias. 
+Although this way of presenting score matching was popular in 2020-2022, it happens to be an avatar of a deeper, clearer result called *Tweedie's formula*. Although there is strictly nothing more in Tweedie's formula than in DNS, the presentation and derivation of the main formulas tells a richer story, and is now considered as a solid grounding for presenting score-matching techniques in diffusions. 
+
+## Tweedie's formula for denoising
+
+
+Herbert Robbins is often credited with the first discovery of Tweedie's formula in 1956 in the context of exponential (Poisson) distributions; a paper by Koichi Miyasawa (1961) was later rediscovered, with the first true appearance of the formula in a general, bayesian context. Miyazawa also computed second-order variants. Maurice Tweedie extended Robbin's formula, and Bradley Efron popularized it in [his excellent paper](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf) on selection bias. 
+
+### The link between Score, Hessian, and best denoiser
+
+
 
 @@deep 
 
@@ -100,13 +111,14 @@ and to the *data prediction* or *denoising* formulas,
 \end{align}
 
 Finally, the optimal denoising error (the Minimum Mean Squared Error) is given by 
-\begin{equation}\label{tweedie-2}
-\mathbb{E}[|X - \mathbb{E}[X \mid Y]|^2] = \mathrm{Tr}\left(\mathrm{Cov}(X \mid Y)\right) = \sigma^2 d + \sigma^4 \mathrm{Tr}\left(\nabla^2 \log p_\sigma(Y)\right).
-\end{equation}
+\begin{align}\label{tweedie-2}
+\text{MMSE} &= \mathbb{E}[|X - \mathbb{E}[X \mid Y]|^2] \\ &= \mathrm{Tr}\left(\mathrm{Cov}(X \mid Y)\right)  \\ &= \sigma^2 d + \sigma^4 \mathrm{Tr}\left(\nabla^2 \log p_\sigma(Y)\right).
+\end{align}
 
 @@
 
-The classical "Tweedie formula" is the first one in \eqref{tweedie}.
+The classical "Tweedie formula" is the first one in \eqref{tweedie}. The quantity $\mathbb{E}[X \mid Y]$ is the best guess of the original sample $X$ given its corrupted version $Y$, hence the term "denoising formula". 
+
 @@proof 
 
 **Proof.** We simply compute $\nabla \log p_\sigma$ and $\nabla^2\log p_\sigma$ by differentiating under the integral sign. Indeed, 
@@ -141,28 +153,34 @@ Both formulations are found in the litterature, as well as affine mixes of both.
 ## Back to diffusions
 
 
-Let us apply this to our setting. Remember that $p_t$ is the density of $\alpha_t X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. 
+Let us apply this to our diffusion setting where $p_t$ is the density of $\alpha_t X_0 + \varepsilon_t$ where $\varepsilon_t \sim \mathscr{N}(0,\bar{\sigma}_t^2)$, hence in this case $g(x) = (2\pi\bar{\sigma}_t^2)^{-d/2}e^{-|x|^2 / 2\bar{\sigma}_t^2}$ and $\nabla \log g(x) = - x / \bar{\sigma}^2_t$. 
 
 **Data prediction model**
 
 The « data prediction » (or denoising) parametrization of the neural network would minimize the objective 
 $$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) - \alpha_t X_0|^2]dt.$$
+This is the loss that was used to train most (but not all) diffusion models, up to the weighting $w$. The SD1.5 and SDXL models use this formulation, hence if you have to use their U-NET you need to keep in mind that it's a *denoiser*. Here is the extract from the [SDXL tech report](https://arxiv.org/pdf/2307.01952):
+
+![](/posts/img/denoising_loss_SDXL.png)
 
 **Noise prediction model**
 
 Alternatively, the « noise prediction » parametrization of the neural network would minimize the objective 
 $$ \int_0^T w(t)\mathbb{E}[|s_{\theta}(t, X_t) -  \varepsilon|^2]dt$$
-where I noted $\varepsilon$ instead of $X_1$ to emphasize we're predicting noise. 
 
-Since we have access to samples $(x^i, \varepsilon^i, \tau^i)$ where $\tau \sim w$, we get the empirical version: 
-\begin{equation}\label{empirical_loss}\hat{\ell}(\theta) = \frac{1}{n}\sum_{i=1}^n \left[|\varepsilon^i - s_\theta(\alpha_\tau x^i + \bar{\sigma}_\tau \varepsilon^i)|^2\right].\end{equation}
-Up to the constants and the choice of the drift $\mu_t$ and variance $w_t$, this is *exactly* the loss function (14) from the [DDPM paper](https://arxiv.org/abs/2006.11239). 
-Once this is done, the proxy for $\nabla \ln p_t$ would be 
-$$\nabla \ln p_t(x) \approx \frac{x - s_{\theta}(t,x)}{\bar{\sigma}_t^2}.$$
-Plugging this back into the SDE (DDPM) sampling formula, we get 
-$$ dY_t = \mu_{T-t}Y_t + 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}(Y_t - s_{\theta}(T-t,Y_t))dt + \sqrt{2w_{T-t}}dB_t$$
-or 
-$$ dY_t = \left(\mu_{T-t} + 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}\right)Y_t - 2\frac{w^2_{T-t}}{\bar{\sigma}_{T-t}^2}s_{\theta}(T-t,Y_t)dt + \sqrt{2w_{T-t}}dB_t.$$
+
+Up to the constants and the choice of the drift $\mu_t$ and variance $w_t$, this is *exactly* the loss function (14) from the early [DDPM paper](https://arxiv.org/abs/2006.11239): 
+![](/posts/img/noise_prediction_loss_DDPM.png)
+
+**Sampling** 
+
+Finally, one needs to plug these expressions back into the reverse SDE or ODE. If you want to play with pretrained models, you have to pay attention to how the model was trained: is it a data predictor or a denoiser? Based on the answer, one can go back to the score. Tweedie's formulas say that 
+
+$$\nabla \log p_\sigma(y) = \frac{\text{data predictor} - y}{\sigma^2}$$
+while on the other hand 
+$$\nabla\log p_\sigma(y) = -\frac{\text{noise predictor}}{\sigma^2}.$$
+
+
 
 
 ## Conclusion
