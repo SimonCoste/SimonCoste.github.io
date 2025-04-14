@@ -7,9 +7,9 @@ abstract = "Flow straight, flow fast: velocity is everything. "
 In the preceding notes, we've seen how [diffusion models](/posts/diffusion.md) are trained and sampled from and we've seen how the score function $\nabla \ln p_t$ is efficiently learnt using [score matching](/posts/score_matching.md). However, since their inception, diffusion models felt a little bit weird for various reasons. 
 - First, they did not « really » bridge $p_0$ with $N(0,I_d)$. They bridge $p_0$ with $p_T$ which is only approximately $N(0,I_d)$. This is absolutely not important practically, but from a theoretical point of view, it is a bit unsatisfactory. There should be a way to bridge $p_0$ with $N(0,I_d)$  **exactly** in finite time. 
 - Second, the design of a diffusion feels a little bit clunky. How do we choose the drift and diffusion coefficients $\mu_t, w_t$? In the end, it looks that the coefficients $\alpha_t, \sigma_t$ such that $x_t$ has the same law as $\alpha_t x_0 + \sigma_t \varepsilon$ are the ones who matter, so why note directly choose them?
-- Finally, this ODE/SDE duality is a bit confusing. In the end, the SDE formulation is not really useful since we are only interested in the marginals $p_t$, and the ODE sampling feels really simpler. There was a time when it was not clear why SDEs seem to work better (while there was absolutely no theoretical reason for that).
+- Finally, this ODE/SDE duality is a bit confusing. In the end, the SDE formulation is not really useful since we are only interested in the marginals $p_t$, and the ODE sampling feels really simpler. There was a time when it was not clear why SDEs seemed to work better (while there was no theoretical reason for that).
 
-For these reasons, the community has been looking for a new model that would be more intuitive, more flexible, and more powerful, able to bridge any two distributions in finite time, with deterministic (ODE) sampling. In the end, it turns out that Flow-Matching is **almost entirely equivalent** to diffusion score mathching, except that the presentation and the way we're doing things is slightly different -- but way more flexible. 
+For these reasons, the community has been looking for a new model that would be more intuitive, more flexible, and more powerful, able to bridge any two distributions in finite time, with deterministic (ODE) sampling. In the end, it turns out that Flow-Matching is **almost entirely equivalent** to diffusion score matching, except that the presentation and the way we're doing things is slightly different -- but way more flexible. 
 
 \tableofcontents
 
@@ -21,9 +21,9 @@ Let $(X_0, X_1)$ be a couple of random variables sampled from $p_0$ and $p_1$. A
 
 @@important 
 
-Suppose that there is a smooth function $\varphi : (t, x, y) \to \varphi_t(x,y)$ such that $\varphi_0(x,y) = x$ and $\varphi_1(x,y)=y$. This provides a connection between $p_0$ and $p_1$ by defining random variables 
+Suppose that there is a smooth function $\varphi : (t, x, y) \to \varphi_t(x,y)$ such that $\varphi_0(x,y) = x$ and $\varphi_1(x,y)=y$. We define
 $$X_t = \varphi_t(X_0, X_1).$$
-This connection is called the **conditional flow** of the system. We note $p_t$ the density of $X_t$. 
+This connection is called the **conditional flow** of the system. We note $p_t$ the density of $X_t$. The family $(p_t)$ continuously connects $p_0$ to $p_1$ and is called the **probability path**. 
 
 @@ 
 
@@ -34,11 +34,11 @@ This connection is called the **conditional flow** of the system. We note $p_t$ 
 
 @@ 
 
-We emphasize the fact that $X_t$ does not satisfy \label{ode_x} in general. The main point is that $X_t$ (the conditional flow) and $x_t$ (the unconditional, or **annealed flow**, defined by the ODE) have the same marginals $p_t$. This is more or less what happened for diffusions, where the SDE and ODE paths had the same marginals but not the same distribution. 
+We emphasize the fact that $X_t$ is not a solution of \eqref{ode_x} in general; but it is true that $X_t$ (the conditional flow) and $x_t$ (the unconditional, or **annealed flow**, defined by the ODE) have the same marginals $p_t$. This is more or less what happened for diffusions, where the SDE and ODE paths had the same marginals but not the same distribution. 
 
 @@proof 
 
-**Proof.** We follow the proofs in the Stochastic Interpolant paper. The Fourier transform of $p_t$ is $\hat{p}_t(\xi) = \mathbb{E}[e^{i \langle \xi,  X_t\rangle}]$. Differentiating in $t$ yields $\partial_t \hat{p}_t(\xi) = \widehat{\partial_t p}(\xi)$ since time-differentiation and Fourier transform commute. On the other hand, by passing $\partial_t$ inside the expectation and conditioning on $X_t$, we get 
+**Proof.** We follow the proofs in the Stochastic Interpolants paper. The Fourier transform of $p_t$ is $\hat{p}_t(\xi) = \mathbb{E}[e^{i \langle \xi,  X_t\rangle}]$. Differentiating in $t$ yields $\partial_t \hat{p}_t(\xi) = \widehat{\partial_t p}(\xi)$ since time-differentiation and Fourier transform commute. On the other hand, by passing $\partial_t$ inside the expectation and conditioning on $X_t$, we get 
 \begin{align}
 \widehat{\partial_t p_t}(\xi) &= \mathbb{E}[i\xi \dot{X}_t e^{i\langle\xi, X_t\rangle}]\\ 
 &=\mathbb{E}[i\xi e^{i\langle\xi, X_t\rangle}\mathbb{E}[\dot{X}_t\mid X_t]]\\ 
@@ -116,10 +116,10 @@ Now that everything is set, we have to design an efficient conditional flow $\va
 
 The simplest (and, indeed, very powerful) flow is the linear one, $\varphi_t(x,y) = \alpha_t x + \sigma_t y$, giving 
 \begin{equation}\label{linearflow}X_t = \alpha_t X_0 + \sigma_t X_1.\end{equation}
-where $\alpha, \sigma$ are differentiable and satisfy $\alpha_0 = \sigma_1 = 1$ and $\alpha_1 = \sigma_0 = 0$. 
+Here, $\alpha, \sigma$ are differentiable functions and must satisfy the constraint $\alpha_0 = \sigma_1 = 1$ and $\alpha_1 = \sigma_0 = 0$. 
 The trajectories are straight lines going from $X_0$ to $X_1$ at a velocity given by 
 \begin{equation}\label{linearvelo}\dot{X}_t = \dot{\alpha}_t X_0 + \dot{\sigma}_t X_1.\end{equation}
-In the simplest setting $\alpha_t  =1-t$ and $\sigma_t = t$, the velocity is constant, $\dot{X}_t = X_1 - X_0$, so that the flow-matching loss minimizes $\mathbb{E}[|s(X_t) - (X_1 - X_0)|^2]$. 
+In the simplest setting, we can simply choose $\alpha_t  =1-t$ and $\sigma_t = t$. This is called **rectified flows**. The velocity is constant, $\dot{X}_t = X_1 - X_0$, so that the flow-matching loss minimizes $\mathbb{E}[|s(X_t) - (X_1 - X_0)|^2]$. 
 
 ### "Gaussian" flows 
 
@@ -145,7 +145,7 @@ $$\mathbb{E}[X_0 \mid X_t] = \frac{X_t + \sigma_t^2\nabla \ln p_t(X_t)}{\alpha_t
 Gathering the two yields the formula. 
 @@ 
 
-Formula \eqref{velocity_gaussian} tells us (once again!) that the only thing that matters given the choice of $\alpha_t, \sigma_t$ is the knowledge of the score $\nabla \ln p_t$. How this score was learnt is actually a secondary problem: we don't care if the learning was done in a diffusion framework or whatever. When we have it, we can plug it in \eqref{velocity_gaussian} and sample. 
+Formula \eqref{velocity_gaussian} tells us (once again!) that the only thing that matters given the choice of $\alpha_t, \sigma_t$ is the knowledge of the score $\nabla \ln p_t$. How this score was learnt is actually an independent problem: we don't care how the learning was done. When we have the score, we can plug it in \eqref{velocity_gaussian} and sample. 
 
 By carefully looking at the derivations, we can see that there are one-to-one linear connections between 
 
@@ -156,6 +156,13 @@ By carefully looking at the derivations, we can see that there are one-to-one li
 Only one of them needs to be learned, and we can convert it into the three others. If one wants to use a pretrained model for sampling, one thus needs to keep track of *how the model was learned*: is it a score, a denoiser, a data predictor or a velocity? 
 
 We close this part with an important note: given a score model for $\nabla \ln p_t$, regardless of how it is formulated and trained, using it to sample from the flow $\dot{x}_t = v_t(x_t)$ or to sample from the DDIM ODE in diffusion models is **exactly the same**. 
+
+### Brownian bridges
+
+Instead of only relying on a single deterministic function $\varphi : (t,x,y) \to \varphi_t(x,y)$ for interpolating between $x$ and $y$, we could add some extra randomness. This would typically be done by considering 
+$$ X_t = \psi_t(x,y) = \varphi_t(x,y) + \gamma_t Z$$
+where $Z$ is an independent random variable and $\gamma$ is a smooth function with $\gamma_0 = \gamma_1 = 0$. Typically, $\gamma_t = \sqrt{t(1-t)}$; in this case, $\gamma_t Z$ has the same marginals as the *brownian bridge*. This method is interesting when we want to bridge two distributions that are not Gaussian. In this case, one can write $X_t = Y_t + \gamma_t Z$, and the velocity is $\mathbb{E}[\dot{Y}_t + \dot{\gamma}_t Z \mid X_t = x]$. With a rectified flow $Y_t = (1-t)X_0 + tX_1$, the loss is easily seen to be  
+$$\mathbb{E}\left[\left|X_1 - X_0 + (1/2 - t)/\gamma_t Z -  s_t(Y_t)\right|^2\right].$$
 
 ### Optimal transport flows 
 
@@ -177,7 +184,7 @@ The conclusion of these considerations is as follows.
 
 @@deep 
 
-The conditional linear flow $X_t = (1-t)X_0 + tX_1$ is a minimizer of **a bound on the Kinetic Energy among all the flows transporting $p_0$ to $p_1$**.
+The rectified flow $X_t = (1-t)X_0 + tX_1$ is a minimizer of **a bound on the Kinetic Energy among all the flows transporting $p_0$ to $p_1$**.
 
 @@ 
 
