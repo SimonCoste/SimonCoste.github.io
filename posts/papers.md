@@ -16,7 +16,6 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 
 ## Theoretical Stats/ML/DL
 - [The James-Stein paradox in estimation](http://www.stat.yale.edu/~hz68/619/Stein-1961.pdf) by Jamest and Stein, 1961. Sometimes, Maximum-likelihood is not the best estimator, even in a L2 world. 
-- [Compressed sensing paper](https://arxiv.org/pdf/math/0409186.pdf) by Candès, Romberg, and Tao (2006).
 - [Scale Mixtures of Gaussians and the Stastistics of Natural Images](https://proceedings.neurips.cc/paper_files/paper/1999/file/6a5dfac4be1502501489fc0f5a24b667-Paper.pdf) by Wainwright and Simoncelli (1999).
 - [Probabilistic PCA](https://www.di.ens.fr/~fbach/courses/fall2010/Bishop_Tipping_1999_Probabilistic_PCA.pdf) by Tipping and Bishop (1999). Lightweight generative model. 
 - [Annealed importance sampling](https://link.springer.com/content/pdf/10.1023/A:1008923215028.pdf) by Radford Neal (2001). 
