@@ -87,6 +87,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 ### Clever tricks and techniques
 
 - [Image Segmentation as rendering](https://arxiv.org/pdf/1912.08193)
+- [FAISS](https://arxiv.org/pdf/1702.08734), Meta's package for high-dimensional k-NN search.
 - [ViTs need Registers](https://arxiv.org/pdf/2309.16588), by T. Darcet et al. A strikingly simple observation : ViT store some internal informations inside the tokens, because it needs to store them somewhere. Adding a small "memory register" (ie, additional tokens) solves it. A very nice scientific paper.  
 - [Chain-of-Thought](https://papers.nips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html), a landmark technique for having better at inference time. Partly responsible for the huge gap in reasonning quality of LLMs between 23 and 24.
 - [Rotary Positional Encoding](https://arxiv.org/abs/2104.09864): previously, positional encoding did not retain *relative position* information. By working in the complex plane with rotations, this is no longer a problem. This solution is now practically implemented everywhere.  
