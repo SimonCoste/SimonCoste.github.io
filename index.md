@@ -4,7 +4,7 @@
 # About
 
 
-I'm a permanent researcher (MCF) in mathematics at [Université de Paris](https://u-paris.fr/en/) (P7, LPSM), interested in probability theory, machine learning,  AI, and [startup funding](https://www.linkedin.com/company/eigensyndicate?original_referer=https%3A%2F%2Fwww.google.com%2F). Entrepreneur (stealth atm).
+I'm a permanent researcher (MCF) in mathematics at [Université de Paris](https://u-paris.fr/en/) (P7, LPSM), interested in probability theory, machine learning,  AI, and [startup funding](https://www.linkedin.com/company/eigensyndicate?original_referer=https%3A%2F%2Fwww.google.com%2F). Entrepreneur (stealth atm -- public launch in september 25).
 
 
 
