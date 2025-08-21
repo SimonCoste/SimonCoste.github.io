@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+<link rel="stylesheet" href="/css/poole_hyde.css">
+<!-- style adjustments -->
+<style>
+  html {font-size: 17px;}
+  .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;}
+  @media (min-width: 940px) {
+    .franklin-content {width: 100%; margin-left: auto; margin-right: auto;}
+  }
+  @media (max-width: 768px) {
+    .franklin-content {padding-left: 6%; padding-right: 6%;}
+  }
+</style>
+<link rel="icon" href="/assets/lichen.png">
+
+   <title>Flow Models V: Latent Diffusion</title> 
+
+</head>
+<body>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+
+    <div class="sidebar-about">
+
+      <h1><a class="sidebar-about" href="/">Simon Coste</a></h1>
+      <p class="sidebar-about">Mathematics</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item " href="/">About</a>
+      <a class="sidebar-nav-item " href="/research/">Research</a>
+      <a class="sidebar-nav-item " href="/teaching/">Teaching</a>
+      <a class="sidebar-nav-item " href="/notes/">Notes</a>
+      <a class="sidebar-nav-item " href="/talk/">Talks</a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <p>&copy; Simon Coste, modified: August 21, 2025. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+    </div>
+
+
+  </div>
+  
+
+  
+</div>
+<div class="content container">
+
+<!-- Content appended here -->
+
+
+<div class="franklin-content">
+   <h1 class="page-title"> Flow Models V: Latent Diffusion </h1> 
+   <span class="page-date"> September 2025 </span> 
+</div>
+<div class="franklin-content">
+<p>This is currently being written - as of Aug 21, 2025</p>
+<p>Path-based generative models can be applied to any kind of continuous data. If one wants to generate HD images, then they are applied to the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi mathvariant="double-struck">R</mi><mrow><mn>3</mn><mo>×</mo><mn>1024</mn><mo>×</mo><mn>1024</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbb{R}^{3 \times 1024 \times 1024}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord mathbb">R</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mbin mtight">×</span><span class="mord mtight">1</span><span class="mord mtight">0</span><span class="mord mtight">2</span><span class="mord mtight">4</span><span class="mbin mtight">×</span><span class="mord mtight">1</span><span class="mord mtight">0</span><span class="mord mtight">2</span><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span> space. The velocity field or score function would then be a function mapping a 3-million space to itself. That&#39;s almost impossible to do efficiently, even with our modern computing power. Indeed, one of the most impressive leaps of diffusion models &#40;at least for image generation&#41; was the very simple idea to diffuse noise in a latent space. This idea was introduced in the <a href="...">LDM paper</a>; this post, not really mathematical, gives a small account on how the latent spaces are chosen and what are the implications of working on these spaces. </p>
+<h2 id="ldm_simple_autoencoders"><a href="#ldm_simple_autoencoders" class="header-anchor">LDM: simple autoencoders</a></h2>
+<h2 id="bye-bye_u-nets_deeper_compression_enables_dit_scaling"><a href="#bye-bye_u-nets_deeper_compression_enables_dit_scaling" class="header-anchor">Bye-Bye U-NETS: Deeper Compression enables DiT scaling</a></h2>
+<h2 id="the_sana_madness"><a href="#the_sana_madness" class="header-anchor">The SANA madness</a></h2>
+<!-- 
+  Page footer is in the sidebar. 
+ --></div><!-- CONTENT ENDS HERE -->
+    </div>  <!-- div: content container -->
+    
+        
+
+
+
+    
+    
+        
+
+
+    
+  </body>
+</html>
