@@ -66,7 +66,15 @@ This score is an approximation of
 
 Experimentally, this technique allows a tradeoff between quality and variety: augmenting the CFG scale $\gamma$ from 0 to (say) 10 augments the variety of the conditional samples (measured by the Inception Score, IS), but reduces the perceptual quality (measured by the Fréchet Inception Distance, FID). 
 
+## CFG with negative prompts
 
+In practice, one does not always want only "conditioning information", but also "negative conditioning". This is what is called "negative prompting": people want to generate a picture of a cat, and certainly *not* a dog. Of course, in theory, if the prompt adherence is well learnt by the model, it would be sufficient to ask for the condition $c = \text{cat, no dog}$. But this often does not work[^1]. Splitting the "positive" and "negative" part of the prompts can sometimes improve things. In practice, if we want the generation to have $c$ (positive part) but not $d$ (negative part) this is done by replacing $s_t(x, \varnothing)$ by $s_t(x, d)$, so the velocity used in the sampling path is now
+
+$$ (1 - \gamma)s_t(x, d) + \gamma s_t(x, c).$$
+
+For example, with a $\gamma=2$ we get $2s_t(x, c) - s_t(x, d)$. Intuitively, this tells us to go even more in the conditioning direction $s_t(x, c)$, and also to flee from the negative conditioning direction $s_t(x, d)$ because we don't want to end in $d$. 
+
+This was done for a long time in SDXL or SD3. However, the results seemed to suck: sometimes, adding a negative prompt (like `negative_prompt="text"` to generate images without text) resulted in *even more* text. The BlackForestLabs team, who spawned the FLUX models, pretended that their model was so good (and it is) that they no longer needed negative prompted, and just used vanilla CFG. I've not been convinced.  
 
 
 ## The gamma-powered distribution
@@ -88,7 +96,10 @@ At the moment of writing of this post (march 25), it really remains unclear (at 
 We simply replace the score $\nabla_x \ln p_t$ with the velocity field. 
 
 In this case, we need to learn a « joint velocity field » $v_t(x,c)$: the entire ODE system is conditionnally on $c$. In practice, this means that the conditional flows/velocities are actually conditioned twice: one on the conditioning information $c$, and one on the final sample itself $X_1 \sim p_1(\cdot \mid c)$. Note that here again, $c$ can be a placeholder $\varnothing$ meaning that the flow is unconditional. Once the approximation $u^\theta_t(x,c)$ is learnt, we can mimick the strategy \eqref{CFG}: at sampling, we use the velocity 
-$$ (1-\gamma) u^\theta_t(x, \varnothing) + \gamma u^\theta_t(x, c).$$
+$$ (1-\gamma) u^\theta_t(x, \varnothing) + \gamma u^\theta_t(x, c)$$
+or, if we use negative prompting, 
+$$ (1-\gamma) u^\theta_t(x, \mathrm{neg. cond.}) + \gamma u^\theta_t(x, c). $$
+
 
 
 
@@ -101,3 +112,5 @@ $$ (1-\gamma) u^\theta_t(x, \varnothing) + \gamma u^\theta_t(x, c).$$
 [CFG is a predictor-corrector](https://arxiv.org/pdf/2408.09000), a nice, recent (oct 25) review on CFG.
 
 [What does guidance do ?](https://arxiv.org/pdf/2409.13074), another recent paper (sep 25) on the topic.
+
+[^1]: From my own experience in image generation models, even extremely powerful models like FLUX.PRO have hard times adhering to "mixed prompts" with both positive and negative elements. 

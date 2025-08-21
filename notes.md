@@ -11,6 +11,8 @@ Those are mostly blog posts, notes, talk slides, nice pictures and various thing
 
 These series of notes focus on diffusion-based generative models, like the celebrated Denoising Diffusion Probabilistic Models; they contain the material I regularly present as lectures in some working groups for mathematicians or math graduate students, so the style is tailored for this audience. In particular, everything is fitted into the continuous-time framework (which is not exactly how it is done in practice). 
 
+In 2025 S2, I will probably completely rewrite and reorder these notes. I think that nowadays, there is **no reason other than historic** to present diffusion models by starting from the reversal of the SDE. The Flow Matching perspective should definitely be favored, the rest should only be anecdotic. 
+
 {{post diffusion}}
 
 {{post score_matching}}
@@ -20,6 +22,8 @@ These series of notes focus on diffusion-based generative models, like the celeb
 {{post guidance}}
 
 {{post consistency}}
+
+{{post LDM}}
 
 
 ## Deep learning
