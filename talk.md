@@ -26,6 +26,11 @@ abstract = "Html slides of some of my talks"
 
 [STF8](/talks/stf8/)
 
+## Seam Carving
+
+~~~
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRB9ad5RShPxIjvS8maCopqWpxp74VE8IMkkqJICYVqf4Fv7rkAC7QKrxZ_2Zpjtnrchyam4We2KvdF/pubembed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+~~~
 
 
 
