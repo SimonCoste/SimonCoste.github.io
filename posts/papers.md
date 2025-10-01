@@ -44,6 +44,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Local Learning algorithms](https://leon.bottou.org/publications/pdf/nc-1992.pdf) by Bottou and Vapnik (1992). The paper that introduced the concept of local learning algorithms.
 - [The two cultures of Stats](https://www2.math.uu.se/~thulin/mm/breiman.pdf)
 - [Why isn't everyone a Bayesian?](https://www2.stat.duke.edu/courses/Spring09/sta122/Readings/EfronWhyEveryone.pdf) by Efron (2013). It seems to me, as of 2025, that almost no one remains a Bayesian -- except academics living in the bubble of Bayesian statistics, of course. 
+- [Correlations and dependencies](https://people.math.ethz.ch/~embrecht/ftp/pitfalls.pdf): the best paper I know on the topic of "what is correlation" and how to measure it. 
 
   
 ## Modern Deep Learning and AI
