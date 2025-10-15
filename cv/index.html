@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simon Coste — CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+html, body {
+  background: #fff !important;
+}
+@media print {
+  html, body { background: #fff !important; }
+  /* These help some engines preserve colors, harmless if ignored */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+  /* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+
+/* Style for job/degree titles */
+.role .job {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #87098b; /* modern accent blue */
+  margin-bottom: 2px;
+  display: block;
+}
+
+  :root{
+    --page-gray:#F2F2F2;
+    --divider:#8E8E8E;
+    --text:#222222;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--page-gray);
+    color:var(--text);
+    font-family: "Inter","Helvetica Neue",Arial,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans","Liberation Sans",sans-serif;
+    line-height:1.35;
+  }
+  /* A4 canvas */
+  .page{
+    width: 794px; /* A4 @ 96dpi */
+    min-height: 1123px;
+    margin: 24px auto;
+    background: var(--card);
+    border: 1px solid #E5E5E5;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.02) inset;
+    padding: 28px 28px 36px;
+    position: relative;
+  }
+  header{
+    display:flex;
+    align-items:flex-start;
+    gap:24px;
+    margin-bottom: 12px;
+  }
+  .name{
+    font-weight: 800;
+    font-size: 40px;
+    letter-spacing: -0.5px;
+    margin: 8px 0 10px;
+  }
+  .meta{
+    font-size:14px;
+  }
+  .meta b{font-weight:700}
+  .photo-wrap{
+    margin-left:auto;
+    width:132px; height:132px;
+    border-radius:50%;
+    overflow:hidden;
+    flex:0 0 auto;
+    background:#ddd;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .photo-wrap img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  /* Section headings */
+  h2{
+    text-align:center;
+    font-size:20px;
+    font-weight:800;
+    margin:18px 0 8px;
+  }
+  .divider{ height:1px; background:var(--divider); margin:6px 0 14px; }
+
+  /* Two-column timeline table */
+  .rows{ display:grid; grid-template-columns: 210px 1fr; column-gap:22px; row-gap:16px; }
+  .when{ font-weight:600; font-size:13px; color:#000; white-space:pre-line; }
+  .role{ font-size:15px; }
+  .role .job{ font-weight:800; display:block; margin-bottom:1px; }
+  .role .org{ font-weight:800; margin-top:-2px; display:block; }
+  .role p{ margin:4px 0 0; font-size:14px; line-height:1.4; }
+
+  .section{ margin-top:10px; }
+
+  /* Fine print */
+  @media print{
+    body{ background: var(--page-gray); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .page{ margin:0 auto; box-shadow:none; border:0; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="left">
+        <div class="name">Simon Coste</div>
+        <div class="meta">
+          <div><b>Website:</b> <a href="https://scoste.fr" target="_blank" style="color:inherit;text-decoration:none;">scoste.fr</a></div>
+          <div><b>Address:</b> Paris, France</div>
+          <div><b>Email address:</b> <a href="mailto:simon.coste@u-paris.fr" style="color:inherit;text-decoration:none;">simon.coste@u-paris.fr</a></div>
+        </div>
+      </div>
+      <div class="photo-wrap">
+        <img src="photo.png" alt="photo">
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>Work Experience</h2>
+      <div class="divider"></div>
+      <div class="rows">
+
+        <div class="when"><b>07/2024 – present</b></div>
+        <div class="role">
+          <span class="job">Co-founder</span>
+          <span class="org">BANG! </span>
+          <p>Chief Scientist Officer - building vision, image processing and AI features.
+          Bang! is a French startup at the crossroads of AI tech, Consumer apps and Traditional
+          publishing. We adapt iconic comics and manga IPs into mobile-first, vertical stories
+          with a cutting-edge ethical AI approach.</p>
+          <p><a href="https://bang-comics.com/en" target="_blank">bang-comics.com 🔗</a></p>
+        </div>
+
+        <div class="when"><b>09/2022 – present</b><br>Ville de Paris, Île-de-France,<br>France</div>
+        <div class="role">
+          <span class="job">Permanent Researcher</span>
+          <span class="org">Université Paris Cité</span>
+          <p>Permanent researcher in Mathematics (Maître de conférence) @LPSM.</p>
+        </div>
+
+        <div class="when"><b>01/2022 – present</b><br>Ville de Paris, Île-de-France,<br>France</div>
+        <div class="role">
+          <span class="job">Founder</span>
+          <span class="org">Eigen</span>
+          <p>Angel syndicate to invest 100–200k in pre-seed and seed AI startups with a strong scientific scope.
+          We are a small team of 5 comprised of mathematicians, entrepreneurs and finance people. As of 2025, we
+          have a portfolio of 11 startups (1 exited, 1 failed).</p>
+        </div>
+
+        <div class="when"><b>09/2021 – 10/2022</b></div>
+        <div class="role">
+          <span class="job">Postdoctoral Researcher</span>
+          <span class="org">École normale supérieure</span>
+          <p>Postdoc researcher in deep learning and mathematics under the supervision of Stéphane Mallat.<br>
+          Co-organizer of the 2022 season of Challenge Data.</p>
+        </div>
+
+        <div class="when"><b>10/2019 – 09/2021</b></div>
+        <div class="role">
+          <span class="job">Postdoctoral Researcher</span>
+          <span class="org">INRIA</span>
+          <p>Postdoc researcher in mathematics &amp; ML under the supervision of François Baccelli.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Education</h2>
+      <div class="divider"></div>
+      <div class="rows">
+        <div class="when"><b>09/2016 – 09/2019</b></div>
+        <div class="role">
+          <span class="job">Mathematics | PhD</span>
+          <span class="org">Université Paul Sabatier and Université Paris-Cité</span>
+          <p>PhD on the spectral theory of random matrices and random graphs, with applications to machine learning and high-dimensional statistics. Under the supervision of Charles Bordenave and Justin Salez.</p>
+        </div>
+
+        <div class="when"><b>2015</b></div>
+        <div class="role">
+          <span class="job">Mathematics | Agrégation</span>
+          <span class="org">École normale supérieure Paris-Saclay</span>
+          <p>National exam for higher-education math teachers.<br>Ranked 30 out of ~1800 participants and ~300 selected.</p>
+        </div>
+
+        <div class="when"><b>01/2011 – 01/2016</b></div>
+        <div class="role">
+          <span class="job">Mathematics | Full curriculum</span>
+          <span class="org">École normale supérieure Paris-Saclay</span>
+          <p>Final year of Masters in Theoretical Probability at Sorbonne-Université.</p>
+        </div>
+
+        <div class="when"><b>01/2009 – 01/2011</b><br>Paris</div>
+        <div class="role">
+          <span class="job">Mathematics and Humanities</span>
+          <span class="org">Collège Stanislas</span>
+          <p>Highly selective two-year undergraduate preparation courses for the entrance exams to top French Schools.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
