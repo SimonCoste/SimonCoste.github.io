@@ -52,11 +52,11 @@ Since the Fourier transform is injective, we get $\partial_t p_t = -\nabla \cdot
 
 @@ 
 
-The joint distribution of $X_t$ and $X_1$ is given by $\pi(x_0, x_1)p_t(x \mid x_0, x_1)$. Consequently, the conditional distribution of $X_t$ given $X_1$ is $\pi(x_0, x_1)p_t(x \mid x_0, x_1) / p_t(x)$, where $p_t(x)$ is the marginal density of $X_t$.
-Formally, we can thus write the velocity field as the following integral: 
+The joint distribution of $X_t$ and $(X_0, X_1)$ is given by $\pi(x_0, x_1)p_t(x \mid x_0, x_1)$, and $\dot{X}_t = \varphi_t(X_0, X_1)$ only depends on $(X_0, X_1)$. By Bayes’ rule, the conditional distribution of $(X_0, X_1)$ given $X_t$ is $\pi(x_0, x_1)p_t(x \mid x_0, x_1) / p_t(x)$, where $p_t(x)$ is the marginal density of $X_t$.
+Formally, we can thus write the velocity field $\mathbb{E}[\dot{X}_t \mid X_t]$ as the following integral: 
 
 $$v_t(x) = \int_{\mathbb{R}^d} \dot{\varphi}_t(x_0, x_1)\frac{p_t(x \mid x_0, x_1)\pi(x_0, x_1)}{p_t(x)}dx_0dx_1.$$
-This is the formula appearing in Lipman's paper.
+This is more or less the formula appearing in Lipman's paper.
 
 **Sampling the probability path.**
 
