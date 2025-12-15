@@ -42,7 +42,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Spline smoothing is almost kernel smoothing](https://sites.stat.washington.edu/courses/stat527/s14/readings/Silverman_Annals_1984.pdf), a striking paper by Silverman (1984), and [its generalization](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8611353) by Ong, Milanfar and Getreuer (2019). Global optimization problems (such as interpolation) can be approximated by local operations (kernel smoothing).
 - [Tweediess formula and selection bias](https://efron.ckirby.su.domains/papers/2011TweediesFormula.pdf), a landmark paper by Bradley Efron. Tweedie's formula is key to many techniques in statistics, including diffusion-based generative models.  
 - [Local Learning algorithms](https://leon.bottou.org/publications/pdf/nc-1992.pdf) by Bottou and Vapnik (1992). The paper that introduced the concept of local learning algorithms.
-- [The two cultures of Stats](https://www2.math.uu.se/~thulin/mm/breiman.pdf)
+- [The two cultures of Stats](https://projecteuclid.org/journalArticle/Download?urlId=10.1214%2Fss%2F1009213726)
 - [Why isn't everyone a Bayesian?](https://www2.stat.duke.edu/courses/Spring09/sta122/Readings/EfronWhyEveryone.pdf) by Efron (2013). It seems to me, as of 2025, that almost no one remains a Bayesian -- except academics living in the bubble of Bayesian statistics, of course. 
 - [Correlations and dependencies](https://people.math.ethz.ch/~embrecht/ftp/pitfalls.pdf): the best paper I know on the topic of "what is correlation" and how to measure it. 
 - [Chatterjee's paper on correlation](https://arxiv.org/abs/1909.10140), another very smart method. 
