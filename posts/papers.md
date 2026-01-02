@@ -6,6 +6,18 @@ abstract = "My personal curated list of old and recent outstanding papers in app
 
 This is a list of wonderful papers in machine learning, reflecting my own tastes and interests. 
 
+## Maths
+
+- [Eigenvalues of real matrices](https://math.mit.edu/~edelman/publications/probability_random.pdf) by Edelman. Probably one of my favourites papers ever. 
+- [The zeta(2) limit for random assignment](https://arxiv.org/pdf/math/0010063), a pure gem by David Aldous
+- [The "longest increasing subsequence" paper](https://arxiv.org/pdf/math/9810105) by Baik, Deift and Johansson
+- [Shape fluctuation and random matrices](https://arxiv.org/pdf/math/9903134), Kurt Johansson's breakthrough on the links between tasep and rmt. 
+- [the sqrt(2+sqrt(2)) honeycomb constant](https://www.unige.ch/~smirnov/papers/saw-j.pdf) by Duminil-Copin and Smirnov
+- [Cutoff on all Ramanujan graphs](https://arxiv.org/pdf/1507.04725), a beautiful piece of spectral theory and combinatorics. 
+- [Eigenvalues and expanders](https://link.springer.com/article/10.1007/bf02579166) by Alon
+- [Overlaps for the Ginibre ensemble](https://arxiv.org/abs/1801.01219), Bourgade and Dubach
+- [The spectral algorithm for finding a sqrt(n) clique](https://www.math.tau.ac.il/~nogaa/PDFS/clique3.pdf), a classical gem by Alon, Krivelevich and Sudakov
+
 ## Numerical Maths
 
 - [Compact finite difference schemes](https://acoustics.web.illinois.edu/pdfs/lele-1992.pdf) by Lele (1992). The paper that introduced the concept of compact finite difference schemes. 
