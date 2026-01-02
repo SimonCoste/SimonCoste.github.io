@@ -355,7 +355,7 @@ julia> x = -3.0
 julia> typeof(pos(x))
 Int64
 ```
-The output is an Int. The function `pos` is not type stable -- shame! The solution, here, is `pos(x) = x < 0 ? zero(0) : x`. In general, if you have an object `y` and you want to convert it to the type of `x`, this operation can be performed (if able) by `oftype(x,y)`. There are helper functions, like `one(x)` which returns a unit of the same type of `x`. 
+The output is an Int. The function `pos` is not type stable -- shame! The solution, here, is `pos(x) = x < 0 ? zero(x) : x`. In general, if you have an object `y` and you want to convert it to the type of `x`, this operation can be performed (if able) by `oftype(x,y)`. There are helper functions, like `one(x)` which returns a unit of the same type of `x`. 
 
 ## Coding style
 
