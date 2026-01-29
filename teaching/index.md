@@ -4,7 +4,7 @@
 @def tags = ["syntax", "code", "image"]
 
 
-# Statistiques fondamentales (MFA et MIDS, 2025)
+# Statistiques fondamentales (MFA et MIDS, 2026)
 
 Tout est sur [le site du cours](https://statsfonda.github.io/site). 
 
@@ -12,7 +12,7 @@ La session 2025-26 sera profondément remaniée, puisque le cours durera doréna
 
 # High-Dimensional Statistics
 
-Je donne en 2026 le cours de Statistique en Grande Dimension du M2MO. Poly et Feuilles de cours viendront plus tard. 
+Je donne en 2026 le cours de Statistique en Grande Dimension du M2MO. Les notes de cours et les exercices sont là : [https://simoncoste.gitlab.io/hdstats/](https://simoncoste.gitlab.io/hdstats/). 
 
 
 
