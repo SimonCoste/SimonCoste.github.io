@@ -58,6 +58,7 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Why isn't everyone a Bayesian?](https://www2.stat.duke.edu/courses/Spring09/sta122/Readings/EfronWhyEveryone.pdf) by Efron (2013). It seems to me, as of 2025, that almost no one remains a Bayesian -- except academics living in the bubble of Bayesian statistics, of course. 
 - [Correlations and dependencies](https://people.math.ethz.ch/~embrecht/ftp/pitfalls.pdf): the best paper I know on the topic of "what is correlation" and how to measure it. 
 - [Chatterjee's paper on correlation](https://arxiv.org/abs/1909.10140), another very smart method. 
+- [The Ledoit-Wolf shrinkage estimation](https://perso.ens-lyon.fr/patrick.flandrin/LedoitWolf_JMA2004.pdf), simple and beautiful ideas that strictly improved covariance estimation for free
 
   
 ## Modern Deep Learning and AI
