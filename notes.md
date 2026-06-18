@@ -66,6 +66,8 @@ In 2025 S2, I will probably completely rewrite and reorder these notes. I think 
 
 {{post kesten}}
 
+{{post cascades}}
+
 
 ## The Gaussian world
 
@@ -80,7 +82,7 @@ In 2025 S2, I will probably completely rewrite and reorder these notes. I think 
 
 {{post gaussian_comp}}
 
-{{post rem}}
+
 
 ## Nice pictures
 
