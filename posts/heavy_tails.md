@@ -84,6 +84,7 @@ There are many survey papers on why heavy tails do appear in the real world, lik
 - Random recursions of the form $X_{n+1} = A_n X_n + B_n$ often converge towards heavy-tailed distributions. This is a very deep result by Harry Kesten and I wrote [a note](/posts/kesten/) on this topic. 
 - The number of connections of nodes in a large network often follows a heavy-tailed distribution. This is notably the case for the [Albert-Barabasi preferential attachment model](https://en.wikipedia.org/wiki/Barab%C3%A1si%E2%80%93Albert_model). 
 - [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law) is probably the most famous example. It says that the probability of a word appearing in a text is inversely proportional to its use rank: for example, the second most-used word ("of") is two times less frequent than the first one ("the"). 
+- The total size of critical Galton-Watson populations is heavy-tailed; in [this note](/posts/cascades), I explain how "cascades" of events that trigger other events lead to heavy-tails for the total number of things happening, even in non-critical settings.  
 
 ## The Lorenz curve of heavy-tailed distributions
 
