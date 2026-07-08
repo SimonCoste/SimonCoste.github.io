@@ -1,6 +1,6 @@
 +++
 titlepost = "Flow Models IV: What is Classifier-Free Guidance?"
-date = "March 2025"
+date = "March 2025 and summer 2026"
 abstract = "From unconditional to conditional generative models "
 +++
 
