@@ -1,6 +1,6 @@
 +++
 titlepost = "Flow Models IV: What is Classifier-Free Guidance?"
-date = "March 2025"
+date = "March 2025 and summer 2026"
 abstract = "From unconditional to conditional generative models "
 +++
 
@@ -11,7 +11,11 @@ However, in practice, it is of paramount importance to generate *conditioned* di
 
 The first papers on diffusions had a method for that called *classifier guidance*, but now it is always done using the **classifier-free guidance** (CFG) technique from [Ho and Salimans's paper](https://arxiv.org/abs/2207.12598), a crucial step in the development of generative models. 
 
-CFG has been proved empirically to yield very good results, at least way better than the preceding approaches. However, it remains essentially a trick, and its theoretical understanding remains shaky in my opinion. 
+CFG has been proved empirically to yield very good results, at least way better than the preceding approaches. However, it is essentially a trick, and it is proven to be *false* in that it does not sample what it's supposed to sample, even though it works well in practice. In fact, it can be understood in the more abstract and general context of *Doob's h-transform*. In this note, 
+
+- I'll first follow the classical CFG formulation, because in my opinion it's (still today, summer '26) the most used method for conditioning a diffusion model; 
+- then I'll present the general mechanism of reward guidance, giving the *exact* sampler for conditioned densities; 
+- and finally I'll try to explain how CFG does not really implement Doob's h-transform. 
 
 ### Diffusions redux
 
@@ -100,7 +104,81 @@ $$ (1-\gamma) u^\theta_t(x, \varnothing) + \gamma u^\theta_t(x, c)$$
 or, if we use negative prompting, 
 $$ (1-\gamma) u^\theta_t(x, \mathrm{neg. cond.}) + \gamma u^\theta_t(x, c). $$
 
+## Reward guidance
 
+Suppose that we're able to sample from a complicated probability distribution $p_1$, typically by using a learnt flow matching model. In many applications, one would like to refine our samples, so that they better match an external criterion. This criterion is typically a *reward* function $r(x)$, taking high values for desirable outputs, and low values for outputs we'd like to avoid; and we would like to sample not from the true model $p_1$, but from the tilted model, 
+\begin{equation}\label{def:reward}\tilde{p}(x) = \frac{p_1(x)e^{\lambda r(x)}}{Z}\end{equation}
+where $Z = \int p_1(x) e^{\lambda r(x)}dx$ is the normalization constant, and $\lambda>0$ is an inverse-temperature parameter representing the influence of the reward: the higher $\lambda$, th, more influent the reward. This setting is very useful and general, and can serve many purposes once we have a generative model for $p_1$. 
+
+**Example.** In text-to-image sampling, $p_1$, the image distribution, is the marginal of a broader joint distribution $p(x,c)$ between images $x$ and « prompts » $c$ (think of $c$ as a text prompt, but it can be anything). Then, one would like to sample from the « conditional » distribution $p(x\mid c)$ which is equal to $p(x)p(c|x)/p(c)$. We can interpret this as $p(x)e^{r(x)}$ where $r(x) = \ln p(c\mid x) - \ln p(c)$. 
+
+
+@@important
+Suppose that $r$ is accessible. How could we sample from \eqref{def:reward} using our path-based generative model for $p$ ?
+@@
+
+Before jumping to the abstract solution of this problem, let us summarize the context. Given $I_0 \sim N(0,I_d)$ and $I_1 \sim p$, we set $I_t = (1-t)I_0 + tI_1$. This process has the same marginals as the deterministic ODE system $\dot{x}_t = v_t(x_t)$ started at $x_0 \sim N(0,I_d)$, with 
+$$v_t(x) = -\frac{x + t\nabla \ln p_t(x)}{1-t}.$$
+But it also has the same marginals as the solution of the SDE given by $X_0 \sim N(0,I_d)$ and 
+\begin{equation}\label{eq:sde_re}dX_t = \left(v_t(X_t) + \frac{\sigma_t^2}{2}\nabla \ln p_t(X_t)\right)dt + \sigma_t dB_t.\end{equation}
+For simplicity we note $f_t(x)$ the drift above. 
+
+@@deep
+
+**Doob's h-transform.**
+
+Set $h_t(x)= \mathbb{E}[\exp(\lambda r(X_1))\mid X_t = x]$. If $X_0$ and $X_1$ are independent, then the ODE flow $\dot{x}_t = w_t(x_t)$ started at $x_0 \sim p_0$ and driven by the velocity field 
+\begin{equation}
+w_t(x) = v_t(x) + \nabla \ln h_t(x)
+\end{equation}
+has marginal density $\eta_t = p_t h_t / c$, where $c = \mathbb{E}[e^{r(X_1)}]$ is the normalization constant. In particular, since $h_1 (x) = e^{\lambda r(x)}$, the distribution at the terminal time $\eta_1$ is equal to the reward-tilted distribution $\tilde{p}$. 
+
+@@
+
+The function $h_t$ is called *Doob's h-transform*, and it is of the form $\mathbb{E}[\varphi(X_T)\mid X_t = x]$ for a specific function $\varphi$. Such functions satisfy the so-called *backward Kolmogorov equations*, namely 
+\begin{equation}\label{eq:bke}
+\dot{h}_t(x) + \mathscr{L}h_t(x) = 0, 
+\end{equation}
+where, for any smooth function $\varphi$, we defined 
+$$\mathscr{L}\varphi(x) = \langle \nabla \varphi (x), f_t(x)\rangle + \frac{\sigma_t^2}{2}\Delta \varphi(x).$$
+This operator $\mathscr{L}$ is often called the *infinitesimal generator* of the diffusion $dX_t = f_t(X_t)dt + \sigma_t dB_t$. In the case of the SDE \eqref{eq:sde_re}, 
+$$\dot{h}_t(x) =  - \nabla h_t(x) v_t(x) + \frac{\sigma_t^2}{2}\nabla \ln p_t(x)\nabla h_t(x) + \frac{\sigma_t^2}{2}\Delta h_t(x).$$
+
+@@proof
+
+**Proof of \eqref{eq:bke}.** Just throw the [Feynman-Kac formula](https://en.wikipedia.org/wiki/Feynman%E2%80%93Kac_formula) at it!
+
+@@
+
+
+@@proof
+
+**Proof of Doob's h-transform correctness.**
+
+The evolution equation for the path $\eta_t = p_t h_t$ is 
+\begin{align}\dot{\eta}_t &= \dot{p}_t h_t + p_t \dot{h}_t \\ 
+&= (-\nabla \cdot v_t p_t) h_t + p_t \mathscr{L}h_t \\
+&=(-\nabla \cdot v_t p_t) h_t - p_t v_t \nabla h_t - \frac{\sigma_t^2}{2}\nabla p_t \nabla h_t - \frac{\sigma_t^2}{2}p_t \Delta h_t .
+\end{align}
+The first two terms are indeed equal to $-\nabla \cdot v_t p_t h_t$. For the two second ones, we note that 
+$$\nabla \cdot (p_t \nabla h_t) = \nabla p_t \nabla h_t + p_t \Delta h_t.$$
+By plugging these two identities in there, we get 
+\begin{align}\dot{\eta}_t &= - \nabla \cdot (v_t p_t h_t) - \frac{\sigma_t^2}{2}\nabla \cdot (p_t \nabla h_t)\\
+&= -\nabla \cdot \left(v_t \eta_t + \frac{\sigma_t^2}{2}\eta_t \nabla \ln h_t\right)\\
+&= -\nabla w_t \eta_t.
+\end{align}
+These equations show that $\eta_t = p_t h_t$ satisfies the continuity equation associated with the velocity flow $w_t$. 
+
+In the case where $X_0$ is independent of $X_1$, we have $h_0(x) = \mathbb{E}[e^{\lambda r(X_1)}\mid X_0 = x] = \mathbb{E}[e^{r(X_1)}]$, a constant independent of $x$, which will be noted $c$. But then, the path $\eta_t / c$ still satisfies the continuity equation, and is started at $\eta_0 = p_0$, a true, normalized density function. This implies that $\eta_t / c$ remains a normalized density at all times (the continuity equation preserves the global mass). If $x_0 \sim p_0 = \eta_0/c$, we thus see that the distribution of $x_t$ will match $p_t h_t / c$ at any time, and especially at time $t=1$, which means that 
+- $x_1$ has the required distribution, that is, the unique distribution with a density proportional to $p_1 (x)h_1 (x)= p_1(x) e^{ r(x)}$;
+- and indeed, that the normalization constant $\int p_1 h_1$ is nothing but $c = \mathbb{E}[e^{r(X_1)}]$. 
+
+@@
+
+todo (july 26):
+- cfg in this context
+- GLASS sampling
+- condition for $X_0 \perp X_1$. 
 
 
 ## References 
@@ -112,5 +190,7 @@ $$ (1-\gamma) u^\theta_t(x, \mathrm{neg. cond.}) + \gamma u^\theta_t(x, c). $$
 [CFG is a predictor-corrector](https://arxiv.org/pdf/2408.09000), a nice, recent (oct 25) review on CFG.
 
 [What does guidance do ?](https://arxiv.org/pdf/2409.13074), another recent paper (sep 25) on the topic.
+
+[Are we really tilting?](https://arxiv.org/html/2606.02884v1) by Dandapanthula and Boffi (june 26) gives an excellent self-contained treatment on reward guidance, although their proof uses the Girsanov machinery when it's not really necessary. 
 
 [^1]: From my own experience in image generation models, even extremely powerful models like FLUX.PRO have hard times adhering to "mixed prompts" with both positive and negative elements. 
