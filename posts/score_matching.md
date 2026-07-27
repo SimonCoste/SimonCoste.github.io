@@ -4,6 +4,8 @@ date = "March 2025"
 abstract = "Learning the score of a density from its samples and Tweedie's formula. "
 +++
 
+**2026 edit**: I completely reworked these lectures notes into a new, simpler, fresher set of notes that you can find [here on its own website](https://simoncoste.gitlab.io/transport/). Enjoy! 
+
 The *score* of a probability density $p$ is the gradient of its log-density: $\nabla \log p(x)$. This object is of paramount importance in many fields, like physics, statistics, and machine learning. In particular, it is needed if one wants to sample from the reverse SDE of a diffusion model. In this note, we survey the classical technique used for learning the score of a density from its samples: *score matching*.
 
 \tableofcontents

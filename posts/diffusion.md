@@ -4,6 +4,8 @@ date = "March 2023"
 abstract = "Add noise to stuff, then remove it. "
 +++
 
+**2026 edit**: I completely reworked these lectures notes into a new, simpler, fresher set of notes that you can find [here on its own website](https://simoncoste.gitlab.io/transport/). Enjoy! 
+
 
 These series of notes focus on diffusion-based generative models, like the celebrated Denoising Diffusion Probabilistic Models; they contain the material I regularly present as lectures in some working groups for mathematicians or math graduate students, so the style is tailored for this audience. In particular, everything is fitted into the continuous-time framework (which is not exactly how it is done in practice). 
 
