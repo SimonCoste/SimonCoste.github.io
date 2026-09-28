@@ -81,7 +81,7 @@ The SNIS estimation of $\int \varphi F$ is $$J_n = \sum \bar{w}_i \varphi(y_i).$
 where $\sigma^2 = \mathrm{Var}(\varphi(Y))$. Now go back to the case where you have $n$ samples $Y_i$ from a proposal distribution $G$. Forget an instant that the $\bar{w}_i$ are random, and treat them like fixed weights. Yes, I know they're not, but imagine. Then the variance of $J_n$ should be
 \begin{equation}\label{eq:v2}\sum_{i=1}\bar{w}_i^2 \mathrm{Var}(\varphi(Y)) = |\bar{w}|_2^2 \sigma^2.\end{equation}
 That's actually a good approximation of the variance of $J_n$. But then, what is the number of "real" samples from $F$ that would give the same variance? Just solve \eqref{eq:v1} = \eqref{eq:v2} and you get the **Effective Sample Size**, 
-\begin{equation}\label{eq:ESS}n_* = \frac{1}{\sum_{i=1}^n \bar{w}_i}.\end{equation}
+\begin{equation}\label{eq:ESS}n_* = \frac{1}{\sum_{i=1}^n \bar{w}_i^2}.\end{equation}
 Other equivalent forms are sometimes seen in the litterature (e.g. in Kong's seminal paper[^kong]). 
 An ESS of $n_*=100$ with a real sample size of 1000 says that your 1000 samples will get you the same precision as 100 real samples. Ultimately, if one real sample from $F$ costs 1€, then the real price of your $n$ fake samples from another distribution $G$ would be $n_*$€. And we always have $n_* \leqslant n$, of course.  
 
@@ -261,4 +261,5 @@ We gather the three bounds and get \eqref{lem}.
 
 [^w1]: actually we computed the asymptotics for every $p\geqslant 1$. 
 
-[^kong]: Typically the equivalent expressions are $\frac{n}{1+\hat\sigma}$ where $\sigma$ is the empirical std of the normalized weights. 
+[^kong]: Typically the equivalent expressions are $\frac{n}{1+\sigma^2}$ where $\sigma^2$ is the variance of $W(x) = F(x)/G(x)$ under $G$. Since $\mathbb{E}_GW = 1$, we see that $\sigma^2 = \mathbb{E}_G [W^2] - 1$, and thus Kong's ESS is $n/\mathbb{E}_G[W^2]$. But we can estimate 
+$$\mathbb{E}_G[W^2]\approx \frac{\frac{1}{n}\sum W(Y_i)^2}{\left(\frac{1}{n}\sum W(Y_i)\right)^2}$$ and thus $$ESS \approx \frac{1}{\sum \bar{w}_i^2.}$$
