@@ -74,14 +74,23 @@ That is too big. Having a low variance for $\hat{Z}$ would require having more t
 
 Practically, a good indicator of the quality of our importance sampling is given by the *effective sample size*. 
 
-Suppose you used $n$ samples $Y_i$ from $G$. If they were distributed exactly as $F$, that is if $g$ was proportional to $f$, we would have $w(Y_i) = Z_f/Z_g$ for all $Y_i$. In general $f$ is not proportional to $g$ hence that's not the case and one way to measure how far the samples we have are from $n$ samples of $F$, we set $\hat{\sigma}_n$ = the [empirical coefficient of variation](https://en.wikipedia.org/wiki/Coefficient_of_variation) of the $w(Y_i)$, and 
-$$ \mathrm{ESS}(n) = \frac{n}{1 + \hat{\sigma}_n}.$$
+For the moment, let us note $\bar{w}_i$ the normalized weights, 
+$$\bar{w}_i = \frac{w(y_i)}{\sum_{i=1}^n w(y_i)}.$$
+The SNIS estimation of $\int \varphi F$ is $$J_n = \sum \bar{w}_i \varphi(y_i).$$ Suppose for a moment that you are in the ideal case where your proposal distribution $G$ is equal to $F$, and you have $m$ samples $y_i$. Then, $\bar{w}_i = 1/m$. The variance of ${J}_m$ in this case is simply
+\begin{equation}\label{eq:v1}\frac{\sigma^2}{m}\end{equation}
+where $\sigma^2 = \mathrm{Var}(\varphi(Y))$. Now go back to the case where you have $n$ samples $Y_i$ from a proposal distribution $G$. Forget an instant that the $\bar{w}_i$ are random, and treat them like fixed weights. Yes, I know they're not, but imagine. Then the variance of $J_n$ should be
+\begin{equation}\label{eq:v2}\sum_{i=1}\bar{w}_i^2 \mathrm{Var}(\varphi(Y)) = |\bar{w}|_2^2 \sigma^2.\end{equation}
+That's actually a good approximation of the variance of $J_n$. But then, what is the number of "real" samples from $F$ that would give the same variance? Just solve \eqref{eq:v1} = \eqref{eq:v2} and you get the **Effective Sample Size**, 
+\begin{equation}\label{eq:ESS}n_* = \frac{1}{\sum_{i=1}^n \bar{w}_i}.\end{equation}
+Other equivalent forms are sometimes seen in the litterature (e.g. in Kong's seminal paper[^kong]). 
+An ESS of $n_*=100$ with a real sample size of 1000 says that your 1000 samples will get you the same precision as 100 real samples. Ultimately, if one real sample from $F$ costs 1€, then the real price of your $n$ fake samples from another distribution $G$ would be $n_*$€. And we always have $n_* \leqslant n$, of course.  
 
-### How to use the ESS ? 
+In general, if you have a decent "precision metric" to evaluate an estimator, you can compute a generalized notion of sample size: just compute the metric on your $n$ samples, and then compute the number $m$ of real samples which would give the same metric. 
 
-Suppose that you use IS with a sample size of $n=1000$. If $\mathrm{ESS} \approx 1000$ then the weigths are almost constant and there's a good chance that our sampling is excellent. If it's small, say $\mathrm{ESS} \approx 100$, then it means that the quality of your IS estimator is the same as if you would have used 100 samples of the real distribution $F$. 
+In practice, the ESS is not really used to assess the quality of an estimator, but rather to take decisions on when to resample or not. It is often used in sequential settings, where one can monitor the ESS along time and decide to resample the proposals when the ESS collapses. 
 
-This method is a good *rule of thumb* to assess the quality of IS, but it's quite empirical. In general, what is the required number of samples when one wants to efficiently estimate a mean $\mathbb{E}[\varphi(X)]$ using importance sampling? 
+However, Empirical Sample Sizes often do not tell the whole story, and are not very informative on the precision of an estimator, but rather on the relative precision compared to other estimators. Concretely, they do not tell you if your $n$ samples are really enough to estimate $\int \varphi F$.
+
 
 ## The number of samples required for IS
 
@@ -131,9 +140,9 @@ over a certain class $\mathscr{F}$?
 
 ### The Wasserstein sample size
 
-If $\mathscr{F}$ is the set of all 1-Lipschitz functions, it turns out that this supremum is nothing more than the Wasserstein-1 distance between the target density $F$ and the « empirical weighted measure », namely 
-$$\hat{F}_n = \hat{Z}_n^{-1}\sum_{i=1}^n w_i\delta_{Y_i}$$
-where $\hat{Z}_n = w_1+\dotsb + w_n$. 
+If $\mathscr{F}$ is the set of all 1-Lipschitz functions, it turns out that this supremum is nothing more than the Wasserstein-1 distance between the target density $F$ and the « empirical self-normalized weighted measure », namely 
+$$\hat{F}_n = \sum_{i=1}^n \bar{w}_i\delta_{Y_i}$$
+where $\bar{w}_i = w(Y_i) / (w(Y_1)+\dotsb + w(Y_n))$ are the self-normalized weights. 
 In [a recent work](https://arxiv.org/abs/2605.30055) with Michael Goldmann, we computed the asymptotics of $W_1(F, \hat{F}_n)$ as $n$ is large[^w1]. 
 
 @@deep
@@ -162,7 +171,7 @@ The entropy of $F$ is $E = -\int F \log F$; therefore, the term above is also eq
 As explained in the ESS section, a prominent question in the theory of IS is: how can we craft diagnostic metrics of an estimator, that indicate whether the estimator is good or bad? 
 
 A priori, the two results given above could give an answer: we have to check if $n$ is greater than, for example, $e^D$. We do not know $D$ but we could still estimate it using IS, with
-\begin{equation}\label{eq:IS_DKL}\hat{D}_n = \frac{\sum w(y_i)\log w(y_i)}{\sum w(y_i)} - \log \hat{Z}_n.\end{equation}
+\begin{equation}\label{eq:IS_DKL}\hat{D}_n = \frac{\sum w(Y_i)\log w(Y_i)}{\sum w(Y_i)} - \log \hat{Z}_n.\end{equation}
 Then declare your IS estimator to be good is $n > e^{\hat{D}_n}$. 
 
  This is dommed to fail. As Chatterjee and Diaconis explain, "*any diagnostic criterion that is itself dependent on the accuracy of an estimate obtained by importance sampling, is unlikely to be effective as a measure of the efficacy of importance sampling*". Id est, the second point of the theorem tells you that estimating $D$ with \eqref{eq:IS_DKL} is already a bad idea, so don't use it to estimate if $n$ is large enough. 
@@ -247,5 +256,9 @@ We gather the three bounds and get \eqref{lem}.
 
 - Two papers on the sample size of IS, [here](https://arxiv.org/pdf/1608.08814) and [there](https://arxiv.org/pdf/2009.10831) by Daniel Sanz-Alonso, especially on the $\chi^2$-divergence. 
 
+- Cool blog posts by Statisticians on the ESS: [Sebastian Nowozin](https://www.nowozin.net/sebastian/blog/effective-sample-size-in-importance-sampling.html), [Alex Smola](https://alex.smola.org/posts/40-effective-sample-size/)
+
 
 [^w1]: actually we computed the asymptotics for every $p\geqslant 1$. 
+
+[^kong]: Typically the equivalent expressions are $\frac{n}{1+\hat\sigma}$ where $\sigma$ is the empirical std of the normalized weights. 
