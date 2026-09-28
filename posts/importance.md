@@ -72,20 +72,23 @@ That is too big. Having a low variance for $\hat{Z}$ would require having more t
 
 ## The Effective Sample Size
 
-Practically, a good indicator of the quality of our importance sampling is given by the *effective sample size*. 
-
-For the moment, let us note $\bar{w}_i$ the normalized weights, 
-$$\bar{w}_i = \frac{w(y_i)}{\sum_{i=1}^n w(y_i)}.$$
-The SNIS estimation of $\int \varphi F$ is $$J_n = \sum \bar{w}_i \varphi(y_i).$$ Suppose for a moment that you are in the ideal case where your proposal distribution $G$ is equal to $F$, and you have $m$ samples $y_i$. Then, $\bar{w}_i = 1/m$. The variance of ${J}_m$ in this case is simply
+**The ESS.**  Let us note $\bar{w}_i$ the normalized weights, 
+$$\bar{w}_i = \frac{w(y_i)}{\sum_{i=1}^n w(Y_i)}.$$
+The SNIS estimation of $\int \varphi F$ is $$J_n = \sum \bar{w}_i \varphi(Y_i).$$ Suppose for a moment that you are in the ideal case where your proposal distribution $G$ is equal to $F$, and you have $m$ samples $Y_i$. Then, all the weights $w(Y_i)$ are equal to 1 and thus $\bar{w}_i = 1/m$. The variance of ${J}_m$ in this case is simply
 \begin{equation}\label{eq:v1}\frac{\sigma^2}{m}\end{equation}
-where $\sigma^2 = \mathrm{Var}(\varphi(Y))$. Now go back to the case where you have $n$ samples $Y_i$ from a proposal distribution $G$. Forget an instant that the $\bar{w}_i$ are random, and treat them like fixed weights. Yes, I know they're not, but imagine. Then the variance of $J_n$ should be
+where $\sigma^2 = \mathrm{Var}(\varphi(Y))$. Now go back to the case where you have $n$ samples $Y_i$ (I'll call them "fake samples") from a proposal distribution $G$. Forget an instant that the $\bar{w}_i$ are random, and treat them like fixed weights. *Yes, I know they're not, but imagine*. Then the variance of $J_n$ should be
 \begin{equation}\label{eq:v2}\sum_{i=1}\bar{w}_i^2 \mathrm{Var}(\varphi(Y)) = |\bar{w}|_2^2 \sigma^2.\end{equation}
-That's actually a good approximation of the variance of $J_n$. But then, what is the number of "real" samples from $F$ that would give the same variance? Just solve \eqref{eq:v1} = \eqref{eq:v2} and you get the **Effective Sample Size**, 
-\begin{equation}\label{eq:ESS}n_* = \frac{1}{\sum_{i=1}^n \bar{w}_i^2}.\end{equation}
-Other equivalent forms are sometimes seen in the litterature (e.g. in Kong's seminal paper[^kong]). 
-An ESS of $n_*=100$ with a real sample size of 1000 says that your 1000 samples will get you the same precision as 100 real samples. Ultimately, if one real sample from $F$ costs 1€, then the real price of your $n$ fake samples from another distribution $G$ would be $n_*$€. And we always have $n_* \leqslant n$, of course.  
+This is actually a good approximation of the variance of $J_n$, as explained in the litterature (e.g. in Kong's seminal paper or in Liu's paper). 
 
-In general, if you have a decent "precision metric" to evaluate an estimator, you can compute a generalized notion of sample size: just compute the metric on your $n$ samples, and then compute the number $m$ of real samples which would give the same metric. 
+Given these two approximations, what is the number of "real" samples from $F$ that would give the same variance as $n$ "fake" samples? Just solve \eqref{eq:v1} = \eqref{eq:v2} and you get the **Effective Sample Size**, 
+@@deep
+\begin{equation}\label{eq:ESS}n_* = \frac{1}{\sum_{i=1}^n \bar{w}_i^2}.\end{equation}
+@@
+Other equivalent forms are sometimes seen in the litterature, e.g. in Kong's seminal paper[^kong], with more rigorous derivations (they consist in using the "delta-method" to estimate $\mathrm{Var}(J_n)$ and are not especially enlightening). 
+
+An ESS of $n_*=100$ with a sample size of 1000 says that your 1000 "fake samples" will get you the same precision as 100 "real samples". Ultimately, if one real sample from $F$ costs 1€, then the real price of your $n$ fake samples would be $n_*$€. And we always have $n_* \leqslant n$, of course.  
+
+**Generalized ESS.** In general, if you have a decent "precision metric" to evaluate an estimator, you can compute a generalized notion of sample size: just compute the metric on your $n$ samples, and then compute the number $m$ of real samples which would give the same metric. 
 
 In practice, the ESS is not really used to assess the quality of an estimator, but rather to take decisions on when to resample or not. It is often used in sequential settings, where one can monitor the ESS along time and decide to resample the proposals when the ESS collapses. 
 
@@ -261,5 +264,4 @@ We gather the three bounds and get \eqref{lem}.
 
 [^w1]: actually we computed the asymptotics for every $p\geqslant 1$. 
 
-[^kong]: Typically the equivalent expressions are $\frac{n}{1+\sigma^2}$ where $\sigma^2$ is the variance of $W(x) = F(x)/G(x)$ under $G$. Since $\mathbb{E}_GW = 1$, we see that $\sigma^2 = \mathbb{E}_G [W^2] - 1$, and thus Kong's ESS is $n/\mathbb{E}_G[W^2]$. But we can estimate 
-$$\mathbb{E}_G[W^2]\approx \frac{\frac{1}{n}\sum W(Y_i)^2}{\left(\frac{1}{n}\sum W(Y_i)\right)^2}$$ and thus $$ESS \approx \frac{1}{\sum \bar{w}_i^2.}$$
+[^kong]: Typically the equivalent expressions are $\frac{n}{1+\sigma^2}$ where $\sigma^2$ is the variance of $W(x) = F(x)/G(x)$ under $G$. Since $\mathbb{E}_GW = 1$, we see that $\sigma^2 = \mathbb{E}_G [W^2] - 1$, and thus Kong's ESS is $n/\mathbb{E}_G[W^2]$. But we can estimate $$\mathbb{E}_G[W^2]\approx \frac{\frac{1}{n}\sum w(Y_i)^2}{\left(\frac{1}{n}\sum w(Y_i)\right)^2} = n \sum \bar{w}_i^2$$ and thus $$ESS \approx \frac{1}{\sum \bar{w}_i^2.}$$ Hence the equivalence between the two expressions. 
