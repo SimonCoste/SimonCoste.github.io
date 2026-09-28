@@ -4,11 +4,19 @@ date = "June 2023, reworked in 2026"
 abstract = "On the sample size required to get a good approximation"
 +++
 
-*Sampling* refers to the generation of random variables following a certain probability distribution; for example if $F$ is a density on $\mathbb{R}^d$, we want to generate random variables which are independent and follow the distribution given by $F$, or we want to compute expectations like $\mathbb{E}[\varphi(X)]$ for some function $\varphi$, where $X \sim F$. In many cases, one does not fully knows $F$, but only that it is proportional to some function $f$, that is 
+*Sampling* refers to the generation of random variables following a certain probability distribution; for example if $F$ is a density on $\mathbb{R}^d$, we want to generate random variables which are independent and follow the distribution given by $F$, or we want to compute expectations like 
+$$\mathbb{E}_{X \sim F}[\varphi(X)] = \int \varphi(x)F(x)dx$$ for some function $\varphi$. In many cases, one does not fully knows $F$, but only that it is proportional to some function $f$, that is 
 $$F(x) = \frac{f(x)}{Z_f} \qquad \text{where} \qquad Z_f = \int f(u)du,$$ 
 and computing the normalizing constant $Z_f$ is intractable. 
 
-There are many techniques that still allow to sample from $F$ in this case; the whole field of Monte-Carlo research consists in crafting stochastic systems (Markov Chains, diffusions) that converge toward samples from $F$. In this note I'm focusing on a simpler method, *importance sampling* (IS), also called *reweighting*, which allows to compute integrals like above, without sampling from $F$. We will see an insightful result by [Chatterjee and Diaconis](https://arxiv.org/pdf/1511.01437.pdf) on the number of samples required for IS to be sufficiently precise. 
+There are many techniques that still allow to sample from $F$ in this case; the whole field of Monte-Carlo research consists in crafting stochastic systems (Markov Chains, diffusions) that converge toward samples from $F$. In this note I'm focusing on a simpler method, *importance sampling* (IS), also called *reweighting*, which allows to compute integrals like above, without sampling from $F$. 
+
+**Plan of the note**.
+- First, I define IS and give examples.
+- Second, I introduce a usefull metric called the Effective Sample Size. Statisticians know this stuff very well. 
+- Then I explain see how much compute you need to use IS efficiently: first with a result by [Chatterjee and Diaconis](https://arxiv.org/pdf/1511.01437.pdf) for estimating a specific integral, then a result on Wasserstein distances for estimating simultaneously every integral. 
+- There's a small section of "useful" diagnostics for IS estimators. 
+- And then there's the proof of the Chatterjee-Diaconis result.  
 
 ## The basic idea of Importance Sampling
 
@@ -34,18 +42,22 @@ This suggests the following method for approximating $\mathbb{E}[\varphi(X)]$ wi
 Let $Y_1, \dotsc, Y_n$ be iid with density $G$. Then, when $n\to\infty$, almost surely one has
 \begin{equation}\label{Z} \frac{\sum_{i=1}^n w(Y_i)}{n} \to \frac{Z_f}{Z_g} \end{equation}
 and
-\begin{equation}\label{In} \frac{\sum_{i=1}^n w(Y_i) \varphi(Y_i)}{\sum_{i=1}^n w(Y_i)} \to \mathbb{E}[\varphi(X)]= \int \varphi(x)F(x)dx.\end{equation}
+\begin{equation}\label{In} \frac{\frac{1}{n}\sum_{i=1}^n w(Y_i) \varphi(Y_i)}{\frac{1}{n}\sum_{i=1}^n w(Y_i)} \to \mathbb{E}[\varphi(X)]= \int \varphi(x)F(x)dx.\end{equation}
 @@
 
 @@proof
 **Proof.** By the Law of Large Numbers, the LHS of \eqref{Z} converges towards $\mathbb{E}[w(Y)] = \int w(y)G(y)dy = Z_f/Z_g$. 
 
-Also by the LLN, $\frac{\sum w(Y_i)\varphi(Y_i)}{n}$
+Also by the LLN, $\frac{\sum _{i=1}^n w(Y_i)\varphi(Y_i)}{n}$
 converges towards $\mathbb{E}[\varphi(Y)w(Y)] = (Z_f/Z_g)\mathbb{E}[\varphi(X)]$. 
 
 Take the ratio of the two to get \eqref{In}. 
 @@
-This technique explains the word *importance sampling*: the samples $Y_i$ are iid but their density is $G(y)$, not $F(y)$, and the weights correct the difference between the two. If some $y$ is very likely under $G$ but not so much under $F$ (meaning that $F(y)$ is close to zero but $G(y)$ is high), then this sample will be assigned a very small weight. 
+
+- This technique explains the word *importance sampling*: the samples $Y_i$ are iid but their density is $G(y)$, not $F(y)$, and the weights correct the difference between the two. 
+- The estimator in \eqref{In} is sometimes called Self-Normalized Importance Sampling (SNIS), because of the normalization term $\hat{Z}_n = (w_1+\dotsb + w_n)/n$. 
+- If some $y$ is very likely under $G$ but not so much under $F$ (meaning that $F(y)$ is close to zero but $G(y)$ is high), then this sample will be assigned a very small weight. 
+- It is very common that $w(x)$ has an exponential form, typically $w(x) = e^{v(x)-u(x)}$ for some functions $v$ and $u$. In this case you better estimate $\ln Z_f/Z_g$ with $\log \hat{Z}_n$ with the [log-sum-exp trick](https://en.wikipedia.org/wiki/LogSumExp) to avoid numerical instabilities. 
 
 ## How good is this approximation? 
 
@@ -58,7 +70,7 @@ The first term, especially $\mathbb{E}[w(X)]$, could be prohibitively big. Indee
 \begin{align}\mathbb{E}[F(X)/G(X)] &= \frac{1}{\sqrt{2\pi}}\int e^{-\frac{(x-10)^2}{2}}e^{-\frac{(x-10)^2 }{ 2} + \frac{x^2}{2}}dx\\ &= \frac{1}{\sqrt{2\pi}}\int e^{- \frac{(x-20)^2}{2} + 100}dx \\&= e^{100}.\end{align}
 That is too big. Having a low variance for $\hat{Z}$ would require having more than $e^{100}$ samples, which is impossible. And indeed, one can even find simple examples (exponential distributions) for which the variance is infinite. 
 
-### The Effective Sample Size
+## The Effective Sample Size
 
 Practically, a good indicator of the quality of our importance sampling is given by the *effective sample size*. 
 
@@ -74,17 +86,19 @@ This method is a good *rule of thumb* to assess the quality of IS, but it's quit
 ## The number of samples required for IS
 
 For any function $\varphi$, we will denote by 
-
 $$J_n(\varphi) = \frac{\sum_{i=1}^n w(Y_i)\varphi(Y_i)}{\sum_{i=1}^n w(Y_i)}$$
-the IS estimator of $\int F\varphi$.  We also note $I(\varphi) = \int \varphi(x)F(x)dx = \mathbb{E}[\varphi(X)]$ the integral and $|\varphi|^2_2 = \int \varphi(x)^2 F(x)dx$ the L2-norm relatively to the target $F$. 
+the IS estimator of the target integral $\int F\varphi$, which will be noted $I(\varphi)$. 
 
 
 Note that $J_n$ is unchanged if the weights $w=f/g$ are replaced by the normalized likelihood ratio $W = F/G$; in the sequel of this section we work with $W$, for which $\mathbb{E}[W(Y)]=1$. 
 
-The Kullback-Leibler divergence is $$D = d_{\mathrm{KL}}(F\mid G) = \int F \log (F/G).$$ 
+### The Informational sample size
+
+The Kullback-Leibler divergence from $F$ towards $G$ is $$D = d_{\mathrm{KL}}(F\mid G) = \int F \log (F/G).$$ 
 It is supposed to be $<\infty$. It can also be defined as $D=\mathbb{E}[\log W(X)]$. In general, concentration inequalities allow to bound how much $\log W(X)$ is concentrated around its mean $D$: depending on $F,G$, the deviation probability
 \begin{equation}\epsilon(s)=\label{dev}\mathbb{P}(|\log W(X) - D| > s)\end{equation}
-is a decreasing function of $s$ with $\epsilon(s)\to 0$. The error terms in the sequel will be expressed using this function $\epsilon$. For any positive $s$ we note $$\varepsilon(s) = (e^{-s/4} + 2\sqrt{\epsilon(s/2)})^{1/2}.$$
+is a decreasing function of $s$ with $\epsilon(s)\to 0$. The error terms in the sequel will be expressed using this function $\epsilon$. For any positive $s$ we note $$\varepsilon(s) = (e^{-s/4} + 2\sqrt{\epsilon(s/2)})^{1/2}$$
+and finally we also note $|\varphi|^2_2 = \int \varphi(x)^2 F(x)dx$ the L2-norm relatively to the target $F$. 
 
 
 
@@ -97,27 +111,40 @@ is a decreasing function of $s$ with $\epsilon(s)\to 0$. The error terms in the 
 
 
 
-*Positive part*. Suppose that $n=e^{D+s}$.  Then, for any $\varphi$ which is in $L^2(F)$,  
+**Positive part**. Suppose that $n=e^{D+s}$.  
+
+Then, for any $\varphi$ which is in $L^2(F)$,  
 \begin{equation}\label{main}\mathbb{P}(|J_n(\varphi) - \mathbb{E}[\varphi(X)]|>4\varepsilon(s) |\varphi|_2)\leqslant 2\varepsilon(s).\end{equation}
-*Negative part*. Conversely, suppose that $n=e^{D-s}$. We note $\hat{D}_n$ the IS estimator of the Kullback-Leibler divergence $\mathbb{E}[\log W(X)]$, i.e. $\varphi = \log W$. Then this estimator is bad, in the sense that $\hat{D}_n \leqslant D - s$ with a fixed probability, at least $1-\mathbb{P}(\log W(X) > D-s)$. 
+**Negative part**. Conversely, suppose that $n=e^{D-s}$. 
+
+We note $\hat{D}_n$ the IS estimator of the Kullback-Leibler divergence $D$. Then this estimator is bad, in the sense that $\hat{D}_n \leqslant D - s$ with a fixed positive probability, at least greater than $1-\mathbb{P}(\log W(X) > D-s)$. 
 @@
 
 
-To summarize: if one has more than $e^{D}$ samples, then for every fixed $\varphi$ the probability of having $J_n(\varphi)$ close to $I(\varphi)$ is high. But if $n$ is smaller than $e^D$, then there might be functions such that with high probability, the estimator $J_n(\varphi)$ is far away from $I(\varphi)$. The original proof in the Chatterjee-Diaconis paper shows that the function $\varphi(x) = \mathbb{1}_{W(x)<\lambda}$ is itself hard to approximate, for some $\lambda$. That the KL itself is hard to estimate is due to El Houssain Chahboun, a young PhD student under the supervision of Pierre Jacob. The proof is entirely due to him!
+To summarize: if one has more than $e^{D}$ samples, then for every fixed $\varphi$ the probability of having $J_n(\varphi)$ close to $I(\varphi)$ is high. But if $n$ is smaller than $e^D$, then there might be functions such that with high probability, the estimator $J_n(\varphi)$ is far away from $I(\varphi)$. The original proof in the Chatterjee-Diaconis paper shows that the function $\varphi(x) = \mathbb{1}_{W(x)<\lambda}$ is itself hard to approximate, for some $\lambda$. That the KL itself is hard to estimate is due to [El Houssain Chahboun](https://elhoussainechahboun.com/about), a PhD student under the supervision of Pierre Jacob. The proof is entirely due to him!
 
-**Uniform bounds.** Note that for a specific $\varphi$, it might very well be true that less than $e^D$ samples are needed. But $e^D$ is always enough. This asks for a natural question: how many samples do you need so that *every estimator of every $\varphi$* is simultaneously good? That is, could we control, for example, 
+
+
+**Uniform bounds.** Note that for a specific $\varphi$, it might very well be true that less than $e^D$ samples are needed. But $e^D$ is always enough. This asks for a natural question: how many samples do you need so that *every estimator of every $\varphi$* is simultaneously good? That is, could we control
 $$\sup_{\varphi \in \mathscr{F}}\left|J_n(\varphi) - I(\varphi)\right|$$
-over a certain class $\mathscr{F}$? Well, if $\mathscr{F}$ is the set of all 1-Lipschitz functions, it turns out that this supremum is nothing more than the Wasserstein-1 distance between the target density $F$ and the « empirical weighted measure », namely 
-$$\hat{F}_n = \sum_{i=1}^n w_i\delta_{Y_i}.$$
+over a certain class $\mathscr{F}$? 
+
+### The Wasserstein sample size
+
+If $\mathscr{F}$ is the set of all 1-Lipschitz functions, it turns out that this supremum is nothing more than the Wasserstein-1 distance between the target density $F$ and the « empirical weighted measure », namely 
+$$\hat{F}_n = \hat{Z}_n^{-1}\sum_{i=1}^n w_i\delta_{Y_i}$$
+where $\hat{Z}_n = w_1+\dotsb + w_n$. 
 In [a recent work](https://arxiv.org/abs/2605.30055) with Michael Goldmann, we computed the asymptotics of $W_1(F, \hat{F}_n)$ as $n$ is large[^w1]. 
 
 @@deep
-**Wasserstein distances.** For $F,G$ compactly supported and bounded away from zero and $\infty$, we have $W_p^d(\hat{F}_n,F)\asymp n^{-p/d}\mathscr{C}_p(F\mid G)$, where 
-$$\mathscr{C}_p(F\mid G) = \int F G^{-p/d}.$$
-This is only valid in dimension $d\geqslant 3$. 
+**Wasserstein asymptotics.** For $F,G$ compactly supported and bounded away from zero and $\infty$, we have $$\mathbb{E}[W_p^p(\hat{F}_n,F)]\asymp n^{-p/d}\int F G^{-p/d}.$$
 @@
 
-So a good proxy for Chatterjee and Diaconis’ result would be that, to have a good approximation, we would need a number $n$ of samples at least comparable to $c^d$, where $c = \mathscr{C}_1(G\mid F)$. If $d$ is large, we can work further our approximation: 
+
+- Here, $\asymp$ means that the LHS is between $c_1 \times LHS$ and $c_2 \times LHS$, for some unknosn absolute constants $c_1 \leqslant c_2$. However, in the $p=2$ case, it is known that $c_1=c_2$, so that the result is actually a true limit. 
+- You can safely remove the $\mathbb{E}$. We didn't include it in the paper we all you have to check is a concentration bound. It's safe. 
+
+**Consequence on the sample size.** Using this asymptotic, a good proxy for Chatterjee and Diaconis’ study would be that, to have a good approximation, we would need a number $n$ of samples at least comparable to $c^d$, where $c = \int F G^{-p/d}$. If $d$ is large, we can work further our approximation: 
 \begin{align}
 c^d 
 &= \left(\int F e^{-\frac{1}{d}\log G}\right)^d \\
@@ -125,11 +152,29 @@ c^d
 &\approx\left(1 - \frac{1}{d}\int F \log G\right)^d \\
 &\approx e^{-\int F \log G}.
 \end{align}
-That is equal to $\exp(D - \int F\log F)$, which is not the $e^D$ of Chatterjee-Diaconis. The term $\int F\log F = -\mathrm{Entropy}(F)$ be very well be positive or negative. When it is very largely positive, it means that the entropy is largely negative and hence that $F$ is very concentrated. 
+The entropy of $F$ is $E = -\int F \log F$; therefore, the term above is also equal to $\exp(D - \int F\log F)= \exp(D+E)$, which is not the $e^D$ of Chatterjee-Diaconis. What happens here is not 100% clear for me, but here is my take: 
+- **Low entropy means less samples are needed.** If $E$ is very low, then $F$ is very concentrated; ultimately one can think of $F$ as almost a Dirac located at a point, say $0$. Then, all the integrals $\int \varphi F$ are either $0$ (if the support of $\varphi$ avoids zero) or $\approx \varphi(0)$. If there is a proposal point close to 0, then ALL the integrals will be well approximated. Hence the need for less points. 
+- **High entropy means more samples are needed.** If $E$ is high then $F$ is more uniform on its support. But then, will high probability there will be a (random) zone in the domain where there is a lack of points, and the functions supported on this zone will be badly approximated. Hence the need for more points. 
+
+## Diagnoses
 
 
-## Proof of the result 
-The proof almost entirely relies on the following lemma, in which we have set $$I_n(\varphi)= \frac{\sum_{i=1}^n \varphi(Y_i)W(Y_i)}{n}.$$
+As explained in the ESS section, a prominent question in the theory of IS is: how can we craft diagnostic metrics of an estimator, that indicate whether the estimator is good or bad? 
+
+A priori, the two results given above could give an answer: we have to check if $n$ is greater than, for example, $e^D$. We do not know $D$ but we could still estimate it using IS, with
+\begin{equation}\label{eq:IS_DKL}\hat{D}_n = \frac{\sum w(y_i)\log w(y_i)}{\sum w(y_i)} - \log \hat{Z}_n.\end{equation}
+Then declare your IS estimator to be good is $n > e^{\hat{D}_n}$. 
+
+ This is dommed to fail. As Chatterjee and Diaconis explain, "*any diagnostic criterion that is itself dependent on the accuracy of an estimate obtained by importance sampling, is unlikely to be effective as a measure of the efficacy of importance sampling*". Id est, the second point of the theorem tells you that estimating $D$ with \eqref{eq:IS_DKL} is already a bad idea, so don't use it to estimate if $n$ is large enough. 
+
+That's the point of the ESS: it is self-contained, in that you only need the weights $w(y_i)$ to compute the diagnostic criterion. But the ESS itself is a weak criterion, in that there is no connection between the variance of $w$ and $e^D$. This is why Chatterjee and Diaconis favor another criterion, which is simply the $L^\infty / L^1$ ratio, 
+$$Q_n = \frac{\max w(y_i)}{\sum w(y_i)}.$$
+They have convincing but incomplete heuristics on this diagnostic quantity. I will, at some point, expose them here. 
+
+
+## Proof of the Chatterjee-Diaconis sample size
+
+The proof relies on the following lemma, in which we have set $$I_n(\varphi)= \frac{\sum_{i=1}^n \varphi(Y_i)W(Y_i)}{n}.$$
 
 @@important
 **Lemma.** For any $\lambda >0$,
