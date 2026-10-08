@@ -133,7 +133,7 @@ We note $\hat{D}_n$ the IS estimator of the Kullback-Leibler divergence $D$. The
 @@
 
 
-To summarize: if one has more than $e^{D}$ samples, then for every fixed $\varphi$ the probability of having $J_n(\varphi)$ close to $I(\varphi)$ is high. But if $n$ is smaller than $e^D$, then there might be functions such that with high probability, the estimator $J_n(\varphi)$ is far away from $I(\varphi)$. The original proof in the Chatterjee-Diaconis paper shows that the function $\varphi(x) = \mathbb{1}_{W(x)<\lambda}$ is itself hard to approximate, for some $\lambda$. That the KL itself is hard to estimate is due to [El Houssain Chahboun](https://elhoussainechahboun.com/about), a PhD student under the supervision of Pierre Jacob. The proof is entirely due to him!
+To summarize: if one has more than $e^{D}$ samples, then for every fixed $\varphi$ the probability of having $J_n(\varphi)$ close to $I(\varphi)$ is high. But if $n$ is smaller than $e^D$, then there might be functions such that with high probability, the estimator $J_n(\varphi)$ is far away from $I(\varphi)$. The original proof in the Chatterjee-Diaconis paper shows that the function $\varphi(x) = \mathbb{1}_{W(x)<\lambda}$ is itself hard to approximate, for some $\lambda$. That the KL itself is hard to estimate is due to [El Houssaine Chahboun](https://elhoussainechahboun.com/about), a PhD student. The proof is entirely due to him!
 
 
 
