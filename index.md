@@ -4,7 +4,7 @@
 # About
 
 
-I'm a permanent researcher (MCF) in mathematics at [Université de Paris](https://u-paris.fr/en/) (P7, LPSM), working on probabilistic fields, with a non-pessimistic view on the future of mathematics. I was co-founder and AI lead of [Bang! vertical comics](https://bang-comics.com/en). 
+I'm a permanent researcher (MCF) in mathematics at [Université de Paris](https://u-paris.fr/en/) (P7, LPSM), working on probabilistic fields, with a nonstandard view on the future of mathematics and scientific higher education. I was co-founder and AI lead of [Bang! vertical comics](https://bang-comics.com/en). 
 
 
 In 2026, I am an invited researcher at CMAP in École Polytechnique. 
