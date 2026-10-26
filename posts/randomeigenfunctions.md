@@ -5,7 +5,7 @@ abstract = "A nice plot of random Laplace eigenfuctions on the torus, also calle
 reeval=true
 +++
 
-![](/posts/img/donuts/1105_color.png)
+![](/posts/img/donuts/1105_color.webp)
 
 The Laplace eigenequation on a sphere, a torus, or any Riemannian manifold is 
 \begin{equation}\label{0}\Delta f + \lambda f = 0\end{equation}
@@ -135,7 +135,7 @@ cbar = Colorbar(fig, pltobj,
 fig[1,2] = cbar #hide
 set_theme!(figure_padding = 0)#hide
 ```
-![](/posts/img/donuts/raw.png)
+![](/posts/img/donuts/raw.webp)
 
 Instead of plotting each color, we can only plot the sign of $f_n$, black if positive and white if negative. 
 The set of points of the torus where $f_n$ is zero is called the **nodal line** while the sets $\{f_n >0\}$ and $\{f_n < 0 \}$ are called **nodal sets**. 
@@ -149,7 +149,7 @@ fig2, ax2, pltobj2 = surface(x, y, z, color = signs,
         backlight = 5f0, 
         show_axis = false) 
 ```
-![](/posts/img/donuts/raw2.png)
+![](/posts/img/donuts/raw2.webp)
 
 With a few processing and computational power, one can get much detailed pictures ! 
 
@@ -160,28 +160,28 @@ Here are some pictures of realizations of various arithmetic waves associated wi
 You can use these pictures if you want, but if so please mention this page.  
 
 @@twopic
-![](/posts/img/donuts/41.png)
-![](/posts/img/donuts/41_color.png)
+![](/posts/img/donuts/41.webp)
+![](/posts/img/donuts/41_color.webp)
 
 $n = 41$, dimension 8
 
-![](/posts/img/donuts/100.png)
-![](/posts/img/donuts/100_color.png)
+![](/posts/img/donuts/100.webp)
+![](/posts/img/donuts/100_color.webp)
 
 $n=100$, dimension 12
 
-![](/posts/img/donuts/985.png)
-![](/posts/img/donuts/985_color.png)
+![](/posts/img/donuts/985.webp)
+![](/posts/img/donuts/985_color.webp)
 
 $n=985$, dimension 16
 
-![](/posts/img/donuts/1105.png)
-![](/posts/img/donuts/1105_color.png)
+![](/posts/img/donuts/1105.webp)
+![](/posts/img/donuts/1105_color.webp)
 
 $n=1105$, dimension 28
 
-![](/posts/img/donuts/71825.png)
-![](/posts/img/donuts/71825_color.png)
+![](/posts/img/donuts/71825.webp)
+![](/posts/img/donuts/71825_color.webp)
 
 $n = 71825$, dimension 64
 @@
