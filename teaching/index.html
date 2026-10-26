@@ -10,13 +10,158 @@
 <link rel="stylesheet" href="/css/poole_hyde.css">
 <!-- style adjustments -->
 <style>
-  html {font-size: 17px;}
-  .franklin-content {position: relative; padding-left: 8%; padding-right: 5%; line-height: 1.35em;}
+  @font-face {
+    font-family: "et-book";
+    src: url("/assets/fonts/et-book/et-book-roman-old-style.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "et-book";
+    src: url("/assets/fonts/et-book/et-book-display-italic.woff") format("woff");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "et-book";
+    src: url("/assets/fonts/et-book/et-book-semi-bold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "et-book";
+    src: url("/assets/fonts/et-book/et-book-bold-line-figures.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Elzevier Caps";
+    src: url("/assets/fonts/elzevier-caps/ElzevierCaps.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+  html {font-size: 18px;}
+  html, body {
+    font-family: et-book, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    color: var(--kupka-navy);
+    background-color: var(--kupka-cream);
+  }
+  .sidebar-about h1 {
+    font-family: et-book, Palatino, Georgia, serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 3.4rem;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    margin-bottom: 0.35rem;
+  }
+  .sidebar-about h1 a.sidebar-about {
+    display: block;
+    color: var(--kupka-navy);
+  }
+  .sidebar-about h1 .name-line {
+    display: block;
+  }
+  .sidebar-about h1 .lettrine {
+    font-family: "Elzevier Caps", et-book, Georgia, serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.35em;
+    line-height: 0.85;
+    margin-right: 0.02em;
+    color: var(--kupka-crimson);
+  }
+  .sidebar-about p.sidebar-about {
+    font-family: et-book, Palatino, Georgia, serif;
+    font-variant: small-caps;
+    letter-spacing: 0.18em;
+    font-size: 0.95rem;
+    margin-top: 0.4rem;
+  }
+  .sidebar-about p.sidebar-about .ornament {
+    font-style: normal;
+    font-variant: normal;
+    letter-spacing: 0;
+    margin-right: 0.15em;
+    user-select: none;
+  }
+  .sidebar-nav-item {
+    font-family: et-book, Palatino, Georgia, serif;
+    font-variant: small-caps;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    font-size: 1.05rem;
+  }
+  .sidebar-art {
+    text-align: right;
+    margin: 1.5rem 0 0.75rem;
+  }
+  .sidebar-art img,
+  .page-art img {
+    width: min(9.36rem, 100%);
+    height: auto;
+    display: block;
+    border-radius: 12px;
+  }
+  .sidebar-art img {
+    margin-left: auto;
+  }
+  .page-art {
+    display: none;
+    text-align: center;
+    margin: 1.75rem 0 0.5rem;
+  }
+  .page-art img {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media (min-width: 768px) {
+    .sidebar-sticky {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 6rem);
+    }
+    .sidebar-art {
+      margin-top: auto;
+      margin-bottom: 0.5rem;
+      text-align: right;
+    }
+    .page-art { display: none !important; }
+  }
+  @media (max-width: 768px) {
+    .sidebar-art { display: none; }
+    .page-art { display: block; }
+  }
+  .franklin-content {
+    position: relative;
+    padding-left: 8%;
+    padding-right: 5%;
+    line-height: 1.5em;
+  }
+  .franklin-content h1,
+  .franklin-content h2,
+  .franklin-content h3 {
+    font-family: et-book, Palatino, Georgia, serif;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--kupka-navy);
+  }
+  .franklin-content h1 {
+    font-style: italic;
+    font-weight: normal;
+    font-size: 2.1rem;
+  }
   @media (min-width: 940px) {
     .franklin-content {width: 100%; margin-left: auto; margin-right: auto;}
   }
   @media (max-width: 768px) {
     .franklin-content {padding-left: 6%; padding-right: 6%;}
+    .sidebar-about h1 {font-size: 2.8rem;}
   }
 </style>
 <link rel="icon" href="/assets/lichen.png">
@@ -29,9 +174,8 @@
   <div class="container sidebar-sticky">
 
     <div class="sidebar-about">
-
-      <h1><a class="sidebar-about" href="/">Simon Coste</a></h1>
-      <p class="sidebar-about">Mathematics</p>
+      <h1><a class="sidebar-about" href="/"><span class="name-line"><span class="lettrine">S</span>imon</span> <span class="name-line">Coste</span></a></h1>
+      <p class="sidebar-about"><span class="ornament" aria-hidden="true">❧</span> Mathematics</p>
     </div>
 
     <nav class="sidebar-nav">
@@ -42,8 +186,12 @@
       <a class="sidebar-nav-item " href="/talk/">Talks</a>
     </nav>
 
+    <div class="sidebar-art" aria-hidden="true">
+      <img src="/assets/le-bateleur.webp" alt="Le Bateleur" width="150" height="288">
+    </div>
+
     <div class="sidebar-foot">
-      <p>&copy; Simon Coste, modified: October 09, 2026. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
+      <p>&copy; Simon Coste, modified: October 26, 2026. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
     </div>
 
 

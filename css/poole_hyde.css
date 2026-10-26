@@ -60,15 +60,15 @@ html {
 }
 
 body {
-  color:  rgb(48, 48, 90)1;
-  background-color: #fff;
+  color: var(--kupka-navy, #1B2631);
+  background-color: var(--kupka-cream, #F5F1E3);
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
 
 /* No `:visited` state is required by default (browsers will use `a`) */
 a {
-  color: #268bd2;
+  color: var(--kupka-burnt, #B35A1F);
   text-decoration: none;
 }
 
@@ -92,7 +92,7 @@ h6 {
   margin-bottom: 0.5rem;
   font-weight: bold;
   line-height: 1.25;
-  color:  rgb(6, 6, 70);
+  color: var(--kupka-navy, #1B2631);
   text-rendering: optimizeLegibility;
 }
 
@@ -124,7 +124,7 @@ p {
 }
 
 strong {
-  color: rgb(48, 48, 90);
+  color: var(--kupka-navy, #1B2631);
 }
 
 
@@ -149,28 +149,28 @@ hr {
   position: relative;
   margin: 1.5rem 0;
   border: 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #fff;
+  border-top: 1px solid var(--kupka-cream-deep, #E8E2CA);
+  border-bottom: 1px solid var(--kupka-cream, #F5F1E3);
 }
 
 abbr {
   font-size: 85%;
   font-weight: bold;
-  color: #555;
+  color: var(--kupka-slate, #6B8494);
   text-transform: uppercase;
 }
 
 abbr[title] {
   cursor: help;
-  border-bottom: 1px dotted #e5e5e5;
+  border-bottom: 1px dotted var(--kupka-cream-deep, #E8E2CA);
 }
 
 /* Quotes */
 blockquote {
   padding: 0.5rem 1rem;
   margin: 0.8rem 0;
-  color: #7a7a7a;
-  border-left: 0.25rem solid #e5e5e5;
+  color: var(--kupka-charcoal, #2C3E50);
+  border-left: 0.25rem solid var(--kupka-ochre, #C4782A);
 }
 
 blockquote p:last-child {
@@ -195,19 +195,19 @@ img {
 table {
   margin-bottom: 1rem;
   width: 100%;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--kupka-cream-deep, #E8E2CA);
   border-collapse: collapse;
 }
 
 td,
 th {
   padding: 0.25rem 0.5rem;
-  border: 1px solid #e5e5e5;
+  border: 1px solid var(--kupka-cream-deep, #E8E2CA);
 }
 
 tbody tr:nth-child(odd) td,
 tbody tr:nth-child(odd) th {
-  background-color: #f9f9f9;
+  background-color: var(--block-background, #EDE6D4);
 }
 
 /*
@@ -257,7 +257,7 @@ html {
 .sidebar {
   text-align: center;
   padding: 2rem 1rem;
-  color: rgb(9, 223, 45);/*basic text color*/  
+  color: var(--kupka-amber, #E5A00D);
   font-size: 16pt;
 }
 
@@ -275,7 +275,7 @@ html {
 }
 
 .sidebar a {
-  color: rgb(6, 6, 70);
+  color: var(--kupka-navy, #1B2631);
 }
 
 a.sidebar:hover{
