@@ -11,7 +11,7 @@ date = Date(2019, 3, 22)
 
 - [The spectral edge of sparse ER digraphs](https://arxiv.org/abs/2609.18369), not submitted
 - [The Wasserstein cost of Importance Sampling](https://arxiv.org/abs/2605.30055), not submitted
-- [The delocalization of eigenvectors of real elliptic matrices](https://arxiv.org/abs/2602.10264), submitted
+- [The delocalization of eigenvectors of real elliptic matrices](https://arxiv.org/abs/2602.10264), Bernoulli
 - [Training EBMs with Jarczynski reweighting](https://arxiv.org/abs/2305.19414), Neurips 23
 - [Wavelet Score-Based Generative Modeling](https://arxiv.org/abs/2208.05003), Neurips 22
 - [The spectrum of fullerenes and graphenes](https://arxiv.org/abs/2306.01462), Journal of Physics A
