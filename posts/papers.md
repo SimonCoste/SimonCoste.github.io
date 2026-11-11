@@ -14,9 +14,10 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [Shape fluctuation and random matrices](https://arxiv.org/pdf/math/9903134), Kurt Johansson's breakthrough on the links between tasep and rmt. 
 - [the sqrt(2+sqrt(2)) honeycomb constant](https://www.unige.ch/~smirnov/papers/saw-j.pdf) by Duminil-Copin and Smirnov
 - [Cutoff on all Ramanujan graphs](https://arxiv.org/pdf/1507.04725), a beautiful piece of spectral theory and combinatorics. 
-- [Eigenvalues and expanders](https://link.springer.com/article/10.1007/bf02579166) by Alon
+- [Eigenvalues and expanders](https://link.springer.com/article/10.1007/bf02579166) by Nogan Alon 
 - [Overlaps for the Ginibre ensemble](https://arxiv.org/abs/1801.01219), Bourgade and Dubach
 - [The spectral algorithm for finding a sqrt(n) clique](https://www.math.tau.ac.il/~nogaa/PDFS/clique3.pdf), a classical gem by Alon, Krivelevich and Sudakov
+- [Small ball probabilities for Wiener processes](https://arxiv.org/pdf/math/0402220) by Dereich and Lifshits, so elegant and useful. The constant $K$ is still unknown!
 
 ## Numerical Maths
 
