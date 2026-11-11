@@ -36,7 +36,6 @@ This is a list of wonderful papers in machine learning, reflecting my own tastes
 - [The BBP transition](https://arxiv.org/abs/math/0403022) by Baik, Ben Arous, and Péché (2004). Probably the most important paper in random matrix theory. 
 - [On spectral clustering](https://proceedings.neurips.cc/paper/2001/file/801272ee79cfde7fa5960571fee36b9b-Paper.pdf) by Ng, Jordan and Weiss (2001).
 - [Hyvärinen's Score Matching paper](https://www.jmlr.org/papers/volume6/hyvarinen05a/hyvarinen05a.pdf) in 2005. 
-- [Exact Matrix Completion via Convex Optimization](https://dl.acm.org/doi/pdf/10.1145/2184319.2184343) by Candes and Recht (2009). Matrix completion via optimization.
 - [Matrix completion from a few entries](https://arxiv.org/pdf/0901.3150.pdf) by Keshavan, Montanari and Oh (2009). Matrix completion from SVD tresholding is (was ?) the go-to method for sparse matrix completion. 
 - [Adaptive mixtures of experts](https://www.cs.toronto.edu/~hinton/absps/jjnh91.pdf) by Jacobs et al. Introduces the famous MoE method that was popularized recently by Mistral. 
 - [Emergence of scaling in random networks](https://arxiv.org/pdf/cond-mat/9910332), the original paper by Barabasi and Albert (1999)
