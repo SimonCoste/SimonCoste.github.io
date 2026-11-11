@@ -24,7 +24,7 @@ Two important examples of PL functions which are not convex are
 
 These examples show that PL functions form a really wider class than (strongly) convex functions. On the other hand, they need not have a unique minimizer, which is the case for strongly convex functions. Indeed, \eqref{PL} implies that any critical point ($\nabla f (x) = 0$) has $f(x) = \inf f$. In other words, local minima are not unique at all, but they are all global, see (b) in the Figure below[^b]. 
 
-![](/posts/img/PL.png)
+![](/posts/img/PL.webp)
 
 Consequently, optimization algorithms will not find minimizers of $f$ but they will search for the minimum value of $f$ instead.  Just as for strongly convex functions, there is a general convergence result for vanilla Gradient Descent, but I'll only present the corresponding result for SGD. That is, we are now in the minimization of a function $f$ assuming the shape
 $$ f(x) = \frac{1}{n}\sum_{i=1}^m f_i(x)$$

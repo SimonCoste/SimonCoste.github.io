@@ -3,10 +3,28 @@
 ================================================================== */
 
 :root {
-  --block-background: #f6ebeb;
+  /* Kupka — The Cathedral */
+  --kupka-cream: #FFFEFC;
+  --kupka-cream-deep: #F7F5F0;
+  --kupka-amber: #E5A00D;
+  --kupka-ochre: #C4782A;
+  --kupka-burnt: #B35A1F;
+  --kupka-crimson: #7B241C;
+  --kupka-slate: #6B8494;
+  --kupka-lavender: #938199;
+  --kupka-navy: #1B2631;
+  --kupka-charcoal: #2C3E50;
+  --kupka-plum: #4A235A;
+
+  --block-background: #EDE6D4;
   --small: 15px;
   --normal: 20px;
-  --text-color:  rgb(48, 48, 90); 
+  --text-color: var(--kupka-navy);
+  --link-color: var(--kupka-burnt);
+  --link-hover: var(--kupka-crimson);
+  --heading-color: var(--kupka-navy);
+  --accent: var(--kupka-amber);
+  --muted: var(--kupka-slate);
 }
 
 /* ==================================================================
@@ -62,14 +80,14 @@ html {
 
 .franklin-content .page-foot a {
   text-decoration: none;
-  color: #a6a2a0;
+  color: var(--kupka-slate, #6B8494);
   text-decoration: underline;
 }
 
 .page-foot {
   font-size: 80%;
   font-family: Arial, serif;
-  color: #a6a2a0;
+  color: var(--kupka-slate, #6B8494);
   text-align: center;
   margin-top: 6em;
   border-top: 1px solid lightgrey;
@@ -99,7 +117,7 @@ html {
     width: 705px;
     margin-left: auto;
     margin-right: auto;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--kupka-cream, #F5F1E3);
   }
 }
 
@@ -175,7 +193,7 @@ td {
 
 .franklin-content blockquote {
   background: var(--block-background);
-  border-left: 7px solid #a8a8a8;
+  border-left: 7px solid var(--kupka-ochre);
   margin: 1.5em 10px;
   padding: 0.5em 10px;
   font-style: italic;
@@ -195,11 +213,12 @@ td {
 }
 
 .franklin-content a {
-  color: #d11caa;
+  color: var(--link-color);
   text-decoration: none;
 }
 
 .franklin-content a:hover {
+  color: var(--link-hover);
   text-decoration: underline;
 }
 
@@ -207,8 +226,8 @@ td {
     HYPERREFS AND FOOTNOTES
 ================================================================== */
 
-.franklin-content .eqref a { color: #d11caa; }
-.franklin-content .bibref a { color: #d11caa; }
+.franklin-content .eqref a { color: var(--link-color); }
+.franklin-content .bibref a { color: var(--link-color); }
 
 .franklin-content sup {
   font-size: 70%;
@@ -316,18 +335,18 @@ code {
 .hljs-metas,
 .hljs-metap { font-weight: bold; }
 
-.hljs-meta { color: rgb(25, 179, 51); }
+.hljs-meta { color: var(--kupka-ochre); }
 
-.hljs-metas { color: red; }
+.hljs-metas { color: var(--kupka-crimson); }
 
-.hljs-metap { color: rgb(51, 131, 231); }
+.hljs-metap { color: var(--kupka-slate); }
 
 /* ==================================================================
     BOXES
 ================================================================== */
 
 .franklin-content .colbox-blue {
-  background-color: #eef3f5;
+  background-color: #E4E9ED;
   padding-top: 5px;
   padding-right: 10px;
   padding-left: 10px;
@@ -336,7 +355,7 @@ code {
   margin-top: 5px;
   margin-bottom: 5px;
   border-radius: 0 10px 10px 0;
-  border-left: 5px solid #4c9cf1;
+  border-left: 5px solid var(--kupka-slate);
 }
 
 
@@ -347,19 +366,19 @@ code {
 }
 
 .important {
-  background-color: rgb(241, 251, 232);
+  background-color: #F3E6C4;
   padding: 0.5em;
   margin-bottom: 1em;
 }
 
 .deep {
-  background-color: rgb(236, 212, 212);
+  background-color: #E8D4D0;
   padding: 0.5em;
   margin-bottom: 1em;
 }
 
 .proof {
-  background-color: rgb(232, 236, 251);
+  background-color: #E2E0E8;
   padding: 0.9em;
   margin-bottom: 1em;
   font-size: var(--small);

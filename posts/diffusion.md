@@ -46,7 +46,7 @@ where $dB_t$ denotes integration with respect to a Brownian motion. Under mild c
 While this theorem is not easy to prove, we will later check using the Fokker-Planck equation that the *marginals* $p_{T-t}$ of the process $X_{T-t}$ are indeed the same as the marginals $q_{T-t}$ of the process $Y_t$.
 
 
-![](/posts/img/score_based_dog.png)
+![](/posts/img/score_based_dog.webp)
 
 
 

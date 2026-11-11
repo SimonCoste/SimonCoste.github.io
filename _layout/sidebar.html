@@ -2,9 +2,8 @@
   <div class="container sidebar-sticky">
 
     <div class="sidebar-about">
-
-      <h1><a class="sidebar-about" href="/">{{author}}</a></h1>
-      <p class="sidebar-about">{{site_synopsis}}</p>
+      <h1><a class="sidebar-about" href="/"><span class="name-line"><span class="lettrine">S</span>imon</span> <span class="name-line">Coste</span></a></h1>
+      <p class="sidebar-about"><span class="ornament" aria-hidden="true">❧</span> {{site_synopsis}}</p>
     </div>
 
     <nav class="sidebar-nav">
@@ -14,6 +13,10 @@
       <a class="sidebar-nav-item {{ispage notes/*}}active{{end}}" href="/notes/">Notes</a>
       <a class="sidebar-nav-item {{ispage talks/*}}active{{end}}" href="/talk/">Talks</a>
     </nav>
+
+    <div class="sidebar-art" aria-hidden="true">
+      <img src="/assets/le-bateleur.webp" alt="Le Bateleur" width="150" height="288">
+    </div>
 
     <div class="sidebar-foot">
       <p>&copy; {{ fill author }}, modified: {{ fill lastmodif }}. <br> Built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language. </a></p>
