@@ -6,7 +6,9 @@ on:
       - master
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    # ubuntu-latest is moving to Ubuntu 26.04, whose glibc refuses to load
+    # Julia 1.9 (libopenlibm wants an executable stack). 24.04 still starts it.
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v4
