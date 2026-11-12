@@ -4,6 +4,15 @@ date = "2023"
 abstract = "Html slides of some of my talks"
 +++
 
+## Autumn tour
+
+- 22 september Université de Strasbourg
+- 29 september Université Paris-Dauphine
+- 9 october AIxMaths, Institut Fourier (Grenoble)
+- 12 novembre Université d'Orsay
+- 13 novembre Paris-Santé Campus @MostlyMonteCarlo
+- 19 novembre Université de Clermont-Ferrand
+
 ## Talks on the characteristic polynomial of random matrices 
 
 
