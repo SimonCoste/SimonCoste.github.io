@@ -9,6 +9,7 @@ date = Date(2019, 3, 22)
 
 \toc
 
+- [The Wasserstein cost of the Girsanov Theorem](/assets/diffusions.pdf), not submitted (will be on the Arxiv on Nov. 13)
 - [The spectral edge of sparse ER digraphs](https://arxiv.org/abs/2609.18369), not submitted
 - [The Wasserstein cost of Importance Sampling](https://arxiv.org/abs/2605.30055), not submitted
 - [The delocalization of eigenvectors of real elliptic matrices](https://arxiv.org/abs/2602.10264), Bernoulli

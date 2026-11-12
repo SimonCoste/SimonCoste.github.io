@@ -4,6 +4,9 @@ date = "March 2025"
 abstract = "Flow straight, flow fast: velocity is everything. "
 +++
 
+
+**2026 edit**: I completely reworked these lectures notes into a new, simpler, fresher set of notes that you can find [here on its own website](https://simoncoste.gitlab.io/transport/). Enjoy! 
+
 In the preceding notes, we've seen how [diffusion models](/posts/diffusion.md) are trained and sampled from and we've seen how the score function $\nabla \ln p_t$ is efficiently learnt using [score matching](/posts/score_matching.md). However, since their inception, diffusion models felt a little bit weird for various reasons. 
 - First, they did not « really » bridge $p_0$ with $N(0,I_d)$. They bridge $p_0$ with $p_T$ which is only approximately $N(0,I_d)$. This is absolutely not important practically, but from a theoretical point of view, it is a bit unsatisfactory. There should be a way to bridge $p_0$ with $N(0,I_d)$  **exactly** in finite time. 
 - Second, the design of a diffusion feels a little bit clunky. How do we choose the drift and diffusion coefficients $\mu_t, w_t$? In the end, it looks that the coefficients $\alpha_t, \sigma_t$ such that $x_t$ has the same law as $\alpha_t x_0 + \sigma_t \varepsilon$ are the ones who matter, so why note directly choose them?
