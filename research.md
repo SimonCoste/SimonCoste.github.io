@@ -27,3 +27,4 @@ date = Date(2019, 3, 22)
 
 A while ago, I also wrote a [survey on hyperuniformity](/assets/survey_hyperuniformity.pdf). It's now outdated: go read [Raphaël Lachièze-Rey's survey](https://arxiv.org/abs/2510.18392) instead!
 
+  
